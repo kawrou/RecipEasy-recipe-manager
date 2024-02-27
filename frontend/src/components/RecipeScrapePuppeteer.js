@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-const url = "https://www.bbcgoodfood.com/recipes/vintage-chocolate-chip-cookies";
+const url = "https://www.slimmingworld.co.uk/recipes/best-ever-bolognese";
 
 const main = async () => {
     const browser = await puppeteer.launch();
