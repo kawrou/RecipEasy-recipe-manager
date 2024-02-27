@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-const url = "https://www.receitasnestle.com.br/receitas/brigadeiro";
+const url = "https://www.slimmingworld.co.uk/recipes/best-ever-bolognese";
 
 const main = async () => {
     const browser = await puppeteer.launch();
