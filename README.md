@@ -7,12 +7,18 @@ manager web application.
 We will be desigining the app by first finding problems with current
 solutions and discovering features we want to implement for an MVP. 
 
-The features main feature, the "skateboard" to our "car", is a page
+The main feature, the "skateboard" to our "car", is a page
 scaper function that will allow users to input a URL, retrieve the
 recipe, and have that saved to their profile. 
 
 The first major interaction will follow this flow:
 **Sign up -> retrieve recipe -> edit recipe -> see recipe in profile page**
+
+Once our first goal is met, we will implement the following features:
+A user can edit their saved recipe. 
+A user can add their own recipe. 
+A user can search filter their recipes based on keywords / tags
+A user can see the nutritional value for each recipe. 
 
 ## TechStack
 -MERN
