@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen} from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-
+import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { expect } from "vitest";
 
@@ -24,6 +24,19 @@ describe("Home Page", () => {
     const paragraph = screen.getByText("A place to store all your favourite recipes, from ones you find online to creating your own.")
     expect(paragraph).toBeInTheDocument()
   });
+
+  test("Text entered into searchbar appears on screen.", async () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+    const user = userEvent.setup()
+    const searchbar = screen.getByPlaceholderText("Paste your URL here");
+    await userEvent.type(searchbar, "Hello, world!");
+    screen.debug()
+    expect(searchbar.value).toBe("Hello, world!");
+  })
 
   // test("Displays a signup link", async () => {
   //   render(
