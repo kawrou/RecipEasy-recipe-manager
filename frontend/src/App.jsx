@@ -4,7 +4,7 @@ import "./App.css";
 import { HomePage } from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
-import { FeedPage } from "./pages/RecipeCollection/FeedPage";
+import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
 
 // docs: https://reactrouter.com/en/main/start/overview

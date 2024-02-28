@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./HomePage.css";
 import { scrapeRecipe } from "../../services/recipeScraper";
-
+import Navbar from "../../components/Navbar.jsx"
 
 
 export const HomePage = () => {
@@ -26,6 +26,7 @@ export const HomePage = () => {
 
   return(
     <div className="home items-center">
+      {Navbar}
       {/* Delete the placeholder logo when we have a logo */}
       <div className="border-2 rounded w-40 h-40">placeholder logo</div> 
       <h1 className="text-5xl font-bold py-5">RecipEasy</h1>

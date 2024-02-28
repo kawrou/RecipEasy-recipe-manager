@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getPosts } from "../../services/posts";
 import Post from "../../components/Recipe/RecipeCard";
 
-export const FeedPage = () => {
+export const RecipeCollection = () => {
   const [posts, setPosts] = useState([]);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();

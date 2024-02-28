@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { FeedPage } from "../../src/pages/RecipeCollection/FeedPage";
+import { RecipeCollection } from "../../src/pages/RecipeCollection/RecipeCollection";
 import { getPosts } from "../../src/services/posts";
 import { useNavigate } from "react-router-dom";
 
@@ -30,14 +30,14 @@ describe("Feed Page", () => {
 
     getPosts.mockResolvedValue({ posts: mockPosts, token: "newToken" });
 
-    render(<FeedPage />);
+    render(<RecipeCollection />);
 
     const post = await screen.findByRole("article");
     expect(post.textContent).toEqual("Test Post 1");
   });
 
   test("It navigates to login if no token is present", async () => {
-    render(<FeedPage />);
+    render(<RecipeCollection />);
     const navigateMock = useNavigate();
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
