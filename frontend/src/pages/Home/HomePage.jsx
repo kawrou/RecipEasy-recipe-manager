@@ -5,25 +5,31 @@ import { scrapeRecipe } from "../../services/recipeScraper";
 
 
 
-export const HomePage = ({token}) => {
+export const HomePage = () => {
+  const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate(); 
   const[url, setUrl] = useState ("")
 
   const handleClick = (e)=> {
     e.preventDefault()
-    scrapeRecipe(url, token)
-    navigate('/signup')
-  }
+    if (token && url) {
+      scrapeRecipe(url, token) // setting token from scraping, not yet implemented
+      navigate('/recipes')
+    } else if (token) {
+      navigate('/recipes')
+    } 
+    else {
+      navigate('/login')
+    }
+     }
 
   return(
     <div className="home">
-      <h1>Welcome to RecipEasy!</h1>
+      <h1>RecipEasy</h1>
       <p> A place to store all your favourite recipes, from ones you find online to creating your own.</p>
       <input type="text" placeholder="Paste your URL here" onChange={e => setUrl(e.target.value)} value={url}/> 
       <button type="submit" onClick={handleClick}>Generate Recipe</button>
-      <button type="submit">Enter Manually</button>
-      <Link to="/signup">Sign Up</Link>
-      <Link to="/login">Log In</Link>
+      <button type="submit" onClick={handleClick}>Enter Manually</button>
     </div>
   );
 };

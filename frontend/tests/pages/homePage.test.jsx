@@ -21,7 +21,11 @@ const token = "test token"
 
 
 
-describe("Home Page: When a user", () => {
+  describe("Home Page: When a user", () => {
+  beforeEach(() => {
+    window.localStorage.removeItem("token");
+    vi.resetAllMocks();
+  });
   test("welcomes you to the site", () => {
     // We need the Browser Router so that the Link elements load correctly
     render(
@@ -59,10 +63,10 @@ describe("Home Page: When a user", () => {
     // When button is clicked, our mocked function is called
     // Assert the function was called
     const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
-  
+    window.localStorage.setItem("token", "test token")
     render(
       <BrowserRouter>
-        <HomePage token={token}/>
+        <HomePage />
       </BrowserRouter>
     );
    
@@ -73,16 +77,52 @@ describe("Home Page: When a user", () => {
     await user.click(generateRecipeBtn);
     expect(scrapeRecipeSpy).toHaveBeenCalledOnce(); 
     expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
-    expect(mockUseNavigate).toHaveBeenCalledWith('/signup')
+    expect(mockUseNavigate).toHaveBeenCalledWith('/recipes')
+  })
+  
+  test("When a user isn't logged in and clicks on the 'Generate recipe' button, they are prompted to 'Sign Up'", async () => {
+    const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+   
+    const user = userEvent.setup()
+    const searchbar = screen.getByPlaceholderText("Paste your URL here")
+    const generateRecipeBtn = screen.getByText("Generate Recipe");
+    await user.type(searchbar, url)
+    await user.click(generateRecipeBtn);
+    expect(scrapeRecipeSpy).not.toHaveBeenCalled(); 
+    expect(mockUseNavigate).toHaveBeenCalledWith('/login')
   })
 
-  test.todo("When a user is logged in and clicks on the 'Generate recipe' button, they are redirected to CreateRecipe page")
+  test("When a user is logged in and clicks on the 'Enter Manually' button, they are redirected to CreateRecipe page", async () => {
+    window.localStorage.setItem("token", "test token")
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+   
+    const user = userEvent.setup()
+    const enterManuallyBtn = screen.getByText("Enter Manually");
+    await user.click(enterManuallyBtn);
+    expect(mockUseNavigate).toHaveBeenCalledWith('/recipes')
+  })
   
-  test.todo("When a user isn't logged in and clicks on the 'Generate recipe' button, they are prompted to 'Sign Up'")
-
-  test.todo("When a user is logged in and clicks on the 'Enter Manually' button, they are redirected to CreateRecipe page")
-  
-  test.todo("When a user isn't logged in and clicks on the 'Enter Manually' button, they are prompted to 'Sign Up'")
+  test("When a user isn't logged in and clicks on the 'Enter Manually' button, they are prompted to 'Sign Up'", async () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+   
+    const user = userEvent.setup()
+    const enterManuallyBtn = screen.getByText("Enter Manually");
+    await user.click(enterManuallyBtn);
+    expect(mockUseNavigate).toHaveBeenCalledWith('/login')
+  })
   // test("Displays a signup link", async () => {
   //   render(
   //     <BrowserRouter>
