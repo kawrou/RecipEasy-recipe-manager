@@ -28,7 +28,7 @@ describe("/posts", () => {
     const user = new User({
       email: "post-test@test.com",
       password: "12345678",
-      username: "someone"
+      username: "post-someone"
     });
     await user.save();
     await Post.deleteMany({});
