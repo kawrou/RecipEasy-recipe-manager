@@ -95,7 +95,10 @@ const fetchRecipeData = async (req, res) => {
 //   .catch((error) => {
 //     console.error("Error:", error);
 //   });
+const RecipesController = {
+  fetchRecipeData: fetchRecipeData,
+}
 
-module.exports = fetchRecipeData;
+module.exports = RecipesController;
 
 
