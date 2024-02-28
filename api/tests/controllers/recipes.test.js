@@ -29,6 +29,7 @@ describe("RecipesController", () => {
     // console.log(res.status)
     expect(res.status).toHaveBeenCalledWith(200);
 });
+
     it("should handle network failure", async () => {
     axios.get.mockRejectedValueOnce(new Error("Network error"));
 
