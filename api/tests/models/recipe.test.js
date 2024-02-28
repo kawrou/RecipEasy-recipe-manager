@@ -11,8 +11,6 @@ describe("Recipe model", () => {
     await Recipe.deleteMany({});
     recipe = new Recipe({
       name: "Jalapeño & Coconut Chicken Thighs",
-      description:
-        "This is sort of what you'd get if a coconut chutney and a chicken traybake had a baby. It's deceptively simple to make and incredibly delicious.",
       tags: [],
       ownerId: "65ba5046a9d4c1867a4cd305",
       favouritedByOwner: false,
@@ -43,12 +41,6 @@ describe("Recipe model", () => {
 
   it("has a name", () => {
     expect(recipe.name).toEqual("Jalapeño & Coconut Chicken Thighs");
-  });
-
-  it("has a description", () => {
-    expect(recipe.description).toEqual(
-      "This is sort of what you'd get if a coconut chutney and a chicken traybake had a baby. It's deceptively simple to make and incredibly delicious."
-    );
   });
 
   it("has an ownerId", () => {
