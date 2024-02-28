@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./HomePage.css";
 import { scrapeRecipe } from "../../services/recipeScraper";
-import Navbar from "../../components/Navbar.jsx"
+
 
 
 export const HomePage = () => {
