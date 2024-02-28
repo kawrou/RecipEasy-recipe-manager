@@ -1,5 +1,5 @@
 
-export const scrapeRecipe =() => {
+export const scrapeRecipe =(url, token) => {
 
   return;
 };
