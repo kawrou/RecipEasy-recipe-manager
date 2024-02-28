@@ -40,7 +40,7 @@ const token = "test token"
     const enterMaunallyBtn = screen.getByText("Enter Manually");
     const paragraph = screen.getByText("A place to store all your favourite recipes, from ones you find online to creating your own.")
 
-    expect(heading.textContent).toEqual("Welcome to RecipEasy!");
+    expect(heading.textContent).toEqual("RecipEasy");
     expect(searchbar).toBeInTheDocument();
     expect(generateRecipeBtn).toBeInTheDocument();
     expect(enterMaunallyBtn).toBeInTheDocument();
