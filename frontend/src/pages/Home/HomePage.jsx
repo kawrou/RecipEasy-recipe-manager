@@ -25,7 +25,7 @@ export const HomePage = () => {
 
   return(
     <div className="home">
-      <h1>RecipEasy</h1>
+      <h1 className="text-5xl font-bold underline">RecipEasy</h1>
       <p> A place to store all your favourite recipes, from ones you find online to creating your own.</p>
       <input type="text" placeholder="Paste your URL here" onChange={e => setUrl(e.target.value)} value={url}/> 
       <button type="submit" onClick={handleClick}>Generate Recipe</button>
