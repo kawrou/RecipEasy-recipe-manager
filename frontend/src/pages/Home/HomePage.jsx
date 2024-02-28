@@ -7,18 +7,18 @@ import { scrapeRecipe } from "../../services/recipeScraper";
 
 export const HomePage = () => {
   //Will need this for setting token later
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate(); 
   const[url, setUrl] = useState ("")
 
 
-  const handleSubmit = (e)=> {
+  const handleSubmit = async (e)=> {
     e.preventDefault()
     if (token && url) {
       // Needs refactoring!
       // Not yet getting token back from FETCH
       scrapeRecipe(url, token) 
-      setToken(window.localStorage.getIem("token"))
+      setToken(window.localStorage.getItem("token"))
       navigate('/recipes')
     } else if (token) {
       navigate('/recipes')
@@ -26,7 +26,7 @@ export const HomePage = () => {
     else {
       navigate('/login')
     }
-     }
+  }
 
   return(
     <div className="home items-center">

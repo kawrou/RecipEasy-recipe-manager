@@ -16,15 +16,22 @@ vi.mock("react-router-dom", async () => {
   }
 }); 
 
+//Mock setting token in window.localStorage
+const mockGetItem = vi.fn()
+Object.defineProperty(window, 'localStorage', {
+  value: {
+    getItem: mockGetItem,
+  },
+  writable: true,
+});
+
 // Reusable bits of code
 const url = "some url"
 const token = "test token"
 
-
-
 describe("Home Page: When a user", () => {
   beforeEach(() => {
-    window.localStorage.removeItem("token");
+    // window.localStorage.removeItem("token");
     vi.resetAllMocks();
   });
   test("welcomes you to the site", () => {
@@ -63,7 +70,7 @@ describe("Home Page: When a user", () => {
     // When button is clicked, our mocked function is called
     // Assert the function was called
     const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
-    window.localStorage.setItem("token", token)
+    mockGetItem.mockReturnValueOnce(token)
     render(
       <BrowserRouter>
         <HomePage />
@@ -98,13 +105,15 @@ describe("Home Page: When a user", () => {
   })
 
   test("When a user is logged in and clicks on the 'Enter Manually' button, they are redirected to CreateRecipe page", async () => {
-    window.localStorage.setItem("token", token)
+    
+    mockGetItem.mockReturnValueOnce(token)
+
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-   
+    
     const user = userEvent.setup()
     const enterManuallyBtn = screen.getByText("Enter Manually");
     await user.click(enterManuallyBtn);
