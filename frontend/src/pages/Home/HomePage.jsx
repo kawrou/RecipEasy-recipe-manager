@@ -15,7 +15,9 @@ export const HomePage = () => {
   const handleSubmit = (e)=> {
     e.preventDefault()
     if (token && url) {
-      scrapeRecipe(url, token) // setting token from scraping, not yet implemented
+      // Needs refactoring!
+      // Not yet getting token back from FETCH
+      scrapeRecipe(url, token) 
       setToken(window.localStorage.getIem("token"))
       navigate('/recipes')
     } else if (token) {
@@ -28,7 +30,6 @@ export const HomePage = () => {
 
   return(
     <div className="home items-center">
-      <Navbar />
       {/* Delete the placeholder logo when we have a logo */}
       <div className="border-2 rounded w-40 h-40">placeholder logo</div> 
       <h1 className="text-5xl font-bold py-5">RecipEasy</h1>
