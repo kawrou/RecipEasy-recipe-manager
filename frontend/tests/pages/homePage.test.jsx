@@ -3,7 +3,8 @@ import { BrowserRouter} from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { expect } from "vitest";
-import * as recipeScraper from "../../src/services/recipeScraper";
+// import * as recipeScraper from "../../src/services/recipeScraper";
+import * as scrapeRecipe from '../../src/services/recipe'
 import { vi } from 'vitest'
 
 //Mock useNavigate to test useNavigate logic in isolation
@@ -42,7 +43,7 @@ describe("Home Page: When a user", () => {
       </BrowserRouter>
     );
     const heading = screen.getByRole("heading");
-    const searchbar = screen.getByPlaceholderText("Paste your URL here");
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     const enterMaunallyBtn = screen.getByText("Enter Manually");
     const paragraph = screen.getByText("A place to store all your favourite recipes, from ones you find online to creating your own.")
@@ -61,7 +62,7 @@ describe("Home Page: When a user", () => {
       </BrowserRouter>
     );
     const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here");
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
     await user.type(searchbar, "Hello, world!");
     expect(searchbar.value).toBe("Hello, world!");
   })
@@ -69,7 +70,7 @@ describe("Home Page: When a user", () => {
   test("When a user generates a recipe, the page scrape function is called", async () => {
     // When button is clicked, our mocked function is called
     // Assert the function was called
-    const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
+    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, 'scrapeRecipe')
     mockGetItem.mockReturnValueOnce(token)
     render(
       <BrowserRouter>
@@ -78,17 +79,18 @@ describe("Home Page: When a user", () => {
     );
    
     const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here")
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL")
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     await user.type(searchbar, url)
     await user.click(generateRecipeBtn);
     expect(scrapeRecipeSpy).toHaveBeenCalledOnce(); 
-    expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
+    // expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
+    expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url)
     expect(mockUseNavigate).toHaveBeenCalledWith('/recipes')
   })
   
   test("When a user isn't logged in and clicks on the 'Generate recipe' button, they are prompted to 'Sign Up'", async () => {
-    const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
+    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, 'scrapeRecipe')
     render(
       <BrowserRouter>
         <HomePage />
@@ -96,7 +98,7 @@ describe("Home Page: When a user", () => {
     );
    
     const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here")
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL")
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     await user.type(searchbar, url)
     await user.click(generateRecipeBtn);
