@@ -1,5 +1,5 @@
 import { render, screen} from "@testing-library/react";
-import { BrowserRouter, MemoryRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter} from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { expect } from "vitest";
@@ -16,12 +16,13 @@ vi.mock("react-router-dom", async () => {
   }
 }); 
 
+// Reusable bits of code
 const url = "some url"
 const token = "test token"
 
 
 
-  describe("Home Page: When a user", () => {
+describe("Home Page: When a user", () => {
   beforeEach(() => {
     window.localStorage.removeItem("token");
     vi.resetAllMocks();
@@ -33,7 +34,6 @@ const token = "test token"
         <HomePage />
       </BrowserRouter>
     );
-
     const heading = screen.getByRole("heading");
     const searchbar = screen.getByPlaceholderText("Paste your URL here");
     const generateRecipeBtn = screen.getByText("Generate Recipe");
@@ -63,7 +63,7 @@ const token = "test token"
     // When button is clicked, our mocked function is called
     // Assert the function was called
     const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
-    window.localStorage.setItem("token", "test token")
+    window.localStorage.setItem("token", token)
     render(
       <BrowserRouter>
         <HomePage />
@@ -98,7 +98,7 @@ const token = "test token"
   })
 
   test("When a user is logged in and clicks on the 'Enter Manually' button, they are redirected to CreateRecipe page", async () => {
-    window.localStorage.setItem("token", "test token")
+    window.localStorage.setItem("token", token)
     render(
       <BrowserRouter>
         <HomePage />
@@ -123,25 +123,4 @@ const token = "test token"
     await user.click(enterManuallyBtn);
     expect(mockUseNavigate).toHaveBeenCalledWith('/login')
   })
-  // test("Displays a signup link", async () => {
-  //   render(
-  //     <BrowserRouter>
-  //       <HomePage />
-  //     </BrowserRouter>
-  //   );
-
-  //   const signupLink = screen.getByText("Sign Up");
-  //   expect(signupLink.getAttribute("href")).toEqual("/signup");
-  // });
-
-  // test("Displays a login link", async () => {
-  //   render(
-  //     <BrowserRouter>
-  //       <HomePage />
-  //     </BrowserRouter>
-  //   );
-
-  //   const loginLink = screen.getByText("Log In");
-  //   expect(loginLink.getAttribute("href")).toEqual("/login");
-  // });
 });
