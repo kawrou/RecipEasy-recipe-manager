@@ -35,7 +35,7 @@ const fetchRecipeData = async (req, res) => {
       }
     });
 
-    if (recipeData.length === 0) {
+    if (!recipeData || recipeData.length === 0) {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.goto(url);
@@ -82,6 +82,7 @@ const fetchRecipeData = async (req, res) => {
     // add user id/token once everything is set up
   } catch (error) {
     console.error("Error fetching URL:", error);
+    res.status(500);
     return null;
   }
 };
