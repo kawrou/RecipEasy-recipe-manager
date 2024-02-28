@@ -1,16 +1,23 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from '@testing-library/user-event'
-import '@testing-library/jest-dom'
+import { BrowserRouter } from "react-router-dom";
 
 import Navbar from "../../src/components/Navbar";
 
 describe("Navbar", () => {
-    test("Navbar is visible with Home, Login, Signup buttons", () => {
-        render(<Navbar />);
+    test("Navbar is visible with Home, Login, Signup buttons that redirect to their routes", async () => {
+        render(
+        <BrowserRouter>
+            <Navbar />
+        </BrowserRouter>
+        );
     
-        await userEvent.click(screen.getByText('Home'))
-        await screen.findByRole('heading')
+        const loginLink = screen.getByText("Log In");
+        expect(loginLink.getAttribute("href")).toEqual("/login");
 
-        expect(screen.getByRole('heading')).toHaveTextContent('Welcome to Acebook!')
+        const signupLink = screen.getByText("Sign Up");
+        expect(signupLink.getAttribute("href")).toEqual("/signup");
+
+        const homeLink = screen.getByText("Home");
+        expect(homeLink.getAttribute("href")).toEqual("/");
     });
 });
