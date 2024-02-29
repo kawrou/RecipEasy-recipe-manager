@@ -8,6 +8,7 @@ export const HomePage = () => {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();
 
+  // COMMENT CAN BE DELETED AFTER REVIEW
   // WHY URL STATE IS HANDLED BY PARENT COMPONENT
   // Current implementation has the parent component handle the navigation
   // This means the url <input> of RecipeScraper component has to be handled
@@ -39,7 +40,6 @@ export const HomePage = () => {
       <div className="border-2 rounded w-40 h-40">placeholder logo</div>
       <h1 className="text-5xl font-bold py-5">RecipEasy</h1>
       <p className="py-5">
-        {" "}
         A place to store all your favourite recipes, from ones you find online
         to creating your own.
       </p>

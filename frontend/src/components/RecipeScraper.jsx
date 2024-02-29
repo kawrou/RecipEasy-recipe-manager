@@ -4,7 +4,11 @@ import "./RecipeScraper.css";
 
 const RecipeScraper = ({ url, handleUrlChange, handleSubmit, token }) => {
   const [recipeData, setRecipeData] = useState(null);
-
+  
+  // COMMENT CAN BE DELETED AFTER REVIEWED
+  // Component only handles the FETCH call
+  // I think that the call should only be made if a token is present
+  // Otherwise the call will be made even though the user isn't logged in
   const handleScrapeRecipe = async () => {
     if (token && url) {
       try {
