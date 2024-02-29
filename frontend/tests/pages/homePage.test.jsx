@@ -1,33 +1,56 @@
-import { render, screen} from "@testing-library/react";
-import { BrowserRouter} from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { expect } from "vitest";
-import * as recipeScraper from "../../src/services/recipeScraper";
-import { vi } from 'vitest'
+import * as scrapeRecipe from "../../src/services/recipe";
+import { vi } from "vitest";
 
 //Mock useNavigate to test useNavigate logic in isolation
-const mockUseNavigate = vi.fn()
+//https://stackoverflow.com/questions/66284286/react-jest-mock-usenavigate & vitest env suggestion
+const mockUseNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom")
+  const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockUseNavigate,
-  }
-}); 
+  };
+});
+
+//Mock setting token in window.localStorage
+const mockGetItem = vi.fn();
+Object.defineProperty(window, "localStorage", {
+  value: {
+    getItem: mockGetItem,
+  },
+  writable: true,
+});
 
 // Reusable bits of code
-const url = "some url"
-const token = "test token"
+const url = "some url";
+const token = "test token";
 
+const clickGenerateRecipe = async () => {
+  const user = userEvent.setup();
+  const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
+  const generateRecipeBtn = screen.getByText("Generate Recipe");
+  await user.type(searchbar, url);
+  await user.click(generateRecipeBtn);
+};
 
+const clickEnterManually = async () => {
+  const user = userEvent.setup();
+  const enterManuallyBtn = screen.getByText("Enter Manually");
+  await user.click(enterManuallyBtn);
+};
 
-describe("Home Page: When a user", () => {
+describe("Home Page renders:", () => {
   beforeEach(() => {
-    window.localStorage.removeItem("token");
+    // window.localStorage.removeItem("token");
     vi.resetAllMocks();
   });
-  test("welcomes you to the site", () => {
+
+  test("the correct elements", () => {
     // We need the Browser Router so that the Link elements load correctly
     render(
       <BrowserRouter>
@@ -35,92 +58,83 @@ describe("Home Page: When a user", () => {
       </BrowserRouter>
     );
     const heading = screen.getByRole("heading");
-    const searchbar = screen.getByPlaceholderText("Paste your URL here");
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     const enterMaunallyBtn = screen.getByText("Enter Manually");
-    const paragraph = screen.getByText("A place to store all your favourite recipes, from ones you find online to creating your own.")
+    const paragraph = screen.getByText(
+      "A place to store all your favourite recipes, from ones you find online to creating your own."
+    );
 
     expect(heading.textContent).toEqual("RecipEasy");
     expect(searchbar).toBeInTheDocument();
     expect(generateRecipeBtn).toBeInTheDocument();
     expect(enterMaunallyBtn).toBeInTheDocument();
-    expect(paragraph).toBeInTheDocument()
+    expect(paragraph).toBeInTheDocument();
   });
-
-  test("Text entered into searchbar appears on screen.", async () => {
+}); 
+describe("When a user:", () => {
+  test("enters a url, it appears on the screen", async () => {
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-    const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here");
+    const user = userEvent.setup();
+    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
     await user.type(searchbar, "Hello, world!");
     expect(searchbar.value).toBe("Hello, world!");
-  })
+  });
 
-  test("When a user generates a recipe, the page scrape function is called", async () => {
-    // When button is clicked, our mocked function is called
-    // Assert the function was called
-    const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
-    window.localStorage.setItem("token", token)
+  test("clicks generate a recipe, scrapeRecipe is called", async () => {
+    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
+    mockGetItem.mockReturnValueOnce(token);
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-   
-    const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here")
-    const generateRecipeBtn = screen.getByText("Generate Recipe");
-    await user.type(searchbar, url)
-    await user.click(generateRecipeBtn);
-    expect(scrapeRecipeSpy).toHaveBeenCalledOnce(); 
-    expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
-    expect(mockUseNavigate).toHaveBeenCalledWith('/recipes')
-  })
-  
-  test("When a user isn't logged in and clicks on the 'Generate recipe' button, they are prompted to 'Sign Up'", async () => {
-    const scrapeRecipeSpy = vi.spyOn(recipeScraper, 'scrapeRecipe')
-    render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
-    );
-   
-    const user = userEvent.setup()
-    const searchbar = screen.getByPlaceholderText("Paste your URL here")
-    const generateRecipeBtn = screen.getByText("Generate Recipe");
-    await user.type(searchbar, url)
-    await user.click(generateRecipeBtn);
-    expect(scrapeRecipeSpy).not.toHaveBeenCalled(); 
-    expect(mockUseNavigate).toHaveBeenCalledWith('/login')
-  })
 
-  test("When a user is logged in and clicks on the 'Enter Manually' button, they are redirected to CreateRecipe page", async () => {
-    window.localStorage.setItem("token", token)
+    await clickGenerateRecipe();
+    expect(scrapeRecipeSpy).toHaveBeenCalledOnce();
+    // expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
+    expect(scrapeRecipeSpy).toHaveBeenCalledWith(url);
+    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes");
+  });
+
+  test("clicks 'Generate recipe', they are redirected to login page if not logged in", async () => {
+    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-   
-    const user = userEvent.setup()
-    const enterManuallyBtn = screen.getByText("Enter Manually");
-    await user.click(enterManuallyBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith('/recipes')
-  })
-  
-  test("When a user isn't logged in and clicks on the 'Enter Manually' button, they are prompted to 'Sign Up'", async () => {
+
+    await clickGenerateRecipe();
+    expect(scrapeRecipeSpy).not.toHaveBeenCalled();
+    expect(mockUseNavigate).toHaveBeenCalledWith("/login");
+  });
+
+  test("clicks 'Enter Manually', they are redirected to CreateRecipe page if logged in", async () => {
+    mockGetItem.mockReturnValueOnce(token);
+
     render(
       <BrowserRouter>
         <HomePage />
       </BrowserRouter>
     );
-   
-    const user = userEvent.setup()
-    const enterManuallyBtn = screen.getByText("Enter Manually");
-    await user.click(enterManuallyBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith('/login')
-  })
+
+    await clickEnterManually();
+    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes");
+  });
+
+  test("clicks on the 'Enter Manually', they are redirected to login page if not logged in", async () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    await clickEnterManually();
+    expect(mockUseNavigate).toHaveBeenCalledWith("/login");
+  });
 });

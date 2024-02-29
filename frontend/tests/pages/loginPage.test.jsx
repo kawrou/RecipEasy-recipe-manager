@@ -46,7 +46,7 @@ describe("Login Page", () => {
     expect(login).toHaveBeenCalledWith("test@email.com", "1234");
   });
 
-  test("navigates to /posts on successful login", async () => {
+  test("navigates to /recipecollection on successful login", async () => {
     render(<LoginPage />);
 
     login.mockResolvedValue("secrettoken123");
@@ -54,7 +54,7 @@ describe("Login Page", () => {
 
     await completeLoginForm();
 
-    expect(navigateMock).toHaveBeenCalledWith("/posts");
+    expect(navigateMock).toHaveBeenCalledWith("/recipecollection");
   });
 
   test("navigates to /login on unsuccessful login", async () => {

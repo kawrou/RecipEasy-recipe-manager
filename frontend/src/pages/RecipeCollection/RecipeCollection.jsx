@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getPosts } from "../../services/posts";
+import { getRecipes } from "../../services/getRecipes";
 import Post from "../../components/Recipe/RecipeCard";
 
 export const RecipeCollection = () => {
-  const [posts, setPosts] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      getPosts(token)
+      getRecipes(token)
         .then((data) => {
-          setPosts(data.posts);
+          setRecipes(data.recipes);
           setToken(data.token);
           window.localStorage.setItem("token", data.token);
         })
@@ -31,9 +31,9 @@ export const RecipeCollection = () => {
 
   return (
     <>
-      <h2>Posts</h2>
+      <h2>Recipes</h2>
       <div className="feed" role="feed">
-        {posts.map((post) => (
+        {recipes.map((post) => (
           <Post post={post} key={post._id} />
         ))}
       </div>

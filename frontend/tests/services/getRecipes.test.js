@@ -1,7 +1,7 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, expect, vi } from "vitest";
 
-import { getPosts } from "../../src/services/posts";
+import { getRecipes } from "../../src/services/getRecipes";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -9,13 +9,13 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 createFetchMock(vi).enableMocks();
 
 describe("posts service", () => {
-  describe("getPosts", () => {
+  describe("getRecipes", () => {
     test("includes a token with its request", async () => {
       fetch.mockResponseOnce(JSON.stringify({ posts: [], token: "newToken" }), {
         status: 200,
       });
 
-      await getPosts("testToken");
+      await getRecipes("testToken");
 
       // This is an array of the arguments that were last passed to fetch
       const fetchArguments = fetch.mock.lastCall;
@@ -34,7 +34,7 @@ describe("posts service", () => {
       );
 
       try {
-        await getPosts("testToken");
+        await getRecipes("testToken");
       } catch (err) {
         expect(err.message).toEqual("Unable to fetch posts");
       }
