@@ -1,8 +1,10 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
+const tokenChecker = require("../middleware/tokenChecker"); 
 
 const fetchRecipeData = async (req, res) => {
+  tokenChecker(req, res, async () => {
   const url = req.query.url;
   console.log(url)
   try {
@@ -78,13 +80,13 @@ const fetchRecipeData = async (req, res) => {
     }
     console.log(recipeData)
     // return recipeData;
-    res.status(200).json({recipe_data:  recipeData});
-    // add user id/token once everything is set up
-  } catch (error) {
-    console.error("Error fetching URL:", error);
-    res.status(500);
-    return null;
-  }
+    res.status(200).json({ recipe_data: recipeData });
+    } catch (error) {
+      console.error("Error fetching URL:", error);
+      res.status(500);
+      return null;
+    }
+  });
 };
 
 // Example usage:
