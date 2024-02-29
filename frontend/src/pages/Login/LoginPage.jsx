@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 import { login } from "../../services/authentication";
 
@@ -54,7 +54,12 @@ export const LoginPage = () => {
         />
         <br />
         <div className="mb-4"></div>
-        <input role="submit-button" id="submit" type="submit" value="Submit" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" />
+        <input role="submit-button" id="submit" type="submit" value="Submit" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-blue-600 border-blue-600 hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 mr-2" />
+        <br />
+        <div className="mb-4"></div>
+        <NavLink to="/signup" className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-500 border-gray-500 hover:border-transparent hover:text-blue-500 hover:bg-white">
+        Sign Up
+        </NavLink>
       </form>
       </div>
     </>
