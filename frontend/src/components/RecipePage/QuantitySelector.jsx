@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
-export const QuantitySelector = () => {
-  const [quantity, setQuantity] = useState(0);
-
+export const QuantitySelector = ({quantity, setQuantity}) => {
   const handleIncrement = () => {
     setQuantity(quantity + 1);
   };
