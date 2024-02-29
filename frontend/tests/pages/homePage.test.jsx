@@ -7,6 +7,7 @@ import * as scrapeRecipe from "../../src/services/recipe";
 import { vi } from "vitest";
 
 //Mock useNavigate to test useNavigate logic in isolation
+//https://stackoverflow.com/questions/66284286/react-jest-mock-usenavigate & vitest env suggestion
 const mockUseNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -85,8 +86,6 @@ describe("When a user:", () => {
   });
 
   test("clicks generate a recipe, scrapeRecipe is called", async () => {
-    // When button is clicked, our mocked function is called
-    // Assert the function was called
     const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
     mockGetItem.mockReturnValueOnce(token);
     render(
@@ -98,7 +97,7 @@ describe("When a user:", () => {
     await clickGenerateRecipe();
     expect(scrapeRecipeSpy).toHaveBeenCalledOnce();
     // expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
-    expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url);
+    expect(scrapeRecipeSpy).toHaveBeenCalledWith(url);
     expect(mockUseNavigate).toHaveBeenCalledWith("/recipes");
   });
 

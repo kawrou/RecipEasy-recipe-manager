@@ -4,7 +4,7 @@ import "./RecipeScraper.css";
 
 const RecipeScraper = ({ url, handleUrlChange, handleSubmit, token }) => {
   const [recipeData, setRecipeData] = useState(null);
-  
+
   // COMMENT CAN BE DELETED AFTER REVIEWED
   // Component only handles the FETCH call
   // I think that the call should only be made if a token is present
@@ -29,6 +29,7 @@ const RecipeScraper = ({ url, handleUrlChange, handleSubmit, token }) => {
         onChange={handleUrlChange}
         className="input-box"
         placeholder="Enter your recipe URL"
+        name="url-input"
       />
       <div className="flex items-center justify-center py-8">
         <button

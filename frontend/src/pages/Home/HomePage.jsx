@@ -7,7 +7,7 @@ export const HomePage = () => {
   //Will need this for setting token later
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();
-
+  
   // COMMENT CAN BE DELETED AFTER REVIEW
   // WHY URL STATE IS HANDLED BY PARENT COMPONENT
   // Current implementation has the parent component handle the navigation
@@ -23,12 +23,13 @@ export const HomePage = () => {
     setUrl(e.target.value);
   };
 
+  // The logic for this will need to change which might break the tests later on
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (token && url) {
       navigate("/recipes");
     } else if (token) {
-      navigate("/recipes");
+      navigate("/recipe");
     } else {
       navigate("/login");
     }
