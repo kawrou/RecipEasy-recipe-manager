@@ -1,3 +1,4 @@
+const { generateToken } = require("../lib/token");
 const User = require("../models/user");
 
 const create = (req, res) => {
@@ -17,8 +18,16 @@ const create = (req, res) => {
     });
 };
 
+const getUserById = async (req, res) => {
+  const userId = req.params.user_id;
+  const user = await User.findById(userId).select("-password -email");
+  const newToken = generateToken(req.user_id); // Use the generateToken function
+  res.status(200).json({ user: user, user_id: req.user_id, token: newToken });
+};
+
 const UsersController = {
   create: create,
+  getUserById: getUserById,
 };
 
 module.exports = UsersController;

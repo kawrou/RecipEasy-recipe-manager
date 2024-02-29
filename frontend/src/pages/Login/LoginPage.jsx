@@ -1,22 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { login } from "../../services/authentication";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+
+  const handleSuccessfulLogin = () => {
+    navigate("/");
+  };
+  
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const token = await login(email, password);
       window.localStorage.setItem("token", token);
-      navigate("/posts");
+      console.log(token);
+      handleSuccessfulLogin();
+
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      setError("Invalid email or password");
     }
   };
 
@@ -51,3 +59,4 @@ export const LoginPage = () => {
     </>
   );
 };
+

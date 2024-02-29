@@ -1,15 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { scrapeRecipe } from '../services/recipe'; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import "./RecipeScraper.css";
+import { getUserById } from "../services/users";
 
 
 const RecipeScraper = () => {
+  const [token, setToken] = useState(window.localStorage.getItem("token"));
+  const [profileInfo, setProfileInfo] = useState("");
+  const [userID, setUserID] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [url, setUrl] = useState('');
+  const { profile_id } = useParams();
   const [recipeData, setRecipeData] = useState(null);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      getUserById(profile_id, token)
+        .then((data) => {
+          setProfileInfo(data.user);
+          setToken(data.token);
+          setUserID(data.user_id);
+
+          if (profile_id === userID) {
+            setIsLoggedIn(true);
+          }
+          window.localStorage.setItem("token", data.token);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      setShowErrorMessage(true);
+    }
+  }, [token]);
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -24,7 +50,6 @@ const RecipeScraper = () => {
     try {
       const scrapedData = await scrapeRecipe(url);
       setRecipeData(scrapedData);
-      // console.log(scrapedData);
     } catch (error) {
       console.error('Error fetching recipe:', error);
     }
