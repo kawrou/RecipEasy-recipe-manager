@@ -1,14 +1,15 @@
-import { Link } from "react-router-dom";
-
+import React from "react";
+import RecipeScraper from "../../components/RecipeScraper";  
 import "./HomePage.css";
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
     
-    <div className="home">
-      <h1 className="text-5xl font-bold underline">Welcome to Acebook!</h1>
-      <Link to="/signup">Sign Up</Link>
-      <Link to="/login">Log In</Link>
+    <div className="HomePage">
+      <h1 className="text-5xl font-bold underline">Welcome to the Recipe Scraper App</h1>
+      <RecipeScraper />
     </div>
   );
 };
+
+export default HomePage;
