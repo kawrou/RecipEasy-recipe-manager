@@ -30,24 +30,33 @@ export const LoginPage = () => {
 
   return (
     <>
+    <div className="home items-center">
+      {/* Delete the placeholder logo when we have a logo */}
+      <div className="border-2 rounded w-40 h-40">placeholder logo</div> 
       <h2 className="text-5xl font-bold py-5">Login</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input className="border-2 rounded w-full"
+      <div className="mb-4"></div>
+        <input className="border-2 rounded w-min"
           id="email"
           type="text"
+          placeholder="Email"
           value={email}
           onChange={handleEmailChange}
         />
-        <label htmlFor="password">Password:</label>
-        <input className="border-2 rounded w-full"
+        <br />
+        <div className="mb-4"></div>
+        <input className="border-2 rounded w-min"
           id="password"
           type="password"
+          placeholder="Password"
           value={password}
           onChange={handlePasswordChange}
         />
+        <br />
+        <div className="mb-4"></div>
         <input role="submit-button" id="submit" type="submit" value="Submit" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" />
       </form>
+      </div>
     </>
   );
 };
