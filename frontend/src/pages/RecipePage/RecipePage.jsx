@@ -13,7 +13,7 @@ export const RecipePage = () => {
     <>
       <div className="w-screen h-4 bg-gray-300" />
       <div className="flex divide-x justify-center w-screen">
-        <div className="flex flex-auto flex-col p-20 gap-7">
+        <div className="flex flex-auto basis-3/5 flex-col p-20 gap-7">
           {/* title */}
           <input
             type="text"
@@ -57,10 +57,11 @@ export const RecipePage = () => {
           {/* Tags */}
           <Tags tags={tags} setTags={setTags} />
         </div>
-        <div className=" flex flex-auto justify-center align-middle p-20">
-          <div className="bg-gray-300 flex-initial w-96 h-80 rounded-xl"></div>
+        <div className=" flex flex-auto justify-center basis-2/5 p-20 ">
+          <div className="bg-gray-300 place-self-center w-96 h-80 rounded-xl"></div>
         </div>
       </div>
+      <div className="w-screen h-4 bg-gray-300" />
     </>
   );
 };
