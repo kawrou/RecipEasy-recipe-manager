@@ -24,9 +24,9 @@ vi.mock("../../src/services/authentication", () => {
 const completeSignupForm = async () => {
   const user = userEvent.setup();
 
-  const emailInputEl = screen.getByLabelText("Email:");
-  const passwordInputEl = screen.getByLabelText("Password:");
-  const usernameInputEl = screen.getByLabelText("Username:");
+  const emailInputEl = screen.getByLabelText("Your email");
+  const passwordInputEl = screen.getByLabelText("Password");
+  const usernameInputEl = screen.getByLabelText("Username");
   const submitButtonEl = screen.getByRole("submit-button");
 
   await user.type(emailInputEl, "test@email.com");
@@ -68,4 +68,24 @@ describe("Signup Page", () => {
 
     expect(navigateMock).toHaveBeenCalledWith("/signup");
   });
+
+  test("error message shown when invalid password and email is input", async () => {
+    render(<SignupPage />);
+    // incorrect signup
+    const user = userEvent.setup();
+
+    const emailInputEl = screen.getByLabelText("Your email");
+    const passwordInputEl = screen.getByLabelText("Password");
+    const usernameInputEl = screen.getByLabelText("Username");
+    const submitButtonEl = screen.getByRole("submit-button");
+
+    await user.type(emailInputEl, "incorrectemail");
+    await user.type(passwordInputEl, "incorrectpassword");
+    await user.type(usernameInputEl, "incorrect");
+    await user.click(submitButtonEl);
+
+    await expect(screen.getAllByText("Enter a valid email address.")).to.exist;
+    await expect(screen.getAllByText("Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character.")).to.exist;
+  });
+
 });

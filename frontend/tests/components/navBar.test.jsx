@@ -65,6 +65,6 @@ describe("Navbar", () => {
         userEvent.click(screen.getByText("Sign Up"));
         
         // Using await before expect to wait for the expectation to resolve
-        await expect(screen.getByText("Signup")).to.exist;
+        await expect(screen.getAllByText("Create an account")).to.exist;
     });
 });
