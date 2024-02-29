@@ -13,7 +13,7 @@ export const RecipePage = () => {
     <>
       <div className="w-screen h-4 bg-gray-300" />
       <div className="flex divide-x justify-center w-screen">
-        <div className="flex flex-auto basis-3/5 flex-col p-20 gap-7">
+        <div className="flex flex-auto justify-center basis-1/2 flex-col pt-18 p-20 gap-7">
           {/* title */}
           <input
             type="text"
@@ -26,7 +26,7 @@ export const RecipePage = () => {
           <textarea
             id="message"
             rows="4"
-            className="block p-2.5 w-full flex-auto text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
+            className="block p-2.5 text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
             placeholder="Enter your description here..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -57,11 +57,19 @@ export const RecipePage = () => {
           {/* Tags */}
           <Tags tags={tags} setTags={setTags} />
         </div>
-        <div className=" flex flex-auto justify-center basis-2/5 p-20 ">
-          <div className="bg-gray-300 place-self-center w-96 h-80 rounded-xl"></div>
+        <div className=" flex justify-center basis-1/2 p-20 ">
+          <div className="bg-gray-300 place-self-center w-full h-full rounded-3xl aspect-square"></div>
         </div>
       </div>
       <div className="w-screen h-4 bg-gray-300" />
+      <div className="flex divide-x justify-center p-10 pb-0">
+        <div className="flex flex-auto flex-col pt-10 p-20 gap-7">
+          <div className="font-extrabold text-5xl text-left">Ingredients</div>
+        </div>
+        <div className="flex flex-auto flex-col pt-10 p-20 gap-7">
+          <div className="font-extrabold text-5xl text-left">Method</div>
+        </div>
+      </div>
     </>
   );
 };
