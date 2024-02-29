@@ -8,11 +8,6 @@ export const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
-
-  const handleSuccessfulLogin = () => {
-    navigate("/");
-  };
-  
   
 
   const handleSubmit = async (event) => {
@@ -20,7 +15,8 @@ export const LoginPage = () => {
     try {
       const token = await login(email, password);
       window.localStorage.setItem("token", token);
-      navigate("/recipecollection");
+      console.log(token)
+      navigate("/");
     } catch (err) {
       console.error(err);
       setError("Invalid email or password");

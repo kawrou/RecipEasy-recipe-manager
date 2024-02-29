@@ -1,63 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { scrapeRecipe } from '../services/recipe'; 
-import { useNavigate, useParams  } from 'react-router-dom';
+import { scrapeRecipe } from '../services/recipe';
+import { useNavigate, useParams } from 'react-router-dom';
 import "./RecipeScraper.css";
-import { getUserById } from "../services/users";
-
+import { getUser } from "../services/users";
 
 const RecipeScraper = () => {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [profileInfo, setProfileInfo] = useState("");
-  const [userID, setUserID] = useState("");
+  // const [userID, setUserID] = useState(window.localStorage.getItem("_id"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [url, setUrl] = useState('');
-  const { profile_id } = useParams();
   const [recipeData, setRecipeData] = useState(null);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const navigate = useNavigate(); 
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getUser(token);
+        setIsLoggedIn(!!user);
+        // console.log(userID);
+        console.log(token);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setIsLoggedIn(false);
+      }
+    };
+  
+    if (token) {
+      fetchUser();
+    }
+  }, [token]);
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
 
   const handleScrapeRecipe = async () => {
-    if (token && url) {
-      if (!isLoggedIn) {
-      setShowErrorMessage(true);
-      return;
-    }
-
-    try {
-        const scrapedData = await scrapeRecipe(url);
+    console.log("Token:", token);
+    console.log("URL:", url);
+    if (token && url && isLoggedIn) {
+      try {
+        const scrapedData = await scrapeRecipe(url, token);
+        console.log(scrapedData)
         setRecipeData(scrapedData);
-        } catch (error) {
+      } catch (error) {
         console.error("Error fetching recipe:", error);
       }
+    } else {
+      // Show error message if not logged in
+      setShowErrorMessage(true);
     }
   };
 
   const redirectToLoginPage = () => {
-    navigate('/login'); 
+    navigate('/login');
   };
 
   const redirectToSignupPage = () => {
-    navigate('/signup'); 
+    navigate('/signup');
   };
 
   return (
-    <div className="recipe-scrapper-container">
-      {/* Move the error message outside the isLoggedIn check */}
+    <div className="recipe-scraper-container">
       {showErrorMessage && !isLoggedIn && (
         <div className="error-message">
-          <p>You must log in to generate a recipe.             <span onClick={redirectToLoginPage} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+          <p>
+            You must log in to generate a recipe.{' '}
+            <span onClick={redirectToLoginPage} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
               Click HERE to log in!
             </span>
-            Don't have an account? 
+            Don't have an account?{' '}
             <span onClick={redirectToSignupPage} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
               Click HERE to sign up!
-            </span></p>
+            </span>
+          </p>
         </div>
       )}
 
-      {/* Always render the input box and buttons */}
       <input type="text" value={url} onChange={handleUrlChange} className="input-box" placeholder="Enter Recipe URL:" />
       <div className="flex items-center justify-center py-8">
         <button onClick={handleScrapeRecipe} type="submit" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Generate Recipe</button>

@@ -1,21 +1,16 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
-const tokenChecker = require("../middleware/tokenChecker");
+// const tokenChecker = require("../middleware/tokenChecker");
 
 const fetchRecipeData = async (req, res) => {
-  tokenChecker(req, res, async () => {
-    // Check if token exists in request headers
-    if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Token is required" });
-    }
-
     const url = req.query.url;
-    console.log(url);
+    console.log("Fetching URL:", url);
 
     try {
       const response = await axios.get(url);
       const html = response.data;
+      console.log(response)
 
       const $ = cheerio.load(html);
 
@@ -28,9 +23,7 @@ const fetchRecipeData = async (req, res) => {
           const jsonData = JSON.parse(scriptContent);
 
           if (jsonData["@graph"]) {
-            const recipeObjects = jsonData["@graph"].filter(
-              (obj) => obj["@type"] === "Recipe"
-            );
+            const recipeObjects = jsonData["@graph"].filter((obj) => obj["@type"] === "Recipe");
             recipeData = recipeObjects;
           } else if (jsonData["@type"] === "Recipe") {
             recipeData = jsonData;
@@ -41,7 +34,7 @@ const fetchRecipeData = async (req, res) => {
       });
 
       if (!recipeData || recipeData.length === 0) {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto(url);
 
@@ -55,9 +48,7 @@ const fetchRecipeData = async (req, res) => {
                 const parsedData = JSON.parse(script.textContent);
 
                 if (parsedData["@graph"]) {
-                  const recipeObjects = parsedData["@graph"].filter(
-                    (obj) => obj["@type"] === "Recipe"
-                  );
+                  const recipeObjects = parsedData["@graph"].filter((obj) => obj["@type"] === "Recipe");
                   jsonData = recipeObjects;
                 } else if (parsedData["@type"] === "Recipe") {
                   jsonData = parsedData;
@@ -75,14 +66,15 @@ const fetchRecipeData = async (req, res) => {
         await browser.close();
       }
 
-      console.log(recipeData);
+      console.log("Recipe Data:", recipeData);
       res.status(200).json({ recipe_data: recipeData });
     } catch (error) {
-      console.error("Error fetching URL:", error);
+      console.log(Object.keys(error))
+      // console.error("Error fetching URL:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  });
-};
+  };
+
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,

@@ -18,6 +18,29 @@ const create = (req, res) => {
     });
 };
 
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = generateToken(user._id);
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getUserById = async (req, res) => {
   const userId = req.params.user_id;
   const user = await User.findById(userId).select("-password -email");
@@ -27,6 +50,7 @@ const getUserById = async (req, res) => {
 
 const UsersController = {
   create: create,
+  login:login,
   getUserById: getUserById,
 };
 

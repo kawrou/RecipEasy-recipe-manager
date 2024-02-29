@@ -9,6 +9,7 @@ export const scrapeRecipe = async (url, token) => {
   };
   try {
     const response = await fetch(`${BACKEND_URL}/recipes/scrape-recipe?url=${encodeURIComponent(url)}`, requestOptions);
+  
 
     if (response.status !== 200) {
       throw new Error("Unable to make GET request for fetch recipe");

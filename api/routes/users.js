@@ -5,6 +5,6 @@ const UsersController = require("../controllers/users");
 const router = express.Router();
 
 router.post("/", UsersController.create);
-router.get("/:user_id", UsersController.getUserById);
+router.get("/recipe-scraper", UsersController.getUserById);
 
 module.exports = router;
