@@ -13,45 +13,24 @@ const RecipeScraper = () => {
   const [url, setUrl] = useState('');
   const { profile_id } = useParams();
   const [recipeData, setRecipeData] = useState(null);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (token) {
-      getUserById(profile_id, token)
-        .then((data) => {
-          setProfileInfo(data.user);
-          setToken(data.token);
-          setUserID(data.user_id);
-
-          if (profile_id === userID) {
-            setIsLoggedIn(true);
-          }
-          window.localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      setShowErrorMessage(true);
-    }
-  }, [token]);
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
 
   const handleScrapeRecipe = async () => {
-    if (!isLoggedIn) {
+    if (token && url) {
+      if (!isLoggedIn) {
       setShowErrorMessage(true);
       return;
     }
 
     try {
-      const scrapedData = await scrapeRecipe(url);
-      setRecipeData(scrapedData);
-    } catch (error) {
-      console.error('Error fetching recipe:', error);
+        const scrapedData = await scrapeRecipe(url);
+        setRecipeData(scrapedData);
+        } catch (error) {
+        console.error("Error fetching recipe:", error);
+      }
     }
   };
 

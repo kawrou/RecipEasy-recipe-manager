@@ -17,7 +17,7 @@ export const scrapeRecipe = async (url, token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching recipe:', error);
-    throw error; 
+    console.error("Error fetching recipe:", error);
+    throw error;
   }
 };
