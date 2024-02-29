@@ -36,7 +36,8 @@ describe("Navbar", () => {
         userEvent.click(screen.getByText("Home"));
         
         // Using await before expect to wait for the expectation to resolve
-        await expect(screen.getByText("Welcome to the Recipe Scraper App")).to.exist;
+        await expect(screen.getByText("RecipEasy")).to.exist;
+
     });
 
     test('redirect to login page', async () => {

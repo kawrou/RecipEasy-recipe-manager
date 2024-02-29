@@ -1,5 +1,5 @@
-const Post = (props) => {
-  return <article key={props.post._id}>{props.post.message}</article>;
+const RecipeCard = (props) => {
+  return <article key={props.recipe._id}>{props.recipe.message}</article>;
 };
 
-export default Post;
+export default RecipeCard;
