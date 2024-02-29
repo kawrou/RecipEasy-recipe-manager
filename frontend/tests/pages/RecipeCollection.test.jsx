@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen , waitFor} from "@testing-library/react";
 import { vi } from "vitest";
 import { UserEvent } from "@testing-library/user-event";
 import { RecipeCollection } from "../../src/pages/RecipeCollection/RecipeCollection";
@@ -18,29 +18,7 @@ vi.mock("react-router-dom", () => {
   return { useNavigate: useNavigateMock };
 });
 
-// describe("RENDERS", () => {
-//   it("displays the correct elements", () => {
-//     window.localStorage.setItem("token", "testToken");
-
-//     render(<RecipeCollection />);
-
-//     const h1 = screen.getByRole("heading", { level: 1 });
-//     const paragraph = screen.getByTestId("searchBarDescription");
-//     const searchBar = screen.getByPlaceholderText("Enter your recipe URL");
-//     const generateRecipeBtn = screen.getByText("Generate Recipe");
-//     const enterMaunallyBtn = screen.getByText("Enter Manually");
-//     const h2 = screen.getByRole("heading", { level: 2 });
-
-//     expect(h1).toBeInTheDocument();
-//     expect(paragraph).toBeInTheDocument();
-//     expect(searchBar).toBeInTheDocument();
-//     expect(generateRecipeBtn).toBeInTheDocument();
-//     expect(enterMaunallyBtn).toBeInTheDocument();
-//     expect(h2).toBeInTheDocument();
-//   });
-// });
-
-describe("BEHAVIOUR", () => {
+describe("Recipe Collection", () => {
   beforeEach(() => {
     window.localStorage.removeItem("token");
   });
@@ -49,23 +27,32 @@ describe("BEHAVIOUR", () => {
     { _id: "23456", title: "Test Recipe 2", duration: "35" },
   ];
 
-  test("displays all the recipes a user has saved", async () => {
+  test("renders all elements and recipes from db", async () => {
     window.localStorage.setItem("token", "testToken");
     getRecipes.mockResolvedValue({ recipes: mockRecipes, token: "newToken" });
 
     render(<RecipeCollection />);
 
-    expect(await screen.getByText("Test Recipe 1")).toBeVisible();
-    // expect(await screen.getByText("45 mins")).toBeInTheDocument();
-    // expect(await screen.getByText("Test Recipe 2")).toBeInTheDocument();
-    // expect(await screen.getByText("35 mins")).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1})).toBeVisible();
+    expect(screen.getByTestId('searchBarDescription')).toBeVisible();
+    expect(screen.getByPlaceholderText('Enter your recipe URL')).toBeVisible();
+    expect(screen.getByText('Generate Recipe')).toBeVisible();
+    expect(screen.getByText("Enter Manually")).toBeVisible();
+    expect(screen.getByRole('heading', { level: 2})).toBeVisible();  
+    
+    await waitFor(()=>{
+      expect(screen.getByText("Test Recipe 1, 45 mins")).toBeVisible();
+      // expect(screen.getByText("45 mins")).toBeVisible();
+      expect(screen.getByText("Test Recipe 2, 35 mins")).toBeVisible();
+      // expect(await screen.getByText("35 mins")).toBeInTheDocument();
+    }); 
   });
 
   test.todo(
-    "navigates to the 'Recipe Page' when 'Generate Recipe' button is clicked"
+    "'Generate Recipe' button is clicked, navigates to the 'Recipe Page'"
   );
   test.todo(
-    "navigates to the 'Recipe Page' when 'Enter Manually' button is clicked"
+    "'Enter Manually' button is clicked, navigates to the 'Recipe Page'"
   );
 });
 
