@@ -4,9 +4,10 @@ import { Tags } from "../../components/RecipePage/Tags";
 import { AutoHeightTextArea } from "../../components/RecipePage/AutoHeightTextArea";
 import { IngredientList } from "../../components/RecipePage/IngredientList";
 import { InstructionList } from "../../components/RecipePage/InstructionList";
+import { FaEdit, FaSave } from "react-icons/fa"; 
 
 export const RecipePage = () => {
-  const [editMode, setEditMode] = useState(true)
+  const [editMode, setEditMode] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -24,11 +25,21 @@ export const RecipePage = () => {
         <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
           {/* title */}
           <div className="text-6xl font-extrabold">
-            <AutoHeightTextArea text={title} setText={setTitle} rows={"1"} placeholder={"Enter your title..."}/>
+            <AutoHeightTextArea
+              text={title}
+              setText={setTitle}
+              rows={"1"}
+              placeholder={"Enter your title..."}
+            />
           </div>
           {/* description */}
           <div className="block text-left p-2.5 text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
-            <AutoHeightTextArea text={description} setText={setDescription} rows={"4"} placeholder={"Enter your description..."}/>
+            <AutoHeightTextArea
+              text={description}
+              setText={setDescription}
+              rows={"4"}
+              placeholder={"Enter your description..."}
+            />
           </div>
           <div className="flex flex-wrap gap-2 divide-x">
             {/* recipeYield */}
@@ -81,6 +92,24 @@ export const RecipePage = () => {
           />
         </div>
       </div>
+      <button
+      className={`fixed bottom-10 right-10 ${
+        editMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-white border border-gray-900"
+      } font-bold h-10 px-4 rounded-lg flex items-center`}
+      onClick={() => setEditMode(!editMode)}
+    >
+      {editMode ? (
+        <>
+          <FaSave className="mr-2" />
+          Save
+        </>
+      ) : (
+        <>
+          <FaEdit className="mr-2" />
+          Edit
+        </>
+      )}
+    </button>
     </>
   );
 };
