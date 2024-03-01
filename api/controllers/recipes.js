@@ -124,8 +124,9 @@ const create = async (req, res) => {
       dateAdded: req.body.dateAdded
     });
     await newRecipe.save();
-    console.log(newRecipe)
+    
     res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+    console.log(res)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

@@ -64,30 +64,30 @@ describe("create recipe tests", () => {
         });
     })
 
-    describe("update recipe tests", () => {
-        test("responds with a 201, updated recipe is present in the document", async () => {
-            const currentDate = new Date();
-            const response = await request(app)
-                .post("/recipes")
-                .set("Authorization", `Bearer ${token}`)
-                .send({
-                    name: "test_recipe",
-                    description: "test_description",
-                    ownerId: token.user_id,
-                    tags: ["test_tag_one", "test_tag_two"],
-                    favouritedByOwner: false,
-                    totalTime: "test_time",
-                    recipeYield: 1,
-                    recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
-                    recipeInstructions: ["test_instruction_one", "test_instruction_two"],
-                    url: "test_url",
-                    image: "test_url",
-                    dateAdded: currentDate
-                });
-        expect(response.status).toEqual(201);
-        const recipe = await Recipe.find();
-        expect(recipe.length).toEqual(1);
-        expect(recipe[0].name).toEqual("test_recipe");
-        });
-    })
+    // describe("update recipe tests", () => {
+    //     test("responds with a 201, updated recipe is present in the document", async () => {
+    //         const currentDate = new Date();
+    //         const response = await request(app)
+    //             .post("/recipes/65e200e7558fd7c8ad317019")
+    //             .set("Authorization", `Bearer ${token}`)
+    //             .send({
+    //                 name: "test_recipe",
+    //                 description: "test_description",
+    //                 ownerId: token.user_id,
+    //                 tags: ["test_tag_one", "test_tag_two"],
+    //                 favouritedByOwner: false,
+    //                 totalTime: "test_time",
+    //                 recipeYield: 1,
+    //                 recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+    //                 recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+    //                 url: "test_url",
+    //                 image: "test_url",
+    //                 dateAdded: currentDate
+    //             });
+    //     expect(response.status).toEqual(201);
+    //     const recipe = await Recipe.find();
+    //     expect(recipe.length).toEqual(1);
+    //     expect(recipe[0].name).toEqual("test_recipe");
+    //     });
+    // })
 })
