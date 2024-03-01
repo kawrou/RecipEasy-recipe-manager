@@ -53,6 +53,7 @@ describe("Recipe Collection", () => {
     });
   });
 
+  //Token handling for FETCH handled in useFetchRecipes hook
   test('renders collection and recipes from db', async () => {
     useFetchRecipes.mockReturnValue({
       recipes: [
@@ -98,7 +99,7 @@ describe("Recipe Collection", () => {
     expect(navigateMock).toHaveBeenCalledWith("/recipe");
   });
 
-  test.skip("It navigates to login if no token is present", async () => {
+  test("It navigates to login if no token is present", async () => {
     useFetchRecipes.mockReturnValue({
       recipes: [],
       loading: false,
@@ -107,6 +108,7 @@ describe("Recipe Collection", () => {
 
     render(<RecipeCollection />);
     const navigateMock = useNavigate();
+    await userEvent.click(screen.getByText('Generate Recipe'))
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 });

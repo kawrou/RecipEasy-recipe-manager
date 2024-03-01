@@ -6,32 +6,9 @@ import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
 export const RecipeCollection = () => {
-  // const [recipes, setRecipes] = useState([]);
-  // const [token, setToken] = useState(window.localStorage.getItem("token"));
-
-
-  // //We need to fetch the recipes from the DB and populate it in our useState
-  // //The fetch request is made by passing a token for authentication
-
-  // useEffect(() => {
-  //   if (token) {
-  //     getRecipes(token)
-  //       .then((data) => {
-  //         setRecipes(data.recipes);
-  //         setToken(data.token);
-  //         window.localStorage.setItem("token", data.token);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
-  //     else {
-  //     navigate("/login");
-  //   }
-  // }, [token]);
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
-  const token = window.localStorage.getItem("token");
+  const [token, setToken] = useState(window.localStorage.getItem('token'))
   const { recipes, loading, error } = useFetchRecipes(token);
   
   if (loading) {
@@ -45,6 +22,7 @@ export const RecipeCollection = () => {
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,3 +57,27 @@ export const RecipeCollection = () => {
     </>
   );
 };
+
+
+// not confident that the above custom hook will work correctly
+  // const [recipes, setRecipes] = useState([]);
+  // const [token, setToken] = useState(window.localStorage.getItem("token"));
+  // const [url, setUrl] = useState("");
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (token) {
+  //     getRecipes(token)
+  //       .then((data) => {
+  //         setRecipes(data.recipes);
+  //         setToken(data.token);
+  //         window.localStorage.setItem("token", data.token);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   }
+  //     else {
+  //     navigate("/login");
+  //   }
+  // }, [token]);
