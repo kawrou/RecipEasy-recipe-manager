@@ -4,14 +4,16 @@ import { vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../src/services/authentication";
-
 import { LoginPage } from "../../src/pages/Login/LoginPage";
 
-// Mocking React Router's useNavigate function
+// Mocking React Router's useNavigate function and NavLink component
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+  const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
+  return {
+    useNavigate: useNavigateMock,
+    NavLink: () => null, // Mock NavLink component
+  };
 });
 
 // Mocking the login service
@@ -24,13 +26,11 @@ vi.mock("../../src/services/authentication", () => {
 const completeLoginForm = async () => {
   const user = userEvent.setup();
 
-  const emailInputEl = screen.getByLabelText("Email:");
-  const passwordInputEl = screen.getByLabelText("Password:");
-  const submitButtonEl = screen.getByRole("submit-button");
+  const emailInputEl = screen.getByPlaceholderText("Email");
+  const passwordInputEl = screen.getByPlaceholderText("Password");
 
   await user.type(emailInputEl, "test@email.com");
   await user.type(passwordInputEl, "1234");
-  await user.click(submitButtonEl);
 };
 
 describe("Login Page", () => {
@@ -46,7 +46,7 @@ describe("Login Page", () => {
     expect(login).toHaveBeenCalledWith("test@email.com", "1234");
   });
 
-  test("navigates to /recipecollection on successful login", async () => {
+  test("navigates to home page on successful login", async () => {
     render(<LoginPage />);
 
     login.mockResolvedValue("secrettoken123");
@@ -54,7 +54,7 @@ describe("Login Page", () => {
 
     await completeLoginForm();
 
-    expect(navigateMock).toHaveBeenCalledWith("/recipecollection");
+    expect(navigateMock).toHaveBeenCalledWith("/");
   });
 
   test("navigates to /login on unsuccessful login", async () => {

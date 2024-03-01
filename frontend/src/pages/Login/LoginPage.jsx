@@ -54,7 +54,9 @@ export const LoginPage = () => {
         />
         <br />
         <div className="mb-4"></div>
-        <input role="submit-button" id="submit" type="submit" value="Submit" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-blue-600 border-blue-600 hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 mr-2" />
+        <NavLink to="/" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-blue-600 border-blue-600 hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 mr-2">
+        Submit 
+        </NavLink>
         <br />
         <div className="mb-4"></div>
         <NavLink to="/signup" className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-500 border-gray-500 hover:border-transparent hover:text-blue-500 hover:bg-white">
