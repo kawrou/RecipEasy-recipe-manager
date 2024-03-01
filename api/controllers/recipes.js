@@ -101,9 +101,7 @@ const fetchRecipeData = async (req, res) => {
 //   });
 
 
-
 const create = async (req, res) => {
-
   // find the user who created the recipe
   const user = await User.findById(req.user_id);
   if (!user) {
@@ -116,7 +114,7 @@ const create = async (req, res) => {
       description: req.body.description,
       ownerId: user._id,
       tags: req.body.tags,
-      favouritedByOwner: false,
+      favouritedByOwner: req.body.favouritedByOwner,
       totalTime: req.body.totalTime,
       recipeYield: req.body.recipeYield,
       recipeIngredient: req.body.recipeIngredient,
@@ -126,7 +124,6 @@ const create = async (req, res) => {
       dateAdded: req.body.dateAdded
     });
     await newRecipe.save();
-
     console.log(newRecipe)
     res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
   } catch (error) {
@@ -136,25 +133,50 @@ const create = async (req, res) => {
 };
 
 // update existing recipe entry
+const updateRecipe = async (req, res) => {
+  try {
+    const recipeId = req.params.recipe_id;
+    const user = await User.findById(req.user_id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const recipeUpdateData = { 
+      name: req.body.name,
+      description: req.body.description,
+      ownerId: user._id,
+      tags: req.body.tags,
+      favouritedByOwner: req.body.favouritedByOwner,
+      totalTime: req.body.totalTime,
+      recipeYield: req.body.recipeYield,
+      recipeIngredient: req.body.recipeIngredient,
+      recipeInstructions: req.body.recipeInstructions,
+      url: req.body.url,
+      image: req.body.image,
+      dateAdded: req.body.dateAdded
+    };
 
-// const getPostById = async (req, res) => {
-//   try {
-//     const postId = req.params.postId;
-//     const post = await Post.findById(postId).populate('comments');
-//     if (!post) {
-//       return res.status(404).json({ message: 'Post not found' });
-//     }
-//     res.status(200).json({ post });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
+    const updatedRecipe = await Recipe.findOneAndUpdate(
+      { _id: recipeId, ownerId: user._id },
+      { $set: recipeUpdateData },
+      { new: true }
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.status(200).json({ message: 'Recipe updated successfully', updatedRecipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
   create: create,
+  updateRecipe: updateRecipe
 }
 
 module.exports = RecipesController;
