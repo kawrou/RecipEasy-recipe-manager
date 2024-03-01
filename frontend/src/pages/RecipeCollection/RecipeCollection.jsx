@@ -1,35 +1,46 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import { getRecipes } from "../../services/getRecipes";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
 export const RecipeCollection = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
+  // const [recipes, setRecipes] = useState([]);
+  // const [token, setToken] = useState(window.localStorage.getItem("token"));
+
+
+  // //We need to fetch the recipes from the DB and populate it in our useState
+  // //The fetch request is made by passing a token for authentication
+
+  // useEffect(() => {
+  //   if (token) {
+  //     getRecipes(token)
+  //       .then((data) => {
+  //         setRecipes(data.recipes);
+  //         setToken(data.token);
+  //         window.localStorage.setItem("token", data.token);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   }
+  //     else {
+  //     navigate("/login");
+  //   }
+  // }, [token]);
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
+  const token = window.localStorage.getItem("token");
+  const { recipes, loading, error } = useFetchRecipes(token);
+  
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-  //We need to fetch the recipes from the DB and populate it in our useState
-  //The fetch request is made by passing a token for authentication
-
-  useEffect(() => {
-    if (token) {
-      getRecipes(token)
-        .then((data) => {
-          setRecipes(data.recipes);
-          setToken(data.token);
-          window.localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-      else {
-      navigate("/login");
-    }
-  }, [token]);
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
