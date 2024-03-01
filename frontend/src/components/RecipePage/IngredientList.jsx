@@ -5,9 +5,12 @@ export const IngredientList = ({ recipeIngredients, setRecipeIngredients }) => {
   const [newIngredient, setNewIngredient] = useState("");
 
   const handleAddIngredient = () => {
-    // Add the new ingredient to the array
+    if (recipeIngredients.some(ingredient => ingredient === "")) {
+      alert("Please fill in all previous fields before adding a new ingredient.");
+      return;
+    }
+
     setRecipeIngredients([...recipeIngredients, newIngredient]);
-    // Clear the input field after adding
     setNewIngredient("");
   };
 
