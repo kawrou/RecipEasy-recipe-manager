@@ -5,8 +5,7 @@ import "./RecipeScraper.css";
 import { getUser } from "../services/users";
 
 const RecipeScraper = () => {
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  // const [token, setToken] = useState(window.localStorage.removeItem("token"));
+  const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [url, setUrl] = useState('');
   const [recipeData, setRecipeData] = useState(null);
@@ -14,22 +13,28 @@ const RecipeScraper = () => {
   const navigate = useNavigate(); 
 
 
+
   useEffect(() => {
+    const storedToken = window.localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
     const fetchUser = async () => {
       try {
-        const user = await getUser(token);
+        const user = await getUser(storedToken);
         setIsLoggedIn(!!user);
-        console.log(token);
+        console.log(storedToken);
       } catch (error) {
         console.error("Error fetching user:", error);
         setIsLoggedIn(false);
       }
     };
   
-    if (token) {
+    if (storedToken) {
       fetchUser();
     }
-  }, [token]);
+  }, []);
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -38,7 +43,7 @@ const RecipeScraper = () => {
   const handleScrapeRecipe = async () => {
     console.log("Token:", token);
     console.log("URL:", url);
-    if (token && url && isLoggedIn) {
+    if (token && isLoggedIn && url) {
       try {
         const scrapedData = await scrapeRecipe(url, token);
         console.log(scrapedData)

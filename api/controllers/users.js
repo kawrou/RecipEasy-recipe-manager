@@ -42,6 +42,10 @@ const login = async (req, res) => {
   }
 };
 
+const logout = (req, res) => {
+  res.status(200).json({ message: "Logout successful" });
+};
+
 const getUserById = async (req, res) => {
   const userId = req.params.user_id;
   const user = await User.findById(userId).select("-password -email");
@@ -53,6 +57,7 @@ const UsersController = {
   create: create,
   login:login,
   getUserById: getUserById,
+  logout, logout
 };
 
 module.exports = UsersController;
