@@ -10,6 +10,7 @@ describe("User model", () => {
     const user = new User({
       email: "someone@example.com",
       password: "password",
+      username: "someone",
     });
     expect(user.email).toEqual("someone@example.com");
   });
@@ -18,8 +19,18 @@ describe("User model", () => {
     const user = new User({
       email: "someone@example.com",
       password: "password",
+      username: "someone",
     });
     expect(user.password).toEqual("password");
+  });
+
+  it("has a username", () => {
+    const user = new User({
+      email: "someone@example.com",
+      password: "password",
+      username: "someone",
+    });
+    expect(user.username).toEqual("someone");
   });
 
   it("can list all users", async () => {
@@ -31,6 +42,7 @@ describe("User model", () => {
     const user = new User({
       email: "someone@example.com",
       password: "password",
+      username: "someone",
     });
 
     await user.save();
@@ -38,5 +50,6 @@ describe("User model", () => {
 
     expect(users[0].email).toEqual("someone@example.com");
     expect(users[0].password).toEqual("password");
+    expect(users[0].username).toEqual("someone");
   });
 });
