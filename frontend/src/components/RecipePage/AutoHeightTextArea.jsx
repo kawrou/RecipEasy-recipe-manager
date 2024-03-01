@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const RecipeTitle = ({ text, setText }) => {
+export const AutoHeightTextArea = ({ text, setText, rows, placeholder }) => {
   const [height, setHeight] = useState("auto");
 
   const handleTextAreaHeightChange = (event) => {
@@ -17,12 +17,12 @@ export const RecipeTitle = ({ text, setText }) => {
 
   return (
     <textarea
-      className="resize-none overflow-hidden placeholder:text-wrap w-full p-2 focus:outline-none text-6xl font-extrabold"
+      className="resize-none overflow-hidden placeholder:text-wrap focus:outline-none bg-transparent w-full "
       value={text}
-      rows="1"
+      rows={rows}
       onChange={handleTextAreaHeightChange}
       style={{ height: height }}
-      placeholder="Enter your title..."
+      placeholder={placeholder}
     />
   );
 };

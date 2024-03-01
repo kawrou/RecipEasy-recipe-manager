@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { QuantitySelector } from "../../components/RecipePage/QuantitySelector";
 import { Tags } from "../../components/RecipePage/Tags";
-import { RecipeTitle } from "../../components/RecipePage/RecipeTitle";
+import { AutoHeightTextArea } from "../../components/RecipePage/AutoHeightTextArea";
 import { IngredientList } from "../../components/RecipePage/IngredientList";
 import { InstructionList } from "../../components/RecipePage/InstructionList";
 
 export const RecipePage = () => {
+  const [editMode, setEditMode] = useState(true)
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [recipeYield, setRecipeYield] = useState(0);
@@ -21,16 +23,13 @@ export const RecipePage = () => {
       <div className="flex divide-x justify-center">
         <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
           {/* title */}
-          <RecipeTitle text={title} setText={setTitle} />
+          <div className="text-6xl font-extrabold">
+            <AutoHeightTextArea text={title} setText={setTitle} rows={"1"} placeholder={"Enter your title..."}/>
+          </div>
           {/* description */}
-          <textarea
-            id="message"
-            rows="4"
-            className="block p-2.5 text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
-            placeholder="Enter your description here..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <div className="block text-left p-2.5 text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+            <AutoHeightTextArea text={description} setText={setDescription} rows={"4"} placeholder={"Enter your description..."}/>
+          </div>
           <div className="flex flex-wrap gap-2 divide-x">
             {/* recipeYield */}
             <div className="flex items-center gap-2 px-2">
