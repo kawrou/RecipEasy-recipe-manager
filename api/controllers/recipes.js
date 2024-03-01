@@ -2,6 +2,9 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
 
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
+
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url;
   console.log(url)
@@ -96,8 +99,62 @@ const fetchRecipeData = async (req, res) => {
 //   .catch((error) => {
 //     console.error("Error:", error);
 //   });
+
+
+
+const create = async (req, res) => {
+
+  // find the user who created the recipe
+  const user = await User.findById(req.user_id);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  // create recipe
+  try {
+    const newRecipe = new Recipe({
+      name: req.body.name,
+      description: req.body.description,
+      ownerId: user._id,
+      tags: req.body.tags,
+      favouritedByOwner: false,
+      totalTime: req.body.totalTime,
+      recipeYield: req.body.recipeYield,
+      recipeIngredient: req.body.recipeIngredient,
+      recipeInstructions: req.body.recipeInstructions,
+      url: req.body.url,
+      image: req.body.image,
+      dateAdded: req.body.dateAdded
+    });
+    await newRecipe.save();
+
+    console.log(newRecipe)
+    res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// update existing recipe entry
+
+// const getPostById = async (req, res) => {
+//   try {
+//     const postId = req.params.postId;
+//     const post = await Post.findById(postId).populate('comments');
+//     if (!post) {
+//       return res.status(404).json({ message: 'Post not found' });
+//     }
+//     res.status(200).json({ post });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
+  create: create,
 }
 
 module.exports = RecipesController;

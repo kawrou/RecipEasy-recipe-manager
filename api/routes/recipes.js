@@ -5,4 +5,8 @@ const router = express.Router();
 
 router.get("/scrape-recipe", RecipesController.fetchRecipeData);
 
+router.post("/recipes", RecipesController.create);
+
+// router.patch("/editingPost/:postId", RecipesController.updateRecipe);
+
 module.exports = router;
