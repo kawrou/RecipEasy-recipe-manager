@@ -63,14 +63,20 @@ const RecipeScraper = () => {
   return (
     <div className="recipe-scraper-container">
       {showErrorMessage && !isLoggedIn && (
-        <div className="error-message">
+        <div className="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           <p>
             You must log in to generate a recipe.{' '}
-            <span onClick={redirectToLoginPage} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+            <span
+              onClick={redirectToLoginPage}
+              className="cursor-pointer text-blue-500 underline"
+            >
               Click HERE to log in!
-            </span>
+            </span>{' '}
             Don't have an account?{' '}
-            <span onClick={redirectToSignupPage} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+            <span
+              onClick={redirectToSignupPage}
+              className="cursor-pointer text-blue-500 underline"
+            >
               Click HERE to sign up!
             </span>
           </p>
