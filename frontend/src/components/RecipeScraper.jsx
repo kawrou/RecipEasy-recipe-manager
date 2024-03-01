@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { scrapeRecipe } from '../services/recipe';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./RecipeScraper.css";
 import { getUser } from "../services/users";
 
 const RecipeScraper = () => {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  // const [userID, setUserID] = useState(window.localStorage.getItem("_id"));
+  // const [token, setToken] = useState(window.localStorage.removeItem("token"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [url, setUrl] = useState('');
   const [recipeData, setRecipeData] = useState(null);
@@ -19,7 +19,6 @@ const RecipeScraper = () => {
       try {
         const user = await getUser(token);
         setIsLoggedIn(!!user);
-        // console.log(userID);
         console.log(token);
       } catch (error) {
         console.error("Error fetching user:", error);

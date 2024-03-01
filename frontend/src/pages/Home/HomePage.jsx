@@ -5,7 +5,7 @@ import RecipeScraper from "../../components/RecipeScraper";
 
 export const HomePage = () => {
   //Will need this for setting token later
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
+  // const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();
   
   // COMMENT CAN BE DELETED AFTER REVIEW
@@ -24,16 +24,16 @@ export const HomePage = () => {
   };
 
   // The logic for this will need to change which might break the tests later on
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (token && url) {
-      navigate("/recipes");
-    } else if (token) {
-      navigate("/recipe");
-    } else {
-      navigate("/login");
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (token && url) {
+  //     navigate("/recipes");
+  //   } else if (token) {
+  //     navigate("/recipe");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
   return (
     <div className="home items-center">
@@ -44,13 +44,7 @@ export const HomePage = () => {
         A place to store all your favourite recipes, from ones you find online
         to creating your own.
       </p>
-      <RecipeScraper
-        token={token}
-        url={url}
-        setUrl={setUrl}
-        handleUrlChange={handleUrlChange}
-        handleSubmit={handleSubmit}
-      />
+      <RecipeScraper/>
     </div>
   );
 };
