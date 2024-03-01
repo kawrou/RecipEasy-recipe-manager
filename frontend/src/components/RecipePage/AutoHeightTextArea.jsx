@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-export const AutoHeightTextArea = ({ text, setText, rows, placeholder }) => {
+export const AutoHeightTextArea = ({ text, setText, rows, placeholder, lineheight }) => {
   const [height, setHeight] = useState("auto");
 
   const handleTextAreaHeightChange = (event) => {
-    const textareaLineHeight = 24; // Change this value based on your textarea's line-height
+    const textareaLineHeight = lineheight; // Change this value based on your textarea's line-height
     const { value, style } = event.target;
     setText(value);
     style.height = "auto"; // Reset the height to auto to properly calculate the scrollHeight
@@ -17,7 +17,7 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder }) => {
 
   return (
     <textarea
-      className="resize-none overflow-hidden placeholder:text-wrap focus:outline-none bg-transparent w-full "
+      className="resize-none overflow-hidden pb-1 placeholder:text-wrap focus:outline-none bg-transparent w-full "
       value={text}
       rows={rows}
       onChange={handleTextAreaHeightChange}

@@ -6,8 +6,8 @@ import { IngredientList } from "../../components/RecipePage/IngredientList";
 import { InstructionList } from "../../components/RecipePage/InstructionList";
 import { FaEdit, FaSave } from "react-icons/fa"; 
 
-export const RecipePage = () => {
-  const [editMode, setEditMode] = useState(false);
+export const RecipePage = (newRecipe) => {
+  const [editMode, setEditMode] = useState(true);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -30,6 +30,7 @@ export const RecipePage = () => {
               setText={setTitle}
               rows={"1"}
               placeholder={"Enter your title..."}
+              lineheight={24}
             />
           </div>
           {/* description */}
@@ -39,6 +40,7 @@ export const RecipePage = () => {
               setText={setDescription}
               rows={"4"}
               placeholder={"Enter your description..."}
+              lineheight={24}
             />
           </div>
           <div className="flex flex-wrap gap-2 divide-x">
