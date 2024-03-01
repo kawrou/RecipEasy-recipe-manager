@@ -8,6 +8,7 @@ import RecipeScraper from "../../components/RecipeScraper";
 export const RecipeCollection = () => {
   const [recipes, setRecipes] = useState([]);
   const [token, setToken] = useState(window.localStorage.getItem("token"));
+  const [url, setUrl] = useState("");
   const navigate = useNavigate();
 
   //We need to fetch the recipes from the DB and populate it in our useState
@@ -24,10 +25,26 @@ export const RecipeCollection = () => {
         .catch((err) => {
           console.error(err);
         });
-    } else {
+    }
+      else {
       navigate("/login");
     }
   }, [token]);
+
+  const handleUrlChange = (e) => {
+    setUrl(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (token && url) {
+      navigate("/recipe");
+    } else if (token) {
+      navigate("/recipe");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <>
@@ -35,7 +52,13 @@ export const RecipeCollection = () => {
       <p data-testid="searchBarDescription">
         Enter a url of your favourite recipe
       </p>
-      <RecipeScraper />
+      <RecipeScraper
+        token={token}
+        url={url}
+        setUrl={setUrl}
+        handleUrlChange={handleUrlChange}
+        handleSubmit={handleSubmit}
+      />
       <h2> My Recipes</h2>
       <div className="feed" role="feed">
         {recipes.map((recipe) => (
