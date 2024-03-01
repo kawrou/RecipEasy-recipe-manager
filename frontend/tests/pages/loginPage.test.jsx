@@ -28,9 +28,11 @@ const completeLoginForm = async () => {
 
   const emailInputEl = screen.getByPlaceholderText("Email");
   const passwordInputEl = screen.getByPlaceholderText("Password");
+  const submitButtonEl = screen.getByRole("button");
 
   await user.type(emailInputEl, "test@email.com");
   await user.type(passwordInputEl, "1234");
+  await user.type(submitButtonEl,"button");
 };
 
 describe("Login Page", () => {
