@@ -11,14 +11,6 @@ export const RecipeCollection = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token'))
   const { recipes, loading, error } = useFetchRecipes(token);
   
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
@@ -50,6 +42,8 @@ export const RecipeCollection = () => {
       />
       <h2> My Recipes</h2>
       <div className="feed" role="feed">
+        {loading && <p>Loading ...</p>}
+        {error && <p>Error: {error.message}</p>}
         {recipes.map((recipe) => (
           <RecipeCard recipe={recipe} key={recipe._id} />
         ))}
