@@ -24,12 +24,14 @@ vi.mock("../../src/services/authentication", () => {
 const completeSignupForm = async () => {
   const user = userEvent.setup();
 
-  const emailInputEl = screen.getByLabelText("Email:");
-  const passwordInputEl = screen.getByLabelText("Password:");
+  const emailInputEl = screen.getByLabelText("Your email");
+  const passwordInputEl = screen.getByLabelText("Password");
+  const usernameInputEl = screen.getByLabelText("Username");
   const submitButtonEl = screen.getByRole("submit-button");
 
   await user.type(emailInputEl, "test@email.com");
-  await user.type(passwordInputEl, "1234");
+  await user.type(passwordInputEl, "Password1!");
+  await user.type(usernameInputEl, "Test");
   await user.click(submitButtonEl);
 };
 
@@ -43,7 +45,7 @@ describe("Signup Page", () => {
 
     await completeSignupForm();
 
-    expect(signup).toHaveBeenCalledWith("test@email.com", "1234");
+    expect(signup).toHaveBeenCalledWith("test@email.com", "Password1!", "Test");
   });
 
   test("navigates to /login on successful signup", async () => {
@@ -66,4 +68,24 @@ describe("Signup Page", () => {
 
     expect(navigateMock).toHaveBeenCalledWith("/signup");
   });
+
+  test("error message shown when invalid password and email is input", async () => {
+    render(<SignupPage />);
+    // incorrect signup
+    const user = userEvent.setup();
+
+    const emailInputEl = screen.getByLabelText("Your email");
+    const passwordInputEl = screen.getByLabelText("Password");
+    const usernameInputEl = screen.getByLabelText("Username");
+    const submitButtonEl = screen.getByRole("submit-button");
+
+    await user.type(emailInputEl, "incorrectemail");
+    await user.type(passwordInputEl, "incorrectpassword");
+    await user.type(usernameInputEl, "incorrect");
+    await user.click(submitButtonEl);
+
+    await expect(screen.getAllByText("Enter a valid email address.")).to.exist;
+    await expect(screen.getAllByText("Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character.")).to.exist;
+  });
+
 });
