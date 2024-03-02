@@ -1,6 +1,11 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
+const { response } = require("../app");
+
+const Recipe = require('../models/recipe')
+const User = require('../models/user');
+const Post = require("../models/post");
 
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url;
@@ -96,6 +101,11 @@ const fetchRecipeData = async (req, res) => {
 //   .catch((error) => {
 //     console.error("Error:", error);
 //   });
+
+// const getAllRecipesByUserId = () => {
+//   console.log('hit')
+// }
+
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
 }
