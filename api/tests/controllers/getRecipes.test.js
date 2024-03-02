@@ -1,11 +1,9 @@
 const request = require("supertest");
 const JWT = require("jsonwebtoken");
-
 const mongoose = require("mongoose");
 
 const app = require("../../app");
 const Recipe = require("../../models/recipe.js");
-// const User = require("../../models/user");
 
 require("../mongodb_helper");
 
@@ -27,18 +25,8 @@ const createToken = (userId) => {
 let token;
 
 describe("Get Recipes tests", () => {
-  //   beforeAll(async () => {
-  //     const user = new User({
-  //       email: "test@test.com",
-  //       password: "12345678",
-  //       username: "post-someone",
-  //     });
-  //     await user.save();
-  //     await Recipe.deleteMany({});
-  // const ownerId = "65e33479eb3dc95c1961d868";
-  //   });
   const ownerId = new mongoose.Types.ObjectId();
-  token = createToken(ownerId);
+  // token = createToken(ownerId);
   const currentDate = new Date();
   const recipe1 = new Recipe({
     name: "test_recipe",
@@ -71,6 +59,7 @@ describe("Get Recipes tests", () => {
   beforeAll(async () => {
     await recipe1.save();
     await recipe2.save();
+		token = createToken(ownerId);
   });
 
   afterEach(async () => {
