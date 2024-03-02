@@ -78,7 +78,7 @@ describe("Get Recipes tests", () => {
   });
 
   describe("GET - all recipes - when token is present", () => {
-    test.only("reponse code is 200", async () => {
+    test("reponse code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
       const response = await request(app)
         .get(`/recipes/${ownerId}`)
         .set("Authorization", `Bearer ${token}`);
@@ -129,9 +129,14 @@ describe("Get Recipes tests", () => {
     });
   });
 
-  describe.skip("GET - all recipes - when token is missing", () => {
-    test.todo("response code is 401");
-    it.todo("returns no posts");
-    it.todo("does not return a new token");
+  describe("GET - all recipes - when token is missing", () => {
+    test("response code is 401, returns no posts, and doesn't return a new token", async () => {
+			const response = await request(app)
+        .get(`/recipes/${ownerId}`)
+
+			expect(response.status).toEqual(401); 
+			expect(response.body.recipes).toEqual(undefined)
+			expect(response.body.token).toEqual(undefined)
+		});
   });
 });
