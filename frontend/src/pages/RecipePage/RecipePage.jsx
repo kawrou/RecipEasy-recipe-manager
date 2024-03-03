@@ -7,6 +7,9 @@ import { FaEdit, FaSave } from "react-icons/fa";
 import { RecipeName } from "../../components/RecipePage/RecipeName";
 import { RecipeDescription } from "../../components/RecipePage/RecipeDescription";
 import { RecipeYield } from "../../components/RecipePage/RecipeYield";
+import { RecipeTimeTaken } from "../../components/RecipePage/RecipeTimeTaken";
+import { RecipeImage } from "../../components/RecipePage/RecipeImage";
+import { RecipeUrl } from "../../components/RecipePage/RecipeUrl";
 
 export const RecipePage = (newRecipe) => {
   const [editMode, setEditMode] = useState(true);
@@ -16,8 +19,11 @@ export const RecipePage = (newRecipe) => {
   const [recipeYield, setRecipeYield] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
   const [tags, setTags] = useState([]);
-  const [recipeIngredients, setRecipeIngredients] = useState([""]);
 
+  const [imageUrl, setImageUrl] = useState("");
+  const [url, setUrl] = useState("");
+
+  const [recipeIngredients, setRecipeIngredients] = useState([""]);
   const [recipeInstructions, setRecipeInstructions] = useState([""]);
 
   return (
@@ -34,48 +40,37 @@ export const RecipePage = (newRecipe) => {
           />
           <div className="flex flex-wrap gap-2 divide-x">
             {/* recipeYield */}
-            <RecipeYield recipeYield={recipeYield} setRecipeYield={setRecipeYield} />
+            <RecipeYield
+              recipeYield={recipeYield}
+              setRecipeYield={setRecipeYield}
+            />
             {/* timeTaken */}
-            <div className="flex items-center gap-2 px-3">
-              <img
-                src="../../src/assets/timeTakenIcon.svg"
-                className="size-8"
-              />
-              <QuantitySelector
-                quantity={timeTaken}
-                setQuantity={setTimeTaken}
-              />
-              <div className="align-middle text-gray-500">mins</div>
-            </div>
+            <RecipeTimeTaken
+              timeTaken={timeTaken}
+              setTimeTaken={setTimeTaken}
+            />
           </div>
           {/* Tags */}
           <Tags tags={tags} setTags={setTags} />
         </div>
         <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
-          <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square"></div>
-          <a className="text-md">Generated from this page</a>
+          <RecipeImage />
+          <RecipeUrl />
         </div>
       </div>
       <div className="w-screen h-4 bg-gray-300" />
       <div className="flex divide-x justify-center p-10 pb-0">
-        <div className="flex w-1/2 flex-col pt-10 p-20 gap-7">
-          <div className="font-extrabold text-5xl text-left pb-3">
-            Ingredients
-          </div>
-          {/* Loop over recipeIngredients array */}
-          <IngredientList
-            recipeIngredients={recipeIngredients}
-            setRecipeIngredients={setRecipeIngredients}
-          />
-        </div>
-        <div className="flex w-1/2 flex-col pt-10 p-20 gap-7">
-          <div className="font-extrabold text-5xl text-left">Method</div>
-          <InstructionList
-            recipeInstructions={recipeInstructions}
-            setRecipeInstructions={setRecipeInstructions}
-          />
-        </div>
+        {/* Loop over recipeIngredients array */}
+        <IngredientList
+          recipeIngredients={recipeIngredients}
+          setRecipeIngredients={setRecipeIngredients}
+        />
+        <InstructionList
+          recipeInstructions={recipeInstructions}
+          setRecipeInstructions={setRecipeInstructions}
+        />
       </div>
+
       <button
         className={`fixed bottom-10 right-10 ${
           editMode
