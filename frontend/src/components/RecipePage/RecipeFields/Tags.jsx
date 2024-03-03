@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const Tags = ({ tags, setTags }) => {
+export const Tags = ({ tags, setTags, editMode }) => {
   const [tagsInput, setTagsInput] = useState("");
 
   const handleTagsInput = (e) => {
@@ -24,12 +24,13 @@ export const Tags = ({ tags, setTags }) => {
       >
         Tags:
       </label>
+      {editMode ? (
       <div className="flex flex-wrap bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
         <div className="flex flex-wrap">
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="flex flex-wrap pl-4 pr-2 py-1 m-1 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-blue-500 text-white hover:bg-blue-600 hover:text-gray-100"
+              className="flex flex-wrap pl-4 pr-2 h-9 m-1 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-blue-500 text-white hover:bg-blue-600 hover:text-gray-100"
             >
               {tag}
               <svg
@@ -57,6 +58,18 @@ export const Tags = ({ tags, setTags }) => {
           onKeyDown={handleTagsInput}
         />
       </div>
+      ):(
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              className="flex flex-wrap px-4 h-9 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-blue-500 text-white"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

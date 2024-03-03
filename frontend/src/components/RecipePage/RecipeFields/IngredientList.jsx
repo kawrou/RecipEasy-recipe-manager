@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa"; // Import icons from FontAwesome
 
-export const IngredientList = ({ recipeIngredients, setRecipeIngredients }) => {
+export const IngredientList = ({ recipeIngredients, setRecipeIngredients, editMode }) => {
   const [newIngredient, setNewIngredient] = useState("");
 
   const handleAddIngredient = () => {
