@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { QuantitySelector } from "../../components/RecipePage/QuantitySelector";
 import { Tags } from "../../components/RecipePage/Tags";
-import { AutoHeightTextArea } from "../../components/RecipePage/AutoHeightTextArea";
 import { IngredientList } from "../../components/RecipePage/IngredientList";
 import { InstructionList } from "../../components/RecipePage/InstructionList";
-import { FaEdit, FaSave } from "react-icons/fa"; 
+import { FaEdit, FaSave } from "react-icons/fa";
+import { RecipeName } from "../../components/RecipePage/RecipeName";
+import { RecipeDescription } from "../../components/RecipePage/RecipeDescription";
+import { RecipeYield } from "../../components/RecipePage/RecipeYield";
 
 export const RecipePage = (newRecipe) => {
   const [editMode, setEditMode] = useState(true);
 
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [recipeYield, setRecipeYield] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
@@ -24,35 +26,15 @@ export const RecipePage = (newRecipe) => {
       <div className="flex divide-x justify-center">
         <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
           {/* title */}
-          <div className="text-6xl font-extrabold">
-            <AutoHeightTextArea
-              text={title}
-              setText={setTitle}
-              rows={"1"}
-              placeholder={"Enter your title..."}
-              lineheight={24}
-            />
-          </div>
+          <RecipeName name={name} setName={setName} />
           {/* description */}
-          <div className="block text-left p-2.5 text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
-            <AutoHeightTextArea
-              text={description}
-              setText={setDescription}
-              rows={"4"}
-              placeholder={"Enter your description..."}
-              lineheight={24}
-            />
-          </div>
+          <RecipeDescription
+            description={description}
+            setDescription={setDescription}
+          />
           <div className="flex flex-wrap gap-2 divide-x">
             {/* recipeYield */}
-            <div className="flex items-center gap-2 px-2">
-              <img src="../../src/assets/servesIcon.svg" className="size-8" />
-              <div className="align-middle text-gray-500">Serves</div>
-              <QuantitySelector
-                quantity={recipeYield}
-                setQuantity={setRecipeYield}
-              />
-            </div>
+            <RecipeYield recipeYield={recipeYield} setRecipeYield={setRecipeYield} />
             {/* timeTaken */}
             <div className="flex items-center gap-2 px-3">
               <img
@@ -95,23 +77,25 @@ export const RecipePage = (newRecipe) => {
         </div>
       </div>
       <button
-      className={`fixed bottom-10 right-10 ${
-        editMode ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-white border border-gray-900"
-      } font-bold h-10 px-4 rounded-lg flex items-center`}
-      onClick={() => setEditMode(!editMode)}
-    >
-      {editMode ? (
-        <>
-          <FaSave className="mr-2" />
-          Save
-        </>
-      ) : (
-        <>
-          <FaEdit className="mr-2" />
-          Edit
-        </>
-      )}
-    </button>
+        className={`fixed bottom-10 right-10 ${
+          editMode
+            ? "bg-blue-500 hover:bg-blue-700 text-white"
+            : "bg-white border border-gray-900"
+        } font-bold h-10 px-4 rounded-lg flex items-center`}
+        onClick={() => setEditMode(!editMode)}
+      >
+        {editMode ? (
+          <>
+            <FaSave className="mr-2" />
+            Save
+          </>
+        ) : (
+          <>
+            <FaEdit className="mr-2" />
+            Edit
+          </>
+        )}
+      </button>
     </>
   );
 };
