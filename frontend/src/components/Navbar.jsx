@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+
+
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const [isOpen, setOpen] = useState(false);
 
