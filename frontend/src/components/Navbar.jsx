@@ -11,14 +11,24 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
   return (
     <nav className="w-screen justify-between flex-wrap bg-white p-6">
       {/* ... (other code) */}
-      <div className={`lg:flex lg:items-center lg:w-auto ${isOpen ? 'block' : 'hidden'}`}>
+      <div
+        className={`lg:flex lg:items-center lg:w-auto ${
+          isOpen ? "block" : "hidden"
+        }`}
+      >
         <div className="text-lg lg:items-center lg:flex-grow">
-          <NavLink className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500" to="/">
+          <NavLink
+            className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500"
+            to="/"
+          >
             Home
           </NavLink>
           {/* Conditionally render "My Recipes" link */}
           {isLoggedIn && (
-            <NavLink className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500" to="/myrecipes">
+            <NavLink
+              className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500"
+              to="/myrecipes"
+            >
               My Recipes
             </NavLink>
           )}
@@ -27,12 +37,13 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         <div className="lg:flex lg:items-center lg:w-auto">
           {/* Right-aligned Login, Logout, and Signup Links */}
           {isLoggedIn ? (
-            <button
-            onClick={onLogout}  
-            className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-red-600 border-red-600 hover:text-red-500 hover:bg-white mt-4 lg:mt-0 ml-auto"
-          >
-            Log Out
-          </button>
+            <NavLink
+              onClick={onLogout}
+              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-red-600 border-red-600 hover:text-red-500 hover:bg-white mt-4 lg:mt-0 ml-auto"
+              to="/"
+            >
+              Log Out
+            </NavLink>
           ) : (
             <NavLink
               className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-blue-600 border-blue-600 hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 ml-auto"

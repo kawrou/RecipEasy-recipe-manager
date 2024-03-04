@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
@@ -9,18 +9,21 @@ import RecipeScraper from "./components/RecipeScraper";
 import { useState } from "react";
 import { logout } from "./services/authentication";
 
-
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token") !== null);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("token") !== null
+  );
   const [recipeData, setRecipeData] = useState(null);
-// try passing token as a State
-const [token, setToken] = useState(localStorage.getItem("token"));
+  // try passing token as a State
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setIsLoggedIn(false);
     setToken(null);
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    }
   };
 
   const handleLogin = (status) => {
@@ -32,7 +35,10 @@ const [token, setToken] = useState(localStorage.getItem("token"));
     <BrowserRouter>
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <Routes>
-        <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} onLogin={handleLogin} />} />
+        <Route
+          path="/login"
+          element={<LoginPage isLoggedIn={isLoggedIn} onLogin={handleLogin} />}
+        />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/recipecollection" element={<RecipeCollection />} />
         <Route
