@@ -9,8 +9,9 @@ import { SignupPage } from "./pages/Signup/SignupPage";
 import { RecipePage } from "./pages/RecipePage/RecipePage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
-
-// docs: https://reactrouter.com/en/main/start/overview
+import RecipeScraper from "./components/RecipeScraper";
+import { useState } from "react";
+import { logout } from "./services/authentication";
 
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
@@ -35,9 +36,27 @@ const App = () => {
 
   console.log(recipeData);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("token") !== null
+  );
+
+  const handleLogout = async () => {
+    await logout();
+    setIsLoggedIn(false);
+    setToken(null);
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    }
+  };
+
+  const handleLogin = (status) => {
+    setIsLoggedIn(status);
+    // setToken(newToken);
+  };
+
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <Routes>
         <Route
           path="/"
@@ -51,7 +70,7 @@ const App = () => {
             />
           }
         />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} onLogin={handleLogin} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/recipes/create"

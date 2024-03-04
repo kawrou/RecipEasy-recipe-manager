@@ -10,17 +10,6 @@ export const HomePage = ({
   url,
   handleUrlChange,
 }) => {
-  //Will need this for setting token later
-
-  // COMMENT CAN BE DELETED AFTER REVIEW
-  // WHY URL STATE IS HANDLED BY PARENT COMPONENT
-  // Current implementation has the parent component handle the navigation
-  // This means the url <input> of RecipeScraper component has to be handled
-  // by parent component instead.
-  // The actual FETCH request is handled by the RecipeScraper component.
-
-  // handleSubmit is passed as prop to RecipeScraper so that when the form is
-  // submitted, the parent component will know to navigate to the correct page
 
   // The logic for this will need to change which might break the tests later on
   const handleSubmit = async (e) => {
