@@ -8,6 +8,7 @@ describe("/tokens", () => {
     const user = new User({
       email: "auth-test@test.com",
       password: "12345678",
+      username: "someone",
     });
 
     // We need to use `await` so that the "beforeAll" setup function waits for
@@ -25,7 +26,7 @@ describe("/tokens", () => {
     const testApp = supertest(app);
     const response = await testApp
       .post("/tokens")
-      .send({ email: "auth-test@test.com", password: "12345678" });
+      .send({ email: "auth-test@test.com", password: "12345678", username: "someone" });
 
     expect(response.status).toEqual(201);
     expect(response.body.token).not.toEqual(undefined);
@@ -36,7 +37,7 @@ describe("/tokens", () => {
     const testApp = supertest(app);
     const response = await testApp
       .post("/tokens")
-      .send({ email: "non-existent@test.com", password: "1234" });
+      .send({ email: "non-existent@test.com", password: "1234", username: "someone" });
 
     expect(response.status).toEqual(401);
     expect(response.body.token).toEqual(undefined);
@@ -47,7 +48,7 @@ describe("/tokens", () => {
     let testApp = supertest(app);
     const response = await testApp
       .post("/tokens")
-      .send({ email: "auth-test@test.com", password: "1234" });
+      .send({ email: "auth-test@test.com", password: "1234", username: "someone" });
 
     expect(response.status).toEqual(401);
     expect(response.body.token).toEqual(undefined);
