@@ -12,28 +12,13 @@ const RecipeScraper = ({
 
   return (
     <div className="recipe-scraper-container">
-      {showErrorMessage && (
-        <div className="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          <p>
-            You must log in to generate a recipe.{' '}
-            <span
-              onClick={redirectToLoginPage}
-              className="cursor-pointer text-blue-500 underline"
-            >
-              Click HERE to log in!
-            </span>{' '}
-            Don't have an account?{' '}
-            <span
-              onClick={redirectToSignupPage}
-              className="cursor-pointer text-blue-500 underline"
-            >
-              Click HERE to sign up!
-            </span>
-          </p>
-        </div>
-      )}
-
-      <input type="text" value={url} onChange={handleUrlChange} className="input-box" placeholder="Enter Recipe URL:" />
+      <input
+        type="text"
+        value={url}
+        onChange={handleUrlChange}
+        className="input-box"
+        placeholder="Enter Recipe URL:"
+      />
       <div className="flex items-center justify-center py-8">
         <button
           onClick={async () => {
@@ -52,7 +37,7 @@ const RecipeScraper = ({
           Enter Manually
         </button>
       </div>
-    </form>
+    </div>
   );
 };
 
