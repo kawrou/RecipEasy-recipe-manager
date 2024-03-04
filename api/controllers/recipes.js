@@ -173,11 +173,39 @@ const updateRecipe = async (req, res) => {
   }
 };
 
+const isFavourite = async (req, res) => {
+  try {
+    const recipeId = req.params.recipe_id;
+    const user = await User.findById(req.user_id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const recipe = await Recipe.findById(recipeId);
+
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    // Toggle the favouritedByOwner field
+    recipe.favouritedByOwner = !recipe.favouritedByOwner;
+
+    // Save the updated recipe
+    await recipe.save();
+
+    res.status(200).json({ message: 'Recipe favourited successfully', recipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
   create: create,
-  updateRecipe: updateRecipe
+  updateRecipe: updateRecipe,
+  isFavourite: isFavourite
 }
 
 module.exports = RecipesController;
