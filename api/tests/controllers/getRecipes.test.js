@@ -26,7 +26,6 @@ let token;
 
 describe("Get Recipes tests", () => {
   const ownerId = new mongoose.Types.ObjectId();
-  // token = createToken(ownerId);
   const currentDate = new Date();
   const recipe1 = new Recipe({
     name: "test_recipe",
@@ -56,13 +55,31 @@ describe("Get Recipes tests", () => {
     image: "test_url",
     dateAdded: currentDate,
   });
+
+	const ownerId2 = new mongoose.Types.ObjectId();
+	const recipe3 = new Recipe({
+    name: "test_recipe3",
+    description: "test_description",
+    ownerId: ownerId2,
+    tags: ["test_tag_one", "test_tag_two"],
+    favouritedByOwner: false,
+    totalTime: "test_time",
+    recipeYield: 1,
+    recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+    recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+    url: "test_url",
+    image: "test_url",
+    dateAdded: currentDate,
+  });
+
   beforeAll(async () => {
     await recipe1.save();
     await recipe2.save();
+		await recipe3.save();
 		token = createToken(ownerId);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await Recipe.deleteMany({});
   });
 
@@ -116,6 +133,20 @@ describe("Get Recipes tests", () => {
         })
       );
     });
+		test("Doesn't return the wrong recipe for the userID", async () => {
+			const response = await request(app)
+			.get(`/recipes/${ownerId}`)
+			.set("Authorization", `Bearer ${token}`);
+		
+			const responseBody = response.body;
+
+			//Returned recipes are only for user1(ownerId)
+			expect(responseBody.recipes[0].ownerId).toEqual(ownerId.toString())
+			expect(responseBody.recipes[1].ownerId).toEqual(ownerId.toString())
+			//Returned recipes don't belong to user2(ownerId2)
+			expect(responseBody.recipes[0].ownerId).not.toEqual(ownerId2.toString())
+			expect(responseBody.recipes[1].ownerId).not.toEqual(ownerId2.toString())
+		})
   });
 
   describe("GET - all recipes - when token is missing", () => {
