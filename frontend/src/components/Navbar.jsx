@@ -20,7 +20,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
       >
         <div className="text-lg lg:items-center lg:flex-grow">
           <NavLink
-            className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500"
+            className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500 mr-4"
             to="/"
           >
             Home
