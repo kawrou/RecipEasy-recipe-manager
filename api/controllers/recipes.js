@@ -6,99 +6,78 @@ const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
 const fetchRecipeData = async (req, res) => {
-  const url = req.query.url;
-  console.log(url)
-  try {
-    const response = await axios.get(url);
-    const html = response.data;
+    const url = req.query.url;
+    console.log("Fetching URL:", url);
 
-    const $ = cheerio.load(html);
+    try {
+      const response = await axios.get(url);
+      const html = response.data;
+      console.log(response)
 
-    const jsonLD = $('script[type="application/ld+json"]');
-    // let recipeData = [];
-    let recipeData;
+      const $ = cheerio.load(html);
 
-    jsonLD.each((index, element) => {
-      const scriptContent = $(element).html();
-      try {
-        const jsonData = JSON.parse(scriptContent);
+      const jsonLD = $('script[type="application/ld+json"]');
+      let recipeData;
 
-        if (jsonData["@graph"]) {
-          const recipeObjects = jsonData["@graph"].filter(
-            (obj) => obj["@type"] === "Recipe"
-          );
-          // recipeData.push(...recipeObjects);
-          recipeData = recipeObjects;
-        } else if (jsonData["@type"] === "Recipe") {
-          // recipeData.push(jsonData);
-          recipeData = jsonData;
+      jsonLD.each((index, element) => {
+        const scriptContent = $(element).html();
+        try {
+          const jsonData = JSON.parse(scriptContent);
+
+          if (jsonData["@graph"]) {
+            const recipeObjects = jsonData["@graph"].filter((obj) => obj["@type"] === "Recipe");
+            recipeData = recipeObjects;
+          } else if (jsonData["@type"] === "Recipe") {
+            recipeData = jsonData;
+          }
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
         }
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    });
+      });
 
-    if (!recipeData || recipeData.length === 0) {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.goto(url);
+      if (!recipeData || recipeData.length === 0) {
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+        await page.goto(url);
 
-      const jsonLdData = await page.$$eval(
-        'script[type="application/ld+json"]',
-        (scripts) => {
-          // const jsonData = [];
-          let jsonData;
+        const jsonLdData = await page.$$eval(
+          'script[type="application/ld+json"]',
+          (scripts) => {
+            let jsonData;
 
-          scripts.forEach((script) => {
-            try {
-              const parsedData = JSON.parse(script.textContent);
+            scripts.forEach((script) => {
+              try {
+                const parsedData = JSON.parse(script.textContent);
 
-              if (parsedData["@graph"]) {
-                const recipeObjects = parsedData["@graph"].filter(
-                  (obj) => obj["@type"] === "Recipe"
-                );
-                // jsonData.push(...recipeObjects);
-                jsonData = recipeObjects;
-              } else if (parsedData["@type"] === "Recipe") {
-                // jsonData.push(parsedData);
-                jsonData = parsedData;
+                if (parsedData["@graph"]) {
+                  const recipeObjects = parsedData["@graph"].filter((obj) => obj["@type"] === "Recipe");
+                  jsonData = recipeObjects;
+                } else if (parsedData["@type"] === "Recipe") {
+                  jsonData = parsedData;
+                }
+              } catch (error) {
+                console.error("Error parsing JSON-LD data:", error);
               }
+            });
+            return jsonData;
+          }
+        );
 
-              // if (parsedData["@type"] === "Recipe") {
-              //   jsonData.push(parsedData);
-              // }
-            } catch (error) {
-              console.error("Error parsing JSON-LD data:", error);
-            }
-          });
-          return jsonData;
-        }
-      );
+        recipeData = jsonLdData;
 
-      recipeData = jsonLdData;
+        await browser.close();
+      }
 
-      await browser.close();
+      console.log("Recipe Data:", recipeData);
+      res.status(200).json({ recipe_data: recipeData });
+    } catch (error) {
+      console.log(Object.keys(error))
+      // console.error("Error fetching URL:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-    console.log(recipeData)
-    // return recipeData;
-    res.status(200).json({recipe_data:  recipeData});
-    // add user id/token once everything is set up
-  } catch (error) {
-    console.error("Error fetching URL:", error);
-    res.status(500);
-    return null;
-  }
-};
+  };
 
-// Example usage:
-// const url = "https://www.mob.co.uk/recipes/jalepeno-coconut-chicken-thighs"; // Replace with the desired URL
-// fetchRecipeData(url)
-//   .then((recipeData) => {
-//     console.log("Recipe Data:", recipeData);
-//   })
-//   .catch((error) => {
-//     console.error("Error:", error);
-//   });
+
 
 
 const create = async (req, res) => {
@@ -209,5 +188,3 @@ const RecipesController = {
 }
 
 module.exports = RecipesController;
-
-

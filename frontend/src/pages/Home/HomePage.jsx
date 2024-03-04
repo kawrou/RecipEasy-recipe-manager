@@ -4,19 +4,9 @@ import "./HomePage.css";
 import RecipeScraper from "../../components/RecipeScraper";
 
 export const HomePage = () => {
-  //Will need this for setting token later
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const navigate = useNavigate();
-  
-  // COMMENT CAN BE DELETED AFTER REVIEW
-  // WHY URL STATE IS HANDLED BY PARENT COMPONENT
-  // Current implementation has the parent component handle the navigation
-  // This means the url <input> of RecipeScraper component has to be handled
-  // by parent component instead.
-  // The actual FETCH request is handled by the RecipeScraper component.
 
-  // handleSubmit is passed as prop to RecipeScraper so that when the form is
-  // submitted, the parent component will know to navigate to the correct page
   const [url, setUrl] = useState("");
 
   const handleUrlChange = (e) => {

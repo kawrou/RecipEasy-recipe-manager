@@ -1,59 +1,86 @@
-import React, { useState } from "react";
-import { scrapeRecipe } from "../services/recipe";
+import React, { useState, useEffect } from 'react';
+import { scrapeRecipe } from '../services/recipe';
+import { useNavigate } from 'react-router-dom';
 import "./RecipeScraper.css";
 
-const RecipeScraper = ({ url, handleUrlChange, handleSubmit, token }) => {
-  const [recipeData, setRecipeData] = useState(null);
 
-  // COMMENT CAN BE DELETED AFTER REVIEWED
-  // Component only handles the FETCH call
-  // I think that the call should only be made if a token is present
-  // Otherwise the call will be made even though the user isn't logged in
+const RecipeScraper = ({ token }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [url, setUrl] = useState('');
+  const [recipeData, setRecipeData] = useState(null);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const navigate = useNavigate(); 
+
+
+  const handleUrlChange = (e) => {
+    setUrl(e.target.value);
+  };
+
   const handleScrapeRecipe = async () => {
+    console.log("Token:", token);
+    console.log("URL:", url);
     if (token && url) {
       try {
-        const scrapedData = await scrapeRecipe(url);
+        const scrapedData = await scrapeRecipe(url, token);
+        console.log(scrapedData)
         setRecipeData(scrapedData);
-        // console.log(scrapedData);
       } catch (error) {
         console.error("Error fetching recipe:", error);
       }
+    } else {
+      // Show error message if not logged in
+      setShowErrorMessage(true);
     }
   };
 
+  const redirectToLoginPage = () => {
+    navigate('/login');
+  };
+
+  const redirectToSignupPage = () => {
+    navigate('/signup');
+  };
+
   return (
-    <form className="recipe-scrapper-container" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={url}
-        onChange={handleUrlChange}
-        className="input-box"
-        placeholder="Enter your recipe URL"
-        name="url-input"
-      />
+    <div className="recipe-scraper-container">
+      {showErrorMessage && (
+        <div className="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <p>
+            You must log in to generate a recipe.{' '}
+            <span
+              onClick={redirectToLoginPage}
+              className="cursor-pointer text-blue-500 underline"
+            >
+              Click HERE to log in!
+            </span>{' '}
+            Don't have an account?{' '}
+            <span
+              onClick={redirectToSignupPage}
+              className="cursor-pointer text-blue-500 underline"
+            >
+              Click HERE to sign up!
+            </span>
+          </p>
+        </div>
+      )}
+
+      <input type="text" value={url} onChange={handleUrlChange} className="input-box" placeholder="Enter Recipe URL:" />
       <div className="flex items-center justify-center py-8">
-        <button
-          onClick={handleScrapeRecipe}
-          type="submit"
-          className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
-        >
-          Generate Recipe
-        </button>
-        <button
-          type="submit"
-          className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
-        >
-          Enter Manually
-        </button>
+        <button onClick={handleScrapeRecipe} type="submit" className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Generate Recipe</button>
+        <button type="submit" className="focus:outline-none text-darkGray border border-gray-500 hover:border-gray-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 bg-white dark:bg-gray-800">Enter Manually</button>
       </div>
 
-      {/* {recipeData && (
-        <div>
-          <h2>Recipe Data</h2>
-          <pre>{JSON.stringify(recipeData, null, 2)}</pre>
-        </div>
-      )} */}
-    </form>
+      {isLoggedIn && (
+        <>
+          {recipeData && (
+            <div>
+              <h2>Recipe Data</h2>
+              <pre>{JSON.stringify(recipeData, null, 2)}</pre>
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 

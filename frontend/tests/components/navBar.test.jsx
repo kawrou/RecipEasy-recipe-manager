@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import userEvent from '@testing-library/user-event'
 
@@ -67,4 +67,20 @@ describe("Navbar", () => {
         // Using await before expect to wait for the expectation to resolve
         await expect(screen.getAllByText("Create an account")).to.exist;
     });
-});
+
+    // Update test once recipe collection page is done so that the user is redirected from their recipes page to the home page
+    test('logout button works and user is redirected to homepage', async () => {
+        render(
+          <BrowserRouter>
+            <Navbar isLoggedIn={true} onLogout={() => {}} />
+            <LoginPage />
+          </BrowserRouter>
+        );
+      
+        userEvent.click(screen.getByText("Log Out"));
+      
+        await waitFor(() => {
+          expect(screen.getByText("Home")).toBeInTheDocument();
+        });
+      });
+    });
