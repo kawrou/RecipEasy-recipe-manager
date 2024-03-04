@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 
-const FavouriteButton = ({ favouritedByOwner }) => {
+const FavouriteButton = () => {
   const [isFavourite, setIsFavourite] = useState(false);
-  const [favouriteCount, setFavouriteCount] = useState(0);
 
   const handleToggleFavourite = () => {
-    setIsFavourite(prevIsFavourite => {
-      const newIsFavourite = !prevIsFavourite;
-      setFavouriteCount(prevCount => {
-        if (newIsFavourite) {
-          return prevCount + 1;
-        } else {
-          return prevCount > 0 ? prevCount - 1 : 0;
-        }
-      });
-      return newIsFavourite;
-    });
+    setIsFavourite(prevIsFavourite => !prevIsFavourite);
   };
 
   return (
@@ -26,7 +15,6 @@ const FavouriteButton = ({ favouritedByOwner }) => {
           alt={isFavourite ? 'Favourite' : 'Unfavourite'}
           className="h-8 w-8"
         />
-        <span className="ml-1">{favouriteCount}</span>
       </button>
     </div>
   );
