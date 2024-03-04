@@ -1,7 +1,9 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
-// const tokenChecker = require("../middleware/tokenChecker");
+
+const Recipe = require('../models/recipe')
+const User = require('../models/user')
 
 const fetchRecipeData = async (req, res) => {
     const url = req.query.url;
@@ -76,8 +78,85 @@ const fetchRecipeData = async (req, res) => {
   };
 
 
+
+
+const create = async (req, res) => {
+  // find the user who created the recipe
+  const user = await User.findById(req.user_id);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  // create recipe
+  try {
+    const newRecipe = new Recipe({
+      name: req.body.name,
+      description: req.body.description,
+      ownerId: user._id,
+      tags: req.body.tags,
+      favouritedByOwner: req.body.favouritedByOwner,
+      totalTime: req.body.totalTime,
+      recipeYield: req.body.recipeYield,
+      recipeIngredient: req.body.recipeIngredient,
+      recipeInstructions: req.body.recipeInstructions,
+      url: req.body.url,
+      image: req.body.image,
+      dateAdded: req.body.dateAdded
+    });
+    await newRecipe.save();
+    console.log("New recipe created:", newRecipe._id.toString())
+    res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// update existing recipe entry
+const updateRecipe = async (req, res) => {
+  try {
+    const recipeId = req.params.recipe_id;
+    const user = await User.findById(req.user_id);
+    if (!user) {
+      console.log("user not found")
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const recipeUpdateData = { 
+      name: req.body.name,
+      description: req.body.description,
+      ownerId: user._id,
+      tags: req.body.tags,
+      favouritedByOwner: req.body.favouritedByOwner,
+      totalTime: req.body.totalTime,
+      recipeYield: req.body.recipeYield,
+      recipeIngredient: req.body.recipeIngredient,
+      recipeInstructions: req.body.recipeInstructions,
+      url: req.body.url,
+      image: req.body.image,
+      dateAdded: req.body.dateAdded
+    };
+
+    const updatedRecipe = await Recipe.findOneAndUpdate(
+      { _id: recipeId, ownerId: user._id },
+      { $set: recipeUpdateData },
+      { new: true }
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.status(200).json({ message: 'Recipe updated successfully', updatedRecipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
-};
+  create: create,
+  updateRecipe: updateRecipe
+}
 
 module.exports = RecipesController;
