@@ -2,8 +2,9 @@ const express = require("express");
 const RecipesController = require("../controllers/recipes");
 
 const router = express.Router();
+const tokenChecker = require("../middleware/tokenChecker");
 
-router.get("/scrape-recipe", RecipesController.fetchRecipeData);
+router.get("/scrape-recipe",tokenChecker, RecipesController.fetchRecipeData);
 
 router.post("/", RecipesController.create);
 
@@ -11,3 +12,4 @@ router.post("/", RecipesController.create);
 router.patch("/:recipe_id", RecipesController.updateRecipe);
 
 module.exports = router;
+
