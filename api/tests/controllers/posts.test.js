@@ -49,16 +49,16 @@ describe("/posts", () => {
       expect(response.status).toEqual(201);
     });
 
-    // test("creates a new post", async () => {
-    //   await request(app)
-    //     .post("/posts")
-    //     .set("Authorization", `Bearer ${token}`)
-    //     .send({ message: "Hello World!!" });
+    test("creates a new post", async () => {
+      await request(app)
+        .post("/posts")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ message: "Hello World!!" });
 
-    //   const posts = await Post.find();
-    //   expect(posts.length).toEqual(1);
-    //   expect(posts[0].message).toEqual("Hello World!!");
-    // });
+      const posts = await Post.find();
+      expect(posts.length).toEqual(1);
+      expect(posts[0].message).toEqual("Hello World!!");
+    });
 
     test("returns a new token", async () => {
       const testApp = request(app);
