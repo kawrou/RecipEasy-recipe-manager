@@ -12,27 +12,31 @@ import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
 export const RecipePage = ({ newRecipe, recipeData }) => {
+  
+  let recipeDataArray = Array.isArray(recipeData.recipe_data)
+    ? recipeData.recipe_data
+    : [recipeData.recipe_data];
 
   const {
-    recipe_data: {
-      name,
-      description,
-      recipeYield,
-      cookTime,
-      prepTime,
-      recipeIngredient,
-      recipeInstructions,
-      image,
-      url,
-      keywords,
-    },
-  } = recipeData;
+    name,
+    description,
+    recipeYield,
+    cookTime,
+    prepTime,
+    recipeIngredient,
+    recipeInstructions,
+    image,
+    url,
+    keywords,
+  } = recipeDataArray[0];
 
   const [editMode, setEditMode] = useState(true);
 
   let instructionsArray = [];
   if (Array.isArray(recipeInstructions)) {
-    instructionsArray = recipeInstructions.map(instruction => instruction.text);
+    instructionsArray = recipeInstructions.map(
+      (instruction) => instruction.text
+    );
   } else {
     instructionsArray = recipeInstructions || [];
   }
@@ -45,7 +49,7 @@ export const RecipePage = ({ newRecipe, recipeData }) => {
   );
   const [ingredients, setIngredients] = useState(recipeIngredient || []);
   const [instructions, setInstructions] = useState(instructionsArray);
-  const [imageUrl, setImageUrl] = useState(image?.url || "");
+  const [imageUrl, setImageUrl] = useState(image?.url || image || "");
   const [recipeUrl, setRecipeUrl] = useState(url || "");
   const [recipeTags, setRecipeTags] = useState(parseKeywords(keywords) || []);
 
@@ -114,8 +118,8 @@ export const RecipePage = ({ newRecipe, recipeData }) => {
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
         <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
-          <RecipeImage imageUrl={imageUrl}/>
-          <RecipeUrl recipeUrl={recipeUrl}/>
+          <RecipeImage imageUrl={imageUrl} />
+          <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
       <div className="w-screen h-4 bg-gray-300" />

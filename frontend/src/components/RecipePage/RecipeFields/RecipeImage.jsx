@@ -1,6 +1,7 @@
 import React from "react";
 
 export const RecipeImage = ({ imageUrl }) => {
+  console.log(imageUrl)
   return (
     <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square">
       {imageUrl && (
