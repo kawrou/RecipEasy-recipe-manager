@@ -8,6 +8,7 @@ const JWT = require("jsonwebtoken");
 require("../mongodb_helper");
 
 const secret = process.env.JWT_SECRET;
+let recipe;
 
 const createToken = (userId) => {
     return JWT.sign(
@@ -23,8 +24,10 @@ const createToken = (userId) => {
 };
 
 let token;
+let decodedToken;
 describe("create recipe tests", () => {
     beforeAll(async () => {
+        // add user
         const user = new User({
         email: "post-test@test.com",
         password: "12345678",
@@ -32,64 +35,63 @@ describe("create recipe tests", () => {
         });
         await user.save();
         await Recipe.deleteMany({});
+        userid = user.id
         token = createToken(user.id);
+        decodedToken = JWT.decode(token, process.env.JWT_SECRET);
+        // add recipe
+        const currentDate = new Date();
+        await request(app)
+            .post("/recipes")
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                name: "test_recipe",
+                description: "test_description",
+                ownerId: token.user_id,
+                tags: ["test_tag_one", "test_tag_two"],
+                favouritedByOwner: false,
+                totalTime: "test_time",
+                recipeYield: 1,
+                recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+                recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+                url: "test_url",
+                image: "test_url",
+                dateAdded: currentDate
+            });
+        
+        recipe = await Recipe.find();
 });
     afterEach(async () => {
         await User.deleteMany({});
-        await Recipe.deleteMany({});
+        await Recipe.deleteMany({})
 });
 
     describe("POST, when a valid token is present and recipe input is valid", () => {
-        test("responds with a 201, new recipe is present in the document", async () => {
-            const currentDate = new Date();
-            const response = await request(app)
-                .post("/recipes")
-                .set("Authorization", `Bearer ${token}`)
-                .send({
-                    name: "test_recipe",
-                    description: "test_description",
-                    ownerId: token.user_id,
-                    tags: ["test_tag_one", "test_tag_two"],
-                    favouritedByOwner: false,
-                    totalTime: "test_time",
-                    recipeYield: 1,
-                    recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
-                    recipeInstructions: ["test_instruction_one", "test_instruction_two"],
-                    url: "test_url",
-                    image: "test_url",
-                    dateAdded: currentDate
-                });
-        expect(response.status).toEqual(201);
-        const recipe = await Recipe.find();
+        test("new recipe is present in the document", async () => {
         expect(recipe.length).toEqual(1);
         expect(recipe[0].name).toEqual("test_recipe");
+
+        const currentDate = new Date();
+        const updateResponse = await request(app)
+            .patch(`/recipes/${recipe[0]._id.toString()}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                name: "test_update",
+                description: "test_description",
+                ownerId: token.user_id,
+                tags: ["test_tag_one", "test_tag_two"],
+                favouritedByOwner: false,
+                totalTime: "test_time",
+                recipeYield: 1,
+                recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+                recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+                url: "test_url",
+                image: "test_url",
+                dateAdded: currentDate
+            });
+            expect(updateResponse.status).toEqual(200);
+            const updateRecipe = await Recipe.find();
+            expect(updateRecipe.length).toEqual(1);
+            expect(updateRecipe[0].name).toEqual("test_update");
         });
     })
-
-    // describe("update recipe tests", () => {
-    //     test("responds with a 201, updated recipe is present in the document", async () => {
-    //         const currentDate = new Date();
-    //         const response = await request(app)
-    //             .post("/recipes/65e200e7558fd7c8ad317019")
-    //             .set("Authorization", `Bearer ${token}`)
-    //             .send({
-    //                 name: "test_recipe",
-    //                 description: "test_description",
-    //                 ownerId: token.user_id,
-    //                 tags: ["test_tag_one", "test_tag_two"],
-    //                 favouritedByOwner: false,
-    //                 totalTime: "test_time",
-    //                 recipeYield: 1,
-    //                 recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
-    //                 recipeInstructions: ["test_instruction_one", "test_instruction_two"],
-    //                 url: "test_url",
-    //                 image: "test_url",
-    //                 dateAdded: currentDate
-    //             });
-    //     expect(response.status).toEqual(201);
-    //     const recipe = await Recipe.find();
-    //     expect(recipe.length).toEqual(1);
-    //     expect(recipe[0].name).toEqual("test_recipe");
-    //     });
-    // })
 })

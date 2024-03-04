@@ -124,9 +124,8 @@ const create = async (req, res) => {
       dateAdded: req.body.dateAdded
     });
     await newRecipe.save();
-    
+    console.log("New recipe created:", newRecipe._id.toString())
     res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
-    console.log(res)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -139,6 +138,7 @@ const updateRecipe = async (req, res) => {
     const recipeId = req.params.recipe_id;
     const user = await User.findById(req.user_id);
     if (!user) {
+      console.log("user not found")
       return res.status(404).json({ message: 'User not found' });
     }
     const recipeUpdateData = { 
