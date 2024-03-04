@@ -2,6 +2,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
 
+const { generateToken } = require("../lib/token");
+
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
 
