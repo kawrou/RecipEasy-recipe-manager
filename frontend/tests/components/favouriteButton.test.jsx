@@ -1,29 +1,30 @@
+import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import FavouriteButton from "../../src/components/FavouriteButton";
 
 describe('FavouriteButton', () => {
-  test('renders favourite button with initial count of 0', () => {
-    const { getByText } = render(<FavouriteButton />);
-    const favouriteButton = getByText(/0/i);
-    expect(favouriteButton).toBeInTheDocument();
+  test('renders unfavourited button', () => {
+    const { getByAltText } = render(<FavouriteButton />);
+    const unfavouritedButton = getByAltText('Unfavourite');
+    expect(unfavouritedButton).toBeInTheDocument();
   });
 
-  test('clicking favourite button toggles favourite status and updates count', () => {
-    const { getByText, getByRole } = render(<FavouriteButton />);
-    const favouriteButton = getByRole('button');
+  test('clicking favourite button toggles favourite status and changes the image', () => {
+    const { getByAltText } = render(<FavouriteButton />);
+    const button = getByAltText('Unfavourite');
 
-    fireEvent.click(favouriteButton);
-    expect(getByText(/1/i)).toBeInTheDocument(); // Count should be 1 after clicking
+    fireEvent.click(button);
+    expect(button.alt).toBe('Favourite');
 
-    fireEvent.click(favouriteButton);
-    expect(getByText(/0/i)).toBeInTheDocument(); // Count should be 0 after clicking again
+    fireEvent.click(button);
+    expect(button.alt).toBe('Unfavourite');
   });
 
-  test('favourite button changes colour when favourited', () => {
-    const { getByRole } = render(<FavouriteButton />);
-    const favouriteButton = getByRole('button');
+  test('favourite button changes image when favourited', () => {
+    const { getByAltText } = render(<FavouriteButton />);
+    const button = getByAltText('Unfavourite');
 
-    fireEvent.click(favouriteButton);
-    expect(favouriteButton.querySelector('svg')).toHaveClass('text-red-500'); // Colour should change when favourited
+    fireEvent.click(button);
+    expect(button.src).toContain('favourited.svg'); // Check if image changes to favourited
   });
 });
