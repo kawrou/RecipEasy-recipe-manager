@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "jsonwebtoken": "^9.0.2",
-    "jwt-decode": "^4.0.0",
-    "react-redux": "^9.1.0"
-  }
-}
