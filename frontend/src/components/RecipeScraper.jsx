@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import "./RecipeScraper.css";
 import { getUser } from "../services/users";
 
-const RecipeScraper = () => {
-  const [token, setToken] = useState(null);
+const RecipeScraper = ({ token }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [url, setUrl] = useState('');
   const [recipeData, setRecipeData] = useState(null);
@@ -15,26 +14,20 @@ const RecipeScraper = () => {
 
 
   useEffect(() => {
-    const storedToken = window.localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
-
     const fetchUser = async () => {
       try {
-        const user = await getUser(storedToken);
+        const user = await getUser(token);
         setIsLoggedIn(!!user);
-        console.log(storedToken);
       } catch (error) {
         console.error("Error fetching user:", error);
         setIsLoggedIn(false);
       }
     };
-  
-    if (storedToken) {
+
+    if (token) {
       fetchUser();
     }
-  }, []);
+  }, [token]);
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);

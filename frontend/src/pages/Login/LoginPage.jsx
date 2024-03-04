@@ -1,28 +1,26 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-
 import { login } from "../../services/authentication";
 
-export const LoginPage = () => {
+export const LoginPage = ({ isLoggedIn, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const token = await login(email, password);
       window.localStorage.setItem("token", token);
-      console.log(token)
+      console.log(token);
+      onLogin(true);
       navigate("/");
     } catch (err) {
       console.error(err);
       setError("Invalid email or password");
     }
   };
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
