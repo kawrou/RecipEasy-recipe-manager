@@ -37,7 +37,7 @@ export const RecipeCollection = () => {
       return <p>Loading ...</p>;
     } else if (error) {
       return <p>Error: {error.message}</p>;
-    } else if (!loading && !error && recipes == undefined) {
+    } else if (!loading && !error && recipes === undefined || recipes.length === 0) {
       return <p> No recipes found</p>;
     } else {
       return recipes.map((recipe) => (
@@ -61,13 +61,6 @@ export const RecipeCollection = () => {
       />
       <h2> My Recipes</h2>
       <div className="feed" role="feed">
-        {/* {loading && <p>Loading ...</p>}
-        {error && <p>Error: {error.message}</p>}
-        {!loading && !error && recipes == undefined && <p>No recipes found.</p>}
-        {recipes !== undefined &&
-          recipes.map((recipe) => (
-            <RecipeCard recipe={recipe} key={recipe._id} />
-          ))} */}
         {renderPageContent()}
       </div>
     </>
