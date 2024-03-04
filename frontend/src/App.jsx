@@ -6,6 +6,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
+import FavouriteButton from "./components/FavouriteButton";
 
 // docs: https://reactrouter.com/en/main/start/overview
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/recipecollection" element={<RecipeCollection/>} />
       </Routes>
+      <FavouriteButton />
     </BrowserRouter>
   );
 };

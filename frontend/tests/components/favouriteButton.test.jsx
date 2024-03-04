@@ -19,11 +19,11 @@ describe('FavouriteButton', () => {
     expect(getByText(/0/i)).toBeInTheDocument(); // Count should be 0 after clicking again
   });
 
-  test('favourite button icon changes color when favourited', () => {
+  test('favourite button changes colour when favourited', () => {
     const { getByRole } = render(<FavouriteButton />);
     const favouriteButton = getByRole('button');
 
     fireEvent.click(favouriteButton);
-    expect(favouriteButton.querySelector('svg')).toHaveClass('text-red-500'); // Icon color should change when favourited
+    expect(favouriteButton.querySelector('svg')).toHaveClass('text-red-500'); // Colour should change when favourited
   });
 });
