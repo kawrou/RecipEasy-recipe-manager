@@ -29,7 +29,7 @@ export const toggleFavourite = async (recipeId, token) => {
     body: JSON.stringify({ recipeId }),
 };
 
-const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
+const response = await fetch(`${BACKEND_URL}/recipes/favouritedByOwner`, requestOptions);
 
 if (response.status !== 200) {
   throw new Error("Failed to toggle favourite button")

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { toggleFavourite } from '../services/getRecipes';
 
-const FavouriteButton = ({recipeId, token}) => {
-  const [isFavourite, setIsFavourite] = useState(false);
+const FavouriteButton = ({ recipeId, token, isFavourite }) => {
+  const [favStatus, setFavStatus] = useState(isFavourite);
 
   const handleFavouriteButton = async () => {
     try {
-      await toggleFavourite(recipeId, token); // Calls function to toggle favourite button
-      setIsFavourite(prevIsFavourite => !prevIsFavourite); // Update local state to reflect this
+      // Call the toggleFavourite function to toggle the favourite status
+      await toggleFavourite(recipeId, token);
+      // Update the local state to reflect if favourited
+      setFavStatus(prevStatus => !prevStatus);
     } catch(error) {
-      console.error('Failed to toggle Favourite button', error)
+      console.error('Failed to toggle Favourite button', error);
     }
   };
 
@@ -17,8 +19,8 @@ const FavouriteButton = ({recipeId, token}) => {
     <div>
       <button onClick={handleFavouriteButton} className="flex items-center">
         <img
-          src={isFavourite ? '/favourited.svg' : '/unfavourited.svg'}
-          alt={isFavourite ? 'Favourite' : 'Unfavourite'}
+          src={favStatus ? '/favourited.svg' : '/unfavourited.svg'}
+          alt={favStatus ? 'Favourite' : 'Unfavourite'}
           className="h-8 w-8"
         />
       </button>
