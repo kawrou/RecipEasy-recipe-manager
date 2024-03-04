@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-import { scrapeRecipe } from "./services/recipe";
+import { scrapeRecipe } from "./services/recipes";
 
 import "./App.css";
 import HomePage from "./pages/Home/HomePage";
@@ -9,24 +9,28 @@ import { SignupPage } from "./pages/Signup/SignupPage";
 import { RecipePage } from "./pages/RecipePage/RecipePage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
-import RecipeScraper from "./components/RecipeScraper";
-import { useState } from "react";
 import { logout } from "./services/authentication";
 
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("token"));
+  const [recipeId, setRecipeId] = useState("");
 
   const handleScrapeRecipe = async () => {
+    console.log("Token:", token);
+    console.log("URL:", url);
     if (token && url) {
       try {
-        const scrapedData = await scrapeRecipe(url);
-        // const jsonScrapedData = JSON.stringify(scrapedData, null, 2)
+        const scrapedData = await scrapeRecipe(url, token);
+        console.log(scrapedData);
         setRecipeData(scrapedData);
       } catch (error) {
         console.error("Error fetching recipe:", error);
       }
+    } else {
+      // Show error message if not logged in
+      setShowErrorMessage(true);
     }
   };
 
@@ -70,16 +74,28 @@ const App = () => {
             />
           }
         />
-        <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} onLogin={handleLogin} />} />
+        <Route
+          path="/login"
+          element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
+        />
         <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/recipes/create"
-          element={<RecipePage newRecipe={true} recipeData={recipeData} />}
+          element={
+            <RecipePage
+              newRecipe={true}
+              recipeData={recipeData}
+              token={token}
+              setToken={setToken}
+              recipeId={recipeId}
+              setRecipeId={setRecipeId}
+            />
+          }
         />
-        <Route
-          path="/recipes/:recipe_id"
+        {/* <Route
+          path={`/recipes/${recipe_id}`}
           element={<RecipePage newRecipe={false} />}
-        />
+        /> */}
         <Route path="/recipecollection" element={<RecipeCollection />} />
       </Routes>
     </BrowserRouter>

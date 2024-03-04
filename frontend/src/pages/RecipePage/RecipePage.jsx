@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { createRecipe, updateRecipe } from "../../services/recipes";
+
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
 import { InstructionList } from "../../components/RecipePage/RecipeFields/InstructionList";
@@ -8,11 +12,20 @@ import { RecipeYield } from "../../components/RecipePage/RecipeFields/RecipeYiel
 import { RecipeTimeTaken } from "../../components/RecipePage/RecipeFields/RecipeTimeTaken";
 import { RecipeImage } from "../../components/RecipePage/RecipeFields/RecipeImage";
 import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
+
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const RecipePage = ({ newRecipe, recipeData }) => {
-  
+export const RecipePage = ({
+  newRecipe,
+  recipeData,
+  token,
+  setToken,
+  recipeId,
+  setRecipeId,
+}) => {
+  const navigate = useNavigate();
+
   let recipeDataArray = Array.isArray(recipeData.recipe_data)
     ? recipeData.recipe_data
     : [recipeData.recipe_data];
@@ -69,7 +82,7 @@ export const RecipePage = ({ newRecipe, recipeData }) => {
     return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
   }
 
-  const handleSaveRecipe = () => {
+  const handleSaveRecipe = async () => {
     if (
       recipeName === "" ||
       yieldAmount === 0 ||
@@ -79,7 +92,39 @@ export const RecipePage = ({ newRecipe, recipeData }) => {
     ) {
       alert("Please fill out all the required fields");
     } else {
-      setEditMode(!editMode);
+      if (newRecipe) {
+        let data = await createRecipe(
+          token,
+          recipeName,
+          recipeDescription,
+          recipeTags,
+          totalTime,
+          yieldAmount,
+          ingredients,
+          instructions,
+          recipeUrl,
+          imageUrl
+        );
+        setToken(data.token);
+        setRecipeId(data.recipe._id);
+        navigate(`/recipes/${data.recipe_id}`);
+      } else {
+        let data = await updateRecipe(
+          token,
+          recipeId,
+          recipeName,
+          recipeDescription,
+          recipeTags,
+          totalTime,
+          yieldAmount,
+          ingredients,
+          instructions,
+          recipeUrl,
+          imageUrl
+        );
+        setToken(data.token);
+        setEditMode(!editMode);
+      }
     }
   };
 

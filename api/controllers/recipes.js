@@ -78,14 +78,13 @@ const fetchRecipeData = async (req, res) => {
   };
 
 
-
-
 const create = async (req, res) => {
   // find the user who created the recipe
   const user = await User.findById(req.user_id);
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
+  console.log(req.body)
   // create recipe
   try {
     const newRecipe = new Recipe({
@@ -100,11 +99,12 @@ const create = async (req, res) => {
       recipeInstructions: req.body.recipeInstructions,
       url: req.body.url,
       image: req.body.image,
-      dateAdded: req.body.dateAdded
+      dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
     console.log("New recipe created:", newRecipe._id.toString())
-    res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+    const newToken = generateToken(req.user_id);
+    res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe, token: newToken });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -144,8 +144,8 @@ const updateRecipe = async (req, res) => {
     if (!updatedRecipe) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
-
-    res.status(200).json({ message: 'Recipe updated successfully', updatedRecipe });
+    const newToken = generateToken(req.user_id);
+    res.status(200).json({ message: 'Recipe updated successfully', updatedRecipe, token: newToken });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
