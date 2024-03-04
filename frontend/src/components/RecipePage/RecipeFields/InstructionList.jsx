@@ -4,6 +4,7 @@ import { FaPlus, FaTimes } from "react-icons/fa"; // Import icons from FontAweso
 export const InstructionList = ({
   recipeInstructions,
   setRecipeInstructions,
+  editMode,
 }) => {
   const [newInstruction, setNewInstruction] = useState("");
   const [heights, setHeights] = useState(
@@ -57,7 +58,8 @@ export const InstructionList = ({
               <div className="font-extrabold text-2xl text-left pb-3">
                 Step {index + 1}
               </div>
-              <div className="relative py-4">
+              {editMode ? (
+                <div className="relative py-4">
                 <textarea
                   className="resize-none overflow-hidden placeholder:text-wrap w-full p-2.5 focus:outline-none text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300"
                   value={instruction}
@@ -73,20 +75,26 @@ export const InstructionList = ({
                   <FaTimes style={{ color: "gray" }} />{" "}
                 </button>
               </div>
+              ):(
+                <div key={index} className="text-left text-md py-2.5 pb-5">{instruction}</div>
+              )}
+              
             </div>
           ))}
         </div>
 
-        <div className="flex justify-center items-center">
-          <div className="w-1/2 border border-gray-200" />{" "}
-          <button
-            className="px-2 py-1 rounded text-white"
-            onClick={handleAddInstruction}
-          >
-            <FaPlus style={{ color: "gray" }} />
-          </button>
-          <div className="w-1/2 border border-gray-200" />{" "}
-        </div>
+        {editMode && (
+          <div className="flex justify-center items-center">
+            <div className="w-1/2 border border-gray-200" />{" "}
+            <button
+              className="px-2 py-1 rounded text-white"
+              onClick={handleAddInstruction}
+            >
+              <FaPlus style={{ color: "gray" }} />
+            </button>
+            <div className="w-1/2 border border-gray-200" />{" "}
+          </div>
+        )}
       </div>
     </div>
   );
