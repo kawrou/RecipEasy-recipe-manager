@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { scrapeRecipe } from '../services/recipe';
 import { useNavigate } from 'react-router-dom';
 import "./RecipeScraper.css";
-import { getUser } from "../services/users";
+
 
 const RecipeScraper = ({ token }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,23 +12,6 @@ const RecipeScraper = ({ token }) => {
   const navigate = useNavigate(); 
 
 
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await getUser(token);
-        setIsLoggedIn(!!user);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setIsLoggedIn(false);
-      }
-    };
-
-    if (token) {
-      fetchUser();
-    }
-  }, [token]);
-
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
@@ -36,7 +19,7 @@ const RecipeScraper = ({ token }) => {
   const handleScrapeRecipe = async () => {
     console.log("Token:", token);
     console.log("URL:", url);
-    if (token && isLoggedIn && url) {
+    if (token && url) {
       try {
         const scrapedData = await scrapeRecipe(url, token);
         console.log(scrapedData)
@@ -60,7 +43,7 @@ const RecipeScraper = ({ token }) => {
 
   return (
     <div className="recipe-scraper-container">
-      {showErrorMessage && !isLoggedIn && (
+      {showErrorMessage && (
         <div className="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           <p>
             You must log in to generate a recipe.{' '}

@@ -46,17 +46,9 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 };
 
-const getUserById = async (req, res) => {
-  const userId = req.params.user_id;
-  const user = await User.findById(userId).select("-password -email");
-  const newToken = generateToken(req.user_id); // Use the generateToken function
-  res.status(200).json({ user: user, user_id: req.user_id, token: newToken });
-};
-
 const UsersController = {
   create: create,
   login:login,
-  getUserById: getUserById,
   logout, logout
 };
 
