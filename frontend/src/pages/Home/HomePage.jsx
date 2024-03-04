@@ -3,11 +3,15 @@ import { useState } from "react";
 import "./HomePage.css";
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const HomePage = () => {
+export const HomePage = ({
+  handleScrapeRecipe,
+  token,
+  setToken,
+  url,
+  handleUrlChange,
+}) => {
   //Will need this for setting token later
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const navigate = useNavigate();
-  
+
   // COMMENT CAN BE DELETED AFTER REVIEW
   // WHY URL STATE IS HANDLED BY PARENT COMPONENT
   // Current implementation has the parent component handle the navigation
@@ -17,11 +21,6 @@ export const HomePage = () => {
 
   // handleSubmit is passed as prop to RecipeScraper so that when the form is
   // submitted, the parent component will know to navigate to the correct page
-  const [url, setUrl] = useState("");
-
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
 
   // The logic for this will need to change which might break the tests later on
   const handleSubmit = async (e) => {
@@ -47,9 +46,9 @@ export const HomePage = () => {
       <RecipeScraper
         token={token}
         url={url}
-        setUrl={setUrl}
         handleUrlChange={handleUrlChange}
         handleSubmit={handleSubmit}
+        handleScrapeRecipe={handleScrapeRecipe}
       />
     </div>
   );

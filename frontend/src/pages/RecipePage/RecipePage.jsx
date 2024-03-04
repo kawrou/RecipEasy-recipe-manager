@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { QuantitySelector } from "../../components/RecipePage/QuantitySelector";
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
 import { InstructionList } from "../../components/RecipePage/RecipeFields/InstructionList";
@@ -12,29 +11,73 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const RecipePage = (newRecipe) => {
+export const RecipePage = ({ newRecipe, recipeData }) => {
+
+  const {
+    recipe_data: {
+      name,
+      description,
+      recipeYield,
+      cookTime,
+      prepTime,
+      recipeIngredient,
+      recipeInstructions,
+      image,
+      url,
+      keywords,
+    },
+  } = recipeData;
+
   const [editMode, setEditMode] = useState(true);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [recipeYield, setRecipeYield] = useState(0);
-  const [timeTaken, setTimeTaken] = useState(0);
-  const [tags, setTags] = useState([]);
+  let instructionsArray = [];
+  if (Array.isArray(recipeInstructions)) {
+    instructionsArray = recipeInstructions.map(instruction => instruction.text);
+  } else {
+    instructionsArray = recipeInstructions || [];
+  }
 
-  const [imageUrl, setImageUrl] = useState("");
-  const [url, setUrl] = useState("");
+  const [recipeName, setRecipeName] = useState(name || "");
+  const [recipeDescription, setRecipeDescription] = useState(description || "");
+  const [yieldAmount, setYieldAmount] = useState(recipeYield || "");
+  const [totalTime, setTotalTime] = useState(
+    calculateTotalTime(cookTime, prepTime) || ""
+  );
+  const [ingredients, setIngredients] = useState(recipeIngredient || []);
+  const [instructions, setInstructions] = useState(instructionsArray);
+  const [imageUrl, setImageUrl] = useState(image?.url || "");
+  const [recipeUrl, setRecipeUrl] = useState(url || "");
+  const [recipeTags, setRecipeTags] = useState(parseKeywords(keywords) || []);
 
-  const [recipeIngredients, setRecipeIngredients] = useState([""]);
-  const [recipeInstructions, setRecipeInstructions] = useState([""]);
+  function calculateTotalTime(cookTime, prepTime) {
+    // Convert PT20M format to minutes
+    const cookTimeInMinutes = cookTime
+      ? parseInt(cookTime.substring(2, cookTime.length - 1))
+      : 0;
+    const prepTimeInMinutes = prepTime
+      ? parseInt(prepTime.substring(2, prepTime.length - 1))
+      : 0;
+    return cookTimeInMinutes + prepTimeInMinutes;
+  }
+
+  // Parse keywords string to an array of tags
+  function parseKeywords(keywords) {
+    return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
+  }
 
   const handleSaveRecipe = () => {
-    if (name === "" || recipeYield === 0 || timeTaken === 0 || recipeIngredients.some(ingredient => ingredient === "") || recipeInstructions.some(instruction => instruction === "")) {
+    if (
+      recipeName === "" ||
+      yieldAmount === 0 ||
+      totalTime === 0 ||
+      ingredients.some((ingredient) => ingredient === "") ||
+      instructions.some((instruction) => instruction === "")
+    ) {
       alert("Please fill out all the required fields");
     } else {
       setEditMode(!editMode);
     }
-  }
-  
+  };
 
   return (
     <>
@@ -42,52 +85,56 @@ export const RecipePage = (newRecipe) => {
       <div className="flex divide-x justify-center">
         <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
           {/* title */}
-          <RecipeName name={name} setName={setName} editMode={editMode} />
+          <RecipeName
+            name={recipeName}
+            setName={setRecipeName}
+            editMode={editMode}
+          />
           {/* description */}
           <RecipeDescription
-            description={description}
-            setDescription={setDescription}
+            description={recipeDescription}
+            setDescription={setRecipeDescription}
             editMode={editMode}
           />
           <div className="flex flex-wrap gap-2 divide-x">
             {/* recipeYield */}
             <RecipeYield
-              recipeYield={recipeYield}
-              setRecipeYield={setRecipeYield}
+              recipeYield={yieldAmount}
+              setRecipeYield={setYieldAmount}
               editMode={editMode}
             />
             {/* timeTaken */}
             <RecipeTimeTaken
-              timeTaken={timeTaken}
-              setTimeTaken={setTimeTaken}
+              timeTaken={totalTime}
+              setTimeTaken={setTotalTime}
               editMode={editMode}
             />
           </div>
           {/* Tags */}
-          <Tags tags={tags} setTags={setTags} editMode={editMode} />
+          <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
         <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
-          <RecipeImage />
-          <RecipeUrl />
+          <RecipeImage imageUrl={imageUrl}/>
+          <RecipeUrl recipeUrl={recipeUrl}/>
         </div>
       </div>
       <div className="w-screen h-4 bg-gray-300" />
       <div className="flex divide-x justify-center p-10 pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList
-          recipeIngredients={recipeIngredients}
-          setRecipeIngredients={setRecipeIngredients}
+          recipeIngredients={ingredients}
+          setRecipeIngredients={setIngredients}
           editMode={editMode}
         />
         <InstructionList
-          recipeInstructions={recipeInstructions}
-          setRecipeInstructions={setRecipeInstructions}
+          recipeInstructions={instructions}
+          setRecipeInstructions={setInstructions}
           editMode={editMode}
         />
       </div>
 
       {editMode ? (
-        <SaveButton handleSaveRecipe={handleSaveRecipe}/>
+        <SaveButton handleSaveRecipe={handleSaveRecipe} />
       ) : (
         <EditButton editMode={editMode} setEditMode={setEditMode} />
       )}
