@@ -8,13 +8,18 @@ import RecipeScraper from "../../components/RecipeScraper";
 export const RecipeCollection = () => {
   const [url, setUrl] = useState("");
   const navigate = useNavigate();
-  const [token, setToken] = useState(window.localStorage.getItem('token'))
+  const [token, setToken] = useState(window.localStorage.getItem("token"));
   const { recipes, loading, error } = useFetchRecipes(token);
-  
+
+  // if (recipes == undefined) {
+  //   console.log("recipes is undefined");
+  // }else{
+  //   console.log(recipes)
+  // }
+
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +29,20 @@ export const RecipeCollection = () => {
       navigate("/recipe");
     } else {
       navigate("/login");
+    }
+  };
+
+  const renderPageContent = () => {
+    if (loading) {
+      return <p>Loading ...</p>;
+    } else if (error) {
+      return <p>Error: {error.message}</p>;
+    } else if (!loading && !error && recipes == undefined) {
+      return <p> No recipes found</p>;
+    } else {
+      return recipes.map((recipe) => (
+        <RecipeCard recipe={recipe} key={recipe._id} />
+      ));
     }
   };
 
@@ -42,11 +61,14 @@ export const RecipeCollection = () => {
       />
       <h2> My Recipes</h2>
       <div className="feed" role="feed">
-        {loading && <p>Loading ...</p>}
+        {/* {loading && <p>Loading ...</p>}
         {error && <p>Error: {error.message}</p>}
-        {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe} key={recipe._id} />
-        ))}
+        {!loading && !error && recipes == undefined && <p>No recipes found.</p>}
+        {recipes !== undefined &&
+          recipes.map((recipe) => (
+            <RecipeCard recipe={recipe} key={recipe._id} />
+          ))} */}
+        {renderPageContent()}
       </div>
     </>
   );
@@ -54,24 +76,24 @@ export const RecipeCollection = () => {
 
 
 // not confident that the above custom hook will work correctly
-  // const [recipes, setRecipes] = useState([]);
-  // const [token, setToken] = useState(window.localStorage.getItem("token"));
-  // const [url, setUrl] = useState("");
-  // const navigate = useNavigate();
+// const [recipes, setRecipes] = useState([]);
+// const [token, setToken] = useState(window.localStorage.getItem("token"));
+// const [url, setUrl] = useState("");
+// const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (token) {
-  //     getRecipes(token)
-  //       .then((data) => {
-  //         setRecipes(data.recipes);
-  //         setToken(data.token);
-  //         window.localStorage.setItem("token", data.token);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
-  //     else {
-  //     navigate("/login");
-  //   }
-  // }, [token]);
+// useEffect(() => {
+//   if (token) {
+//     getRecipes(token)
+//       .then((data) => {
+//         setRecipes(data.recipes);
+//         setToken(data.token);
+//         window.localStorage.setItem("token", data.token);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//       });
+//   }
+//     else {
+//     navigate("/login");
+//   }
+// }, [token]);

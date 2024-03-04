@@ -8,7 +8,7 @@ export const useFetchRecipes = (token) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 //   const navigate = useNavigate();
-    
+
   useEffect(() => {
     const fetchData = async () => {
       if (!token) {

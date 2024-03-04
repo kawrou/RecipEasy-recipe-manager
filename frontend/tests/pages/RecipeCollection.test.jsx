@@ -31,6 +31,7 @@ describe("Recipe Collection", () => {
     window.localStorage.removeItem("token");
   });
 
+  // Test is deprecated as getRecipes is handled in useFetchRecipes hook
   test.skip("renders all elements and recipes from db", async () => {
     window.localStorage.setItem("token", "testToken");
     getRecipes.mockResolvedValue({ recipes: mockRecipes, token: "newToken" });
@@ -55,6 +56,7 @@ describe("Recipe Collection", () => {
 
   //Token handling for FETCH handled in useFetchRecipes hook
   test('renders collection and recipes from db', async () => {
+    window.localStorage.setItem("token", "testToken")
     useFetchRecipes.mockReturnValue({
       recipes: [
         { _id: "12345", title: "Recipe 1", duration: "45" },

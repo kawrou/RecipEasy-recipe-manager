@@ -71,6 +71,7 @@ describe("Home Page renders:", () => {
     expect(enterMaunallyBtn).toBeInTheDocument();
     expect(paragraph).toBeInTheDocument();
   });
+  test.todo("Handles when a user has no recipes saved")
 }); 
 describe("When a user:", () => {
   test("enters a url, it appears on the screen", async () => {
