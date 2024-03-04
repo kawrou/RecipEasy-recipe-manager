@@ -13,16 +13,19 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token") !== null);
   const [recipeData, setRecipeData] = useState(null);
-
+// try passing token as a State
+const [token, setToken] = useState(localStorage.getItem("token"));
 
 
   const handleLogout = () => {
     logout();
     setIsLoggedIn(false);
+    setToken(null);
   };
 
   const handleLogin = (status) => {
     setIsLoggedIn(status);
+    // setToken(newToken);
   };
 
   return (
@@ -36,7 +39,8 @@ const App = () => {
           path="/recipe-scraper"
           element={
             <RecipeScraper
-              token={localStorage.getItem("token")}
+              // token={localStorage.getItem("token")}
+              token={token}
             />
           }
         />
