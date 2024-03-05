@@ -21,7 +21,7 @@ export const getRecipes = async (token) => {
 
 export const toggleFavourite = async (recipeId, token) => {
   const requestOptions = {
-    method: "POST",
+    method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content- Type": "application/json",
