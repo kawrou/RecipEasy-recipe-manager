@@ -3,15 +3,13 @@ import { useState } from "react";
 import "./HomePage.css";
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const HomePage = () => {
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const navigate = useNavigate();
-
-  const [url, setUrl] = useState("");
-
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
+export const HomePage = ({
+  handleScrapeRecipe,
+  token,
+  setToken,
+  url,
+  handleUrlChange,
+}) => {
 
   // The logic for this will need to change which might break the tests later on
   const handleSubmit = async (e) => {
@@ -37,9 +35,9 @@ export const HomePage = () => {
       <RecipeScraper
         token={token}
         url={url}
-        setUrl={setUrl}
         handleUrlChange={handleUrlChange}
         handleSubmit={handleSubmit}
+        handleScrapeRecipe={handleScrapeRecipe}
       />
     </div>
   );

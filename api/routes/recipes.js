@@ -4,7 +4,8 @@ const RecipesController = require("../controllers/recipes");
 const router = express.Router();
 const tokenChecker = require("../middleware/tokenChecker");
 
-router.get("/scrape-recipe",tokenChecker, RecipesController.fetchRecipeData);
+router.get("/scrape-recipe", RecipesController.fetchRecipeData);
+router.get("/:recipe_id", RecipesController.getRecipeById);
 
 router.post("/", RecipesController.create);
 
@@ -14,4 +15,3 @@ router.patch("/:recipe_id", RecipesController.updateRecipe);
 router.patch("/favouritedByOwner", RecipesController.isFavourite);
 
 module.exports = router;
-
