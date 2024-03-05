@@ -14,7 +14,7 @@ const fetchRecipeData = async (req, res) => {
   try {
     const response = await axios.get(url);
     const html = response.data;
-    console.log(response);
+    // console.log(response);
 
     const $ = cheerio.load(html);
 
@@ -167,9 +167,10 @@ const updateRecipe = async (req, res) => {
 
 const isFavourite = async (req, res) => {
   try {
+    console.log("here")
     console.log('Checking if recipe is favourite...');
     
-    const recipeId = req.body.recipe_id;
+    const recipeId = req.params.recipe_id;
     console.log('Recipe ID:', recipeId);
     
     const user = await User.findById(req.user_id);

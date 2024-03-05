@@ -95,6 +95,10 @@ const App = () => {
           path="/recipes/:recipe_id"
           element={<SingleRecipePage token={token} setToken={setToken} />}
         />
+        <Route
+          path="/recipes/favouritedByOwner/:recipe_id"
+          element={<SingleRecipePage token={token} setToken={setToken} />}
+        />
         <Route path="/recipecollection" element={<RecipeCollection />} />
       </Routes>
     </BrowserRouter>
