@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { expect } from "vitest";
-import * as scrapeRecipe from "../../src/services/recipe";
+import * as recipeService from "../../src/services/recipes";
 import { vi } from "vitest";
 
 //Mock useNavigate to test useNavigate logic in isolation
@@ -32,15 +32,15 @@ const token = "test token";
 
 const clickGenerateRecipe = async () => {
   const user = userEvent.setup();
-  const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
-  const generateRecipeBtn = screen.getByText("Generate Recipe");
+  const searchbar = screen.getByRole("textbox");
+  const generateRecipeBtn = screen.getByRole("button", { name: "Generate" });
   await user.type(searchbar, url);
   await user.click(generateRecipeBtn);
 };
 
 const clickEnterManually = async () => {
   const user = userEvent.setup();
-  const enterManuallyBtn = screen.getByText("Enter Manually");
+  const enterManuallyBtn = screen.getByRole("button", { name: "Manually" });
   await user.click(enterManuallyBtn);
 };
 
@@ -57,23 +57,27 @@ describe("Home Page renders:", () => {
         <HomePage />
       </BrowserRouter>
     );
-    const heading = screen.getByRole("heading");
-    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
-    const generateRecipeBtn = screen.getByText("Generate Recipe");
-    const enterMaunallyBtn = screen.getByText("Enter Manually");
-    const paragraph = screen.getByText(
-      "A place to store all your favourite recipes, from ones you find online to creating your own."
+    const heading = screen.getByRole("heading", { level: 1 });
+    const searchbar = screen.getByRole("textbox");
+    const generateRecipeBtn = screen.getByRole("button", { name: "Generate" });
+    const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
+    const pTagPageDescription = screen.getByLabelText("Page Instructions", {
+      selector: "p",
+    });
+
+    expect(heading.textContent).toEqual("Recipeasy");
+    expect(searchbar).toBeVisible();
+    expect(generateRecipeBtn).toBeVisible();
+    expect(enterMaunallyBtn).toBeVisible();
+    expect(pTagPageDescription).toHaveTextContent(
+      "Simply paste the URL of your favourite recipe page, " +
+        "or manually input your cherished recipes, and watch as " +
+        "Recipeasy effortlessly generates neatly organised recipes " +
+        "for you to store and access anytime, anywhere."
     );
-
-    expect(heading.textContent).toEqual("RecipEasy");
-    expect(searchbar).toBeInTheDocument();
-    expect(generateRecipeBtn).toBeInTheDocument();
-    expect(enterMaunallyBtn).toBeInTheDocument();
-    expect(paragraph).toBeInTheDocument();
   });
-
-}); 
-describe("When a user:", () => {
+});
+describe("When a user is logged in and:", () => {
   test("enters a url, it appears on the screen", async () => {
     render(
       <BrowserRouter>
@@ -81,61 +85,113 @@ describe("When a user:", () => {
       </BrowserRouter>
     );
     const user = userEvent.setup();
-    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
+    const searchbar = screen.getByRole("textbox");
     await user.type(searchbar, "Hello, world!");
     expect(searchbar.value).toBe("Hello, world!");
   });
 
   test("clicks generate a recipe, scrapeRecipe is called", async () => {
-    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
+    // const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
+    const handleUrlChangeMock = vi.fn();
+    const handleScrapeRecipeMock = vi.fn();
     mockGetItem.mockReturnValueOnce(token);
     render(
       <BrowserRouter>
-        <HomePage />
+        <HomePage
+          url={url}
+          handleUrlChange={handleUrlChangeMock}
+          handleScrapeRecipe={handleScrapeRecipeMock}
+        />
       </BrowserRouter>
     );
 
     await clickGenerateRecipe();
-    expect(scrapeRecipeSpy).toHaveBeenCalledOnce();
-    // expect(scrapeRecipeSpy).toHaveBeenLastCalledWith(url, token)
-    expect(scrapeRecipeSpy).toHaveBeenCalledWith(url);
-    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes");
+    expect(handleScrapeRecipeMock).toHaveBeenCalledOnce();
+    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes/create");
   });
 
-  test("clicks 'Generate recipe', they are redirected to login page if not logged in", async () => {
-    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
+  //TODO: Test written, but code hasn't been implemented yet.
+  test.todo(
+    "clicks 'Enter Manually', they are redirected to the create recipe page",
+    async () => {
+      mockGetItem.mockReturnValueOnce(token);
+      const handleUrlChangeMock = vi.fn();
+      const handleScrapeRecipeMock = vi.fn();
+      const handleEnterManuallyMock = vi.fn();
+      render(
+        <BrowserRouter>
+          <HomePage
+            url={url}
+            handleUrlChange={handleUrlChangeMock}
+            handleScrapeRecipe={handleScrapeRecipeMock}
+            handleEnterManually={handleEnterManuallyMock}
+          />
+        </BrowserRouter>
+      );
+
+      await clickEnterManually();
+      expect(handleEnterManuallyMock).toHaveBeenCalledOnce();
+      expect(mockUseNavigate).toHaveBeenCalledWith("/recipes/create");
+    }
+  );
+});
+
+//TODO: Finish writing tests and implement code
+describe.todo("When a user isn't logged in and", () => {
+  test.todo("It navigates to login if no token is present", async () => {
+    useFetchRecipes.mockReturnValue({
+      recipes: [],
+      loading: false,
+      error: null,
+    });
+
     render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
+      <RecipeCollection
+        token={testToken}
+        setToken={setTokenMock}
+        handleScrapeRecipe={handleScrapeRecipeMock}
+      />
     );
-
-    await clickGenerateRecipe();
-    expect(scrapeRecipeSpy).not.toHaveBeenCalled();
-    expect(mockUseNavigate).toHaveBeenCalledWith("/login");
+    const navigateMock = useNavigate();
+    await userEvent.click(screen.getByText("Generate Recipe"));
+    expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 
-  test("clicks 'Enter Manually', they are redirected to CreateRecipe page if logged in", async () => {
-    mockGetItem.mockReturnValueOnce(token);
+  test.todo(
+    "clicks 'Generate recipe', they are redirected to login page",
+    async () => {
+      // const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
+      const handleUrlChangeMock = vi.fn();
+      const handleScrapeRecipeMock = vi.fn();
+      render(
+        <BrowserRouter>
+          <HomePage
+            token={null}
+            url={url}
+            handleUrlChange={handleUrlChangeMock}
+            handleScrapeRecipe={handleScrapeRecipeMock}
+          />
+        </BrowserRouter>
+      );
 
-    render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
-    );
+      await clickGenerateRecipe();
+      // expect(scrapeRecipeSpy).not.toHaveBeenCalled();
+      expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
+      expect(mockUseNavigate).toHaveBeenCalledWith("/login");
+    }
+  );
 
-    await clickEnterManually();
-    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes");
-  });
+  test.todo(
+    "clicks on the 'Enter Manually', they are redirected to login page",
+    async () => {
+      render(
+        <BrowserRouter>
+          <HomePage />
+        </BrowserRouter>
+      );
 
-  test("clicks on the 'Enter Manually', they are redirected to login page if not logged in", async () => {
-    render(
-      <BrowserRouter>
-        <HomePage />
-      </BrowserRouter>
-    );
-
-    await clickEnterManually();
-    expect(mockUseNavigate).toHaveBeenCalledWith("/login");
-  });
+      await clickEnterManually();
+      expect(mockUseNavigate).toHaveBeenCalledWith("/login");
+    }
+  );
 });

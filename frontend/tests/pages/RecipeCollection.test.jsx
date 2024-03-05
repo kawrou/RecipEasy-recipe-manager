@@ -47,10 +47,10 @@ describe("Recipe collection - When token is present", () => {
     render(<RecipeCollection token={testToken} setToken={setTokenMock} />);
     //Renders the elements
     expect(screen.getByRole("heading", { level: 1 })).toBeVisible();
-    expect(screen.getByTestId("searchBarDescription")).toBeVisible();
+    expect(screen.getByTestId("searchBarDescription")).toBeVisible(); //Refactor
     expect(screen.getByRole("textbox")).toBeVisible();
-    expect(screen.getByText("Generate Recipe")).toBeVisible();
-    expect(screen.getByText("Enter Manually")).toBeVisible();
+    expect(screen.getByRole("button", {name: "Generate"})).toBeVisible();
+    expect(screen.getByRole("button", {name: "Manually"})).toBeVisible();
     expect(screen.getByRole("heading", { level: 2 })).toBeVisible();
 
     //Checks that recipes received from the backend are rendered

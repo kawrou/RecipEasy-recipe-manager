@@ -36,7 +36,10 @@ export const HomePage = ({
           <h2 className="font-kanit font-medium text-primary-500 text-2xl pb-4">
             Your Hassle-Free Recipe Organiser
           </h2>
-          <p className="font-poppins py-5 font-extralight text-md text-gray-600">
+          <p
+            aria-label="Page Instructions"
+            className="font-poppins py-5 font-extralight text-md text-gray-600"
+          >
             Simply paste the URL of your favourite recipe page, or manually
             input your cherished recipes, and watch as Recipeasy effortlessly
             generates neatly organised recipes for you to store and access
