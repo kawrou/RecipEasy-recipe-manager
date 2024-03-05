@@ -14,10 +14,12 @@
     "axios": "^1.6.7",
     "babel": "^6.23.0",
     "cheerio": "^1.0.0-rc.12",
+    "classnames": "^2.5.1",
     "jest-fetch-mock": "^3.0.3",
     "puppeteer": "^22.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",

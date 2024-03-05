@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
 
-export const LoginPage = ({ isLoggedIn, onLogin }) => {
+export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ export const LoginPage = ({ isLoggedIn, onLogin }) => {
       window.localStorage.setItem("token", token);
       console.log(token);
       onLogin(true);
+      setToken(token)
       navigate("/");
     } catch (err) {
       console.error(err);
