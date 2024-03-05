@@ -83,5 +83,6 @@ describe("Unit Test: RecipeScraper", () => {
     expect(scrapeRecipeSpy).not.toHaveBeenCalled();
   });
 
+  // TODO: Enter Manually button not yet implemented
   test.todo("What happens when Enter Manually button is clicked?");
 });

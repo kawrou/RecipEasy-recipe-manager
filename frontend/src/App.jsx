@@ -8,7 +8,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
-import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
+import { RecipeCollection } from "./pages/MyRecipes/RecipeCollection";
 import Navbar from "./components/Navbar";
 import { logout } from "./services/authentication";
 
@@ -95,7 +95,7 @@ const App = () => {
           element={<SingleRecipePage token={token} setToken={setToken} />}
         />
         <Route
-          path="/recipecollection"
+          path="/myrecipes"
           element={
             <RecipeCollection
               handleScrapeRecipe={handleScrapeRecipe}
