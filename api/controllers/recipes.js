@@ -8,22 +8,21 @@ const User = require("../models/user");
 //NEED TO CREATE A NEW TOKEN TO GIVE BACK TO USER
 
 const fetchRecipeData = async (req, res) => {
-  const url = req.query.url;// assigns url to a variable
+  const url = req.query.url; // assigns url to a variable
 
   try {
     const response = await axios.get(url); // Use axios to get webpage and return a promise
     const html = response.data; // assign all webpage data to html variable
-    console.log(2, response);
 
     //load the html tags into cheerio which is a library that has methods for finding and extracting html elements
-    const $ = cheerio.load(html); 
-    
+    const $ = cheerio.load(html);
+
     //JSON-LD is being used to semantically markup the data, to make them become not only machine-readable,
     //but also machine-understanable by providing additional syntax to JSON for serialization of Linked Data.
-    const jsonLD = $('script[type="application/ld+json"]'); 
+    const jsonLD = $('script[type="application/ld+json"]');
     let recipeData;
 
-    //jsonLD is a collection of HTML elements 
+    //jsonLD is a collection of HTML elements
     //each method from the cheerio library, takes a callback func with two parameters - index of the current element, and 'element' is reference to the current 'element'
     //you can access and manipulate the element using the 'element' parameter
     //console.log(`Element ${index}: ${element.html()}`); -> prints the html element and index to the console
@@ -36,10 +35,10 @@ const fetchRecipeData = async (req, res) => {
             (obj) => obj["@type"] === "Recipe"
           );
           recipeData = recipeObjects;
-          console.log("5: @graph - RecipeData", recipeData)
+          console.log("5: @graph - RecipeData", recipeData);
         } else if (jsonData["@type"] === "Recipe") {
           recipeData = jsonData;
-          console.log("5: @type - RecipeData", recipeData)
+          console.log("5: @type - RecipeData", recipeData);
         }
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -82,6 +81,40 @@ const fetchRecipeData = async (req, res) => {
       await browser.close();
     }
 
+    //We can start filtering recipeData here.
+    // We want:
+    // Recipe title - (name)
+    // recipe description - (description)
+    // servings - (recipeYield)
+    // tags - (keywords)
+    // time - (cookTime, prepTime)
+    // ingredients - (recipeIngredient)
+    // instructions - (recipeInstructions)
+    // url - (mainEntityOfPage)
+    // image - (image)
+    const filterRecipeData = (recipeData) => {
+      let recipeDataArray = Array.isArray(recipeData.recipe_data)
+        ? recipeData.recipe_data
+        : [recipeData.recipe_data];
+      console.log(recipeDataArray)
+    };
+
+    // Convert PT20M format to minutes
+    function calculateTotalTime(cookTime, prepTime) {
+      const cookTimeInMinutes = cookTime
+        ? parseInt(cookTime.substring(2, cookTime.length - 1))
+        : 0;
+      const prepTimeInMinutes = prepTime
+        ? parseInt(prepTime.substring(2, prepTime.lenght - 1))
+        : 0;
+      return cookTimeInMinutes + prepTimeInMinutes;
+    }
+
+    function parseKeywords(keywords) {
+      return keywords ? keywords.split(",").map((tag) => tag.trimg()) : [];
+    }
+
+    // The returned JSON will probably need to be changed?
     console.log("6 - Final Recipe Data:", recipeData);
     res.status(200).json({ recipe_data: recipeData });
   } catch (error) {
