@@ -165,6 +165,16 @@ const updateRecipe = async (req, res) => {
   }
 };
 
+const getRecipeById = async (req, res) => {
+  console.log("recipe id ----------------------", req.params.recipe_id);
+  const recipeId = req.params.recipe_id;
+  const recipeData = await Recipe.findById(recipeId);
+  const newToken = generateToken(req.user_id);
+  res
+    .status(200)
+    .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
+};
+
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
@@ -172,8 +182,6 @@ const RecipesController = {
   updateRecipe: updateRecipe,
   getRecipeById: getRecipeById,
 };
-  updateRecipe: updateRecipe,
-  getRecipeById: getRecipeById
-}
+
 
 module.exports = RecipesController;
