@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetchRecipes } from "../../src/hooks/useFetchRecipe";
 
 // Mocking the getRecipes service
-vi.mock("../../src/services/getRecipes", () => {
+vi.mock("../../src/services/recipes", () => {
   const getRecipesMock = vi.fn();
   return { getRecipes: getRecipesMock };
 });
