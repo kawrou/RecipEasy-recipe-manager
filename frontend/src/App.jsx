@@ -31,7 +31,7 @@ const App = () => {
       }
     } else {
       // Show error message if not logged in
-      setShowErrorMessage(true);
+      // setShowErrorMessage(true);
     }
   };
 
@@ -94,7 +94,18 @@ const App = () => {
           path="/recipes/:recipe_id"
           element={<SingleRecipePage token={token} setToken={setToken} />}
         />
-        <Route path="/recipecollection" element={<RecipeCollection />} />
+        <Route
+          path="/recipecollection"
+          element={
+            <RecipeCollection
+              handleScrapeRecipe={handleScrapeRecipe}
+              token={token}
+              setToken={setToken}
+              url={url}
+              handleUrlChange={handleUrlChange}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
