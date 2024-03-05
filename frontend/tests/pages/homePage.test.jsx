@@ -2,12 +2,11 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
-import { expect } from "vitest";
-import * as recipeService from "../../src/services/recipes";
-import { vi } from "vitest";
+import { vi, expect, describe, test } from "vitest";
 
-//Mock useNavigate to test useNavigate logic in isolation
-//https://stackoverflow.com/questions/66284286/react-jest-mock-usenavigate & vitest env suggestion
+// MOCKS
+// Mock useNavigate to test useNavigate logic in isolation
+// https://stackoverflow.com/questions/66284286/react-jest-mock-usenavigate & vitest env suggestion
 const mockUseNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -26,7 +25,11 @@ Object.defineProperty(window, "localStorage", {
   writable: true,
 });
 
-// Reusable bits of code
+const handleUrlChangeMock = vi.fn();
+const handleScrapeRecipeMock = vi.fn();
+const handleEnterManuallyMock = vi.fn();
+
+// REUSABLE BITS OF CODE
 const url = "some url";
 const token = "test token";
 
@@ -44,6 +47,7 @@ const clickEnterManually = async () => {
   await user.click(enterManuallyBtn);
 };
 
+// TESTS
 describe("Home Page renders:", () => {
   beforeEach(() => {
     // window.localStorage.removeItem("token");
@@ -92,8 +96,6 @@ describe("When a user is logged in and:", () => {
 
   test("clicks generate a recipe, scrapeRecipe is called", async () => {
     // const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
-    const handleUrlChangeMock = vi.fn();
-    const handleScrapeRecipeMock = vi.fn();
     mockGetItem.mockReturnValueOnce(token);
     render(
       <BrowserRouter>
@@ -115,9 +117,6 @@ describe("When a user is logged in and:", () => {
     "clicks 'Enter Manually', they are redirected to the create recipe page",
     async () => {
       mockGetItem.mockReturnValueOnce(token);
-      const handleUrlChangeMock = vi.fn();
-      const handleScrapeRecipeMock = vi.fn();
-      const handleEnterManuallyMock = vi.fn();
       render(
         <BrowserRouter>
           <HomePage
@@ -160,9 +159,6 @@ describe.todo("When a user isn't logged in and", () => {
   test.todo(
     "clicks 'Generate recipe', they are redirected to login page",
     async () => {
-      // const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
-      const handleUrlChangeMock = vi.fn();
-      const handleScrapeRecipeMock = vi.fn();
       render(
         <BrowserRouter>
           <HomePage

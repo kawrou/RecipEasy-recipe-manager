@@ -19,7 +19,7 @@ export const RecipeCollection = ({
     if (!loading && !token) {
       navigate("/login");
     } else if (loading) {
-      return <p>Loading ...</p>;
+      return <p aria-label="Loading message">Loading ...</p>;
     } else if (error) {
       navigate("/login")
       // return <p>Error: {error.message}</p>;
@@ -27,7 +27,7 @@ export const RecipeCollection = ({
       (!loading && !error && recipes === undefined) ||
       recipes.length === 0
     ) {
-      return <p> No recipes found</p>;
+      return <p aria-label="Empty Recipes"> No recipes found</p>;
     } else {
       return recipes.map((recipe) => (
         <RecipeCard recipe={recipe} key={recipe._id} />
@@ -38,7 +38,7 @@ export const RecipeCollection = ({
   return (
     <>
       <h1>Add a recipe</h1>
-      <p data-testid="searchBarDescription">
+      <p aria-label="Scrape Input Description">
         Enter a url of your favourite recipe
       </p>
       <RecipeScraper
