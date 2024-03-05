@@ -14,7 +14,7 @@ describe("Recipe model", () => {
       tags: [],
       ownerId: "65ba5046a9d4c1867a4cd305",
       favouritedByOwner: false,
-      totalTime: "PT45M",
+      totalTime: 45,
       recipeYield: 4,
       recipeIngredient: [
         "2 tablespoons olive oil",
@@ -54,7 +54,7 @@ describe("Recipe model", () => {
   });
 
   it("has a total time", () => {
-    expect(recipe.totalTime).toEqual("PT45M");
+    expect(recipe.totalTime).toEqual(45);
   });
 
   it("has a recipe yield", () => {
@@ -103,6 +103,6 @@ describe("Recipe model", () => {
     await recipe.save();
 
     const recipes = await Recipe.find();
-    expect(recipes[0].totalTime).toEqual("PT45M");
+    expect(recipes[0].totalTime).toEqual(45);
   });
 });

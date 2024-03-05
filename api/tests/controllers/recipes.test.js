@@ -1,21 +1,12 @@
-const request = require("supertest");
-const JWT = require("jsonwebtoken");
-
-const axios = require("axios");
-const puppeteer = require("puppeteer");
-
-const RecipesController = require("../../controllers/recipes");
+const app = require("../../app");
 const Recipe = require("../../models/recipe");
 const User = require("../../models/user");
-
-const app = require("../../app");
-
-jest.mock("axios");
-jest.mock("puppeteer");
-
+const request = require("supertest");
+const JWT = require("jsonwebtoken");
 require("../mongodb_helper");
 
 const secret = process.env.JWT_SECRET;
+let recipe;
 
 const createToken = (userId) => {
   return JWT.sign(
@@ -31,48 +22,79 @@ const createToken = (userId) => {
 };
 
 let token;
-
-describe("RecipesController", () => {
-  it("should fetch recipe data successfully", async () => {
-    const mockAxiosResponse = {
-      data: "<html><body>Mock HTML content</body></html>",
-    };
-
-    axios.get.mockResolvedValueOnce(mockAxiosResponse);
-    puppeteer.launch.mockResolvedValueOnce({
-      newPage: jest.fn().mockResolvedValueOnce({
-        goto: jest.fn().mockResolvedValueOnce(),
-        $$eval: jest
-          .fn()
-          .mockImplementation((selector, callback) => callback([])),
-      }),
-      close: jest.fn().mockResolvedValueOnce(),
+let decodedToken;
+describe("/recipes", () => {
+  beforeAll(async () => {
+    // add user
+    const user = new User({
+      email: "post-test@test.com",
+      password: "12345678",
+      username: "post-someone",
     });
+    await user.save();
+    await Recipe.deleteMany({});
+    userid = user.id;
+    token = createToken(user.id);
+    decodedToken = JWT.decode(token, process.env.JWT_SECRET);
+    // add recipe
+    const currentDate = new Date();
+    await request(app)
+      .post("/recipes")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "test_recipe",
+        description: "test_description",
+        ownerId: token.user_id,
+        tags: ["test_tag_one", "test_tag_two"],
+        favouritedByOwner: false,
+        totalTime: 20,
+        recipeYield: 1,
+        recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+        recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+        url: "test_url",
+        image: "test_url",
+        dateAdded: currentDate,
+      });
 
-    const req = { query: { url: "https://example.com" } };
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-    await RecipesController.fetchRecipeData(req, res);
-
-    expect(axios.get).toHaveBeenCalledWith("https://example.com");
-    // console.log(res.status)
-    expect(res.status).toHaveBeenCalledWith(200);
+    recipe = await Recipe.find();
+  });
+  afterEach(async () => {
+    await User.deleteMany({});
+    await Recipe.deleteMany({});
   });
 
-  it("should handle network failure", async () => {
-    axios.get.mockRejectedValueOnce(new Error("Network error"));
+  describe("POST, when a valid token is present and recipe input is valid", () => {
+    test("new recipe is present in the document", async () => {
+      expect(recipe.length).toEqual(1);
+      expect(recipe[0].name).toEqual("test_recipe");
 
-    const req = { query: { url: "https://example.com" } };
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-    await RecipesController.fetchRecipeData(req, res);
-
-    expect(axios.get).toHaveBeenCalledWith("https://example.com");
-    expect(res.status).toHaveBeenCalledWith(500);
+      const currentDate = new Date();
+      const updateResponse = await request(app)
+        .patch(`/recipes/${recipe[0]._id.toString()}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          name: "test_update",
+          description: "test_description",
+          ownerId: token.user_id,
+          tags: ["test_tag_one", "test_tag_two"],
+          favouritedByOwner: false,
+          totalTime: 20,
+          recipeYield: 1,
+          recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
+          recipeInstructions: ["test_instruction_one", "test_instruction_two"],
+          url: "test_url",
+          image: "test_url",
+          dateAdded: currentDate,
+        });
+      expect(updateResponse.status).toEqual(200);
+      const updateRecipe = await Recipe.find();
+      expect(updateRecipe.length).toEqual(1);
+      expect(updateRecipe[0].name).toEqual("test_update");
+    });
   });
 });
 
-describe("Tests for route /recipes/:recipe_id", () => {
+describe("/recipes/:recipe_id", () => {
   const dateAdded = new Date("2024-03-04");
   const user = new User({
     username: "pops123",
@@ -146,7 +168,7 @@ describe("Tests for route /recipes/:recipe_id", () => {
       expect(recipeData.ownerId).toEqual("65e1ed2534ba17d5e7b48f68");
       expect(recipeData.tags).toEqual(["Baking", "Blueberry"]);
       expect(recipeData.favouritedByOwner).toEqual(false);
-      expect(recipeData.totalTime).toEqual("40");
+      expect(recipeData.totalTime).toEqual(40);
       expect(recipeData.recipeYield).toEqual(4);
       expect(recipeData.recipeIngredient).toEqual([
         "100g unsalted butter softened, plus 1 tbsp, melted, for greasing",
