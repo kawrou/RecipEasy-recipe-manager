@@ -1,26 +1,28 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-
 import { login } from "../../services/authentication";
 
-export const LoginPage = () => {
+export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const token = await login(email, password);
       window.localStorage.setItem("token", token);
+      console.log(token);
+      onLogin(true);
+      setToken(token)
       navigate("/");
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      setError("Invalid email or password");
       alert("Please try again")
     }
   };
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -68,3 +70,4 @@ export const LoginPage = () => {
     </>
   );
 };
+

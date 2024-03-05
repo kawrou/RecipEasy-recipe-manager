@@ -1,15 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
 import { expect } from "vitest";
-import * as scrapeRecipe from "../../src/services/recipe";
+import * as recipeService from "../../src/services/recipe";
 import RecipeScraper from "../../src/components/RecipeScraper";
 
 describe("Unit Test: RecipeScraper", () => {
   it("Renders elements", () => {
-    render(<RecipeScraper />);
+    render(
+      <MemoryRouter>
+        <RecipeScraper />
+      </MemoryRouter>
+    );
 
-    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
+    const searchbar = screen.getByPlaceholderText("Enter Recipe URL:");
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     const enterMaunallyBtn = screen.getByText("Enter Manually");
 
@@ -19,17 +24,25 @@ describe("Unit Test: RecipeScraper", () => {
   });
 
   test("Renders URL address string upon input", async () => {
-    render(<RecipeScraper />);
+    render(
+      <MemoryRouter>
+        <RecipeScraper />
+      </MemoryRouter>
+    );
 
-    const searchbar = screen.getByPlaceholderText("Enter your recipe URL");
+    const searchbar = screen.getByPlaceholderText("Enter Recipe URL:");
     await userEvent.type(searchbar, "test-url");
     expect(searchbar.value).toBe("test-url");
   });
 
   test("scrapeRecipe func called when 'Generate Recipe' clicked", async () => {
-    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
+    const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
 
-    render(<RecipeScraper url="test-url" token={"test-token"} />);
+    render(
+      <MemoryRouter>
+        <RecipeScraper url="test-url" token={"test-token"}/>
+      </MemoryRouter>
+    );
 
     const generateRecipeBtn = screen.getByText("Generate Recipe");
     await userEvent.click(generateRecipeBtn);
@@ -38,14 +51,18 @@ describe("Unit Test: RecipeScraper", () => {
     expect(scrapeRecipeSpy).toHaveBeenCalledWith("test-url");
   });
 
-  test("scrapeRecipe func not called when empty URL", async () => {
-    const scrapeRecipeSpy = vi.spyOn(scrapeRecipe, "scrapeRecipe");
-
-    render(<RecipeScraper />);
-
-    const generateRecipeBtn = screen.getByText("Generate Recipe");
-    await userEvent.click(generateRecipeBtn);
-
-    expect(scrapeRecipeSpy).not.toHaveBeenCalled();
+    test("scrapeRecipe func not called when empty URL", async () => {
+      const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
+  
+      render(
+        <MemoryRouter>
+          <RecipeScraper />
+        </MemoryRouter>
+      );
+  
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
+      await userEvent.click(generateRecipeBtn);
+  
+      expect(scrapeRecipeSpy).not.toHaveBeenCalled();
+    });
   });
-});
