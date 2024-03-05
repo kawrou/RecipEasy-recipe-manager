@@ -2,6 +2,9 @@ const express = require("express");
 const RecipesController = require("../controllers/recipes");
 
 const router = express.Router();
+
+//TODO:
+// Move token checker back to app.js as all requests related to recipes will require tokenChecker
 const tokenChecker = require("../middleware/tokenChecker");
 
 router.get("/scrape-recipe",tokenChecker, RecipesController.fetchRecipeData);
