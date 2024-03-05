@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { toggleFavourite } from '../../services/recipe';
+import { toggleFavourite } from '../../services/recipes';
 
-const FavouriteButton = ({ recipeId, token  }) => {
+export const FavouriteButton = ({ recipeId, token  }) => {
   const [favStatus, setFavStatus] = useState(false);
   console.log('initialFavStatus', favStatus)
 
@@ -31,5 +31,3 @@ const FavouriteButton = ({ recipeId, token  }) => {
     </div>
   );
 };
-
-export default FavouriteButton;

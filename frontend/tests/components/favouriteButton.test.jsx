@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import FavouriteButton from "../../src/components/FavouriteButton";
+import FavouriteButton from '../../src/components/RecipePage/FavouriteButton';
 
 describe('FavouriteButton', () => {
   test('renders unfavourited button', () => {
