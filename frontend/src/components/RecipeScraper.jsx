@@ -15,6 +15,7 @@ const RecipeScraper = ({ url, handleUrlChange, handleScrapeRecipe }) => {
       />
       <div className="flex items-center justify-center py-5 gap-5">
         <button
+          aria-label="Generate"
           onClick={async () => {
             await handleScrapeRecipe();
             navigate("/recipes/create");
@@ -25,6 +26,7 @@ const RecipeScraper = ({ url, handleUrlChange, handleScrapeRecipe }) => {
           Generate Recipe
         </button>
         <button
+          aria-label="Manually"
           type="submit"
           className="font-kanit font-bold text-lg text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white rounded-lg px-5 py-2"
         >
