@@ -35,7 +35,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <FavouriteButton recipeId={'65e604871bde1df33e102dfe'} />
+      <FavouriteButton />
       <Routes>
         <Route
           path="/login"

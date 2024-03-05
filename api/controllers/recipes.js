@@ -154,31 +154,42 @@ const updateRecipe = async (req, res) => {
 
 const isFavourite = async (req, res) => {
   try {
+    console.log('Checking if recipe is favourite...');
+    
     const recipeId = req.body.recipe_id;
+    console.log('Recipe ID:', recipeId);
+    
     const user = await User.findById(req.user_id);
+    console.log('User:', user);
 
     if (!user) {
+      console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
     }
 
     const recipe = await Recipe.findById(recipeId);
+    console.log('Recipe:', recipe);
 
     if (!recipe) {
+      console.log('Recipe not found');
       return res.status(404).json({ message: 'Recipe not found' });
     }
 
     // Toggle the favouritedByOwner field
     recipe.favouritedByOwner = !recipe.favouritedByOwner;
+    console.log('Favourite status toggled:', recipe.favouritedByOwner);
 
     // Save the updated recipe
     await recipe.save();
+    console.log('Recipe saved successfully');
 
     res.status(200).json({ message: 'Recipe favourited successfully', recipe });
   } catch (error) {
-    console.error(error);
+    console.error('Internal server error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
