@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  createRecipe,
-  updateRecipe,
-  getRecipeById,
-} from "../../services/recipes";
+import { updateRecipe, getRecipeById } from "../../services/recipes";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
@@ -20,8 +16,10 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const RecipePage = ({ token, setToken, recipeId }) => {
+export const RecipePage = ({ token, setToken }) => {
   const navigate = useNavigate();
+
+  const { recipe_id } = useParams();
 
   const [editMode, setEditMode] = useState(false);
 
@@ -37,7 +35,7 @@ export const RecipePage = ({ token, setToken, recipeId }) => {
 
   useEffect(() => {
     if (token) {
-      getRecipeById(recipeId, token)
+      getRecipeById(recipe_id, token)
         .then((data) => {
           setRecipeName(data.recipeData.name);
           setRecipeDescription(data.recipeData.description);
@@ -73,7 +71,7 @@ export const RecipePage = ({ token, setToken, recipeId }) => {
     } else {
       let data = await updateRecipe(
         token,
-        recipeId,
+        recipe_id,
         recipeName,
         recipeDescription,
         recipeTags,

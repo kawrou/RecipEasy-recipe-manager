@@ -24,7 +24,6 @@ export const CreateRecipePage = ({
   recipeData,
   token,
   setToken,
-  setRecipeId,
 }) => {
   const navigate = useNavigate();
 
@@ -107,7 +106,6 @@ export const CreateRecipePage = ({
         imageUrl
       );
       setToken(data.token);
-      setRecipeId(data.recipe._id);
       navigate(`/recipes/${data.recipe._id}`);
     }
   };
