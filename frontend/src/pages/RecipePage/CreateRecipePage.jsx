@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  createRecipe,
-  updateRecipe,
-  getRecipeById,
-} from "../../services/recipes";
+import { createRecipe } from "../../services/recipes";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
@@ -20,11 +16,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const CreateRecipePage = ({
-  recipeData,
-  token,
-  setToken,
-}) => {
+export const CreateRecipePage = ({ recipeData, token, setToken }) => {
   const navigate = useNavigate();
 
   let recipeDataArray = Array.isArray(recipeData.recipe_data)
@@ -112,9 +104,9 @@ export const CreateRecipePage = ({
 
   return (
     <>
-      <div className="h-4 bg-gray-300" />
+      <div className="h-4 bg-tertiary-500" />
       <div className="flex divide-x justify-center">
-        <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
+        <div className="flex justify-center w-1/2 flex-col pt-18 p-20 gap-7">
           {/* title */}
           <RecipeName
             name={recipeName}
@@ -144,12 +136,12 @@ export const CreateRecipePage = ({
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
-        <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
+        <div className="flex flex-1 flex-col gap-10 justify-center p-20 ">
           <RecipeImage imageUrl={imageUrl} />
           <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
-      <div className="w-screen h-4 bg-gray-300" />
+      <div className="w-screen h-4 bg-tertiary-500" />
       <div className="flex divide-x justify-center p-10 pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList
