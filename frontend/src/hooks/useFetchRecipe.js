@@ -21,6 +21,7 @@ export const useFetchRecipes = (token, setToken) => {
         setLoading(false);
         setToken(data.token);
       } catch (err) {
+        console.log(err)
         setError(err);
         setLoading(false);
       }
