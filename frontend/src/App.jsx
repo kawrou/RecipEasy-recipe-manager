@@ -7,6 +7,7 @@ import HomePage from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { RecipePage } from "./pages/RecipePage/RecipePage";
+import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
 import { logout } from "./services/authentication";
@@ -82,8 +83,7 @@ const App = () => {
         <Route
           path="/recipes/create"
           element={
-            <RecipePage
-              newRecipe={true}
+            <CreateRecipePage
               recipeData={recipeData}
               token={token}
               setToken={setToken}
@@ -92,10 +92,18 @@ const App = () => {
             />
           }
         />
-        {/* <Route
-          path={`/recipes/${recipe_id}`}
-          element={<RecipePage newRecipe={false} />}
-        /> */}
+        <Route
+          path={`/recipes/${recipeId}`}
+          element={
+            <RecipePage
+              recipeData={recipeData}
+              token={token}
+              setToken={setToken}
+              recipeId={recipeId}
+              setRecipeId={setRecipeId}
+            />
+          }
+        />
         <Route path="/recipecollection" element={<RecipeCollection />} />
       </Routes>
     </BrowserRouter>

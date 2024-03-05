@@ -166,7 +166,6 @@ const updateRecipe = async (req, res) => {
 };
 
 const getRecipeById = async (req, res) => {
-  console.log("recipe id ----------------------", req.params.recipe_id);
   const recipeId = req.params.recipe_id;
   const recipeData = await Recipe.findById(recipeId);
   const newToken = generateToken(req.user_id);

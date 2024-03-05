@@ -20,46 +20,69 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const RecipePage = ({ token, setToken, recipeId }) => {
+export const CreateRecipePage = ({
+  recipeData,
+  token,
+  setToken,
+  setRecipeId,
+}) => {
   const navigate = useNavigate();
 
-  const [editMode, setEditMode] = useState(false);
+  let recipeDataArray = Array.isArray(recipeData.recipe_data)
+    ? recipeData.recipe_data
+    : [recipeData.recipe_data];
 
-  const [recipeName, setRecipeName] = useState("");
-  const [recipeDescription, setRecipeDescription] = useState("");
-  const [yieldAmount, setYieldAmount] = useState("");
-  const [totalTime, setTotalTime] = useState("");
-  const [ingredients, setIngredients] = useState([]);
-  const [instructions, setInstructions] = useState([]);
-  const [imageUrl, setImageUrl] = useState("");
-  const [recipeUrl, setRecipeUrl] = useState("");
-  const [recipeTags, setRecipeTags] = useState([]);
+  const {
+    name,
+    description,
+    recipeYield,
+    cookTime,
+    prepTime,
+    recipeIngredient,
+    recipeInstructions,
+    image,
+    url,
+    keywords,
+  } = recipeDataArray[0];
 
-  useEffect(() => {
-    if (token) {
-      getRecipeById(recipeId, token)
-        .then((data) => {
-          setRecipeName(data.recipeData.name);
-          setRecipeDescription(data.recipeData.description);
-          setYieldAmount(data.recipeData.recipeYield);
-          setTotalTime(data.recipeData.totalTime);
-          setIngredients(data.recipeData.recipeIngredient);
-          setInstructions(data.recipeData.recipeInstructions);
-          setImageUrl(data.recipeData.image);
-          setRecipeUrl(data.recipeData.url);
-          setRecipeTags(data.recipeData.tags);
+  const [editMode, setEditMode] = useState(true);
 
-          setToken(data.token);
+  let instructionsArray = [];
+  if (Array.isArray(recipeInstructions)) {
+    instructionsArray = recipeInstructions.map(
+      (instruction) => instruction.text
+    );
+  } else {
+    instructionsArray = recipeInstructions || [];
+  }
 
-          window.localStorage.setItem("token", data.token);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      navigate("/");
-    }
-  }, [token]);
+  const [recipeName, setRecipeName] = useState(name || "");
+  const [recipeDescription, setRecipeDescription] = useState(description || "");
+  const [yieldAmount, setYieldAmount] = useState(recipeYield || "");
+  const [totalTime, setTotalTime] = useState(
+    calculateTotalTime(cookTime, prepTime) || ""
+  );
+  const [ingredients, setIngredients] = useState(recipeIngredient || []);
+  const [instructions, setInstructions] = useState(instructionsArray);
+  const [imageUrl, setImageUrl] = useState(image?.url || image || "");
+  const [recipeUrl, setRecipeUrl] = useState(url || "");
+  const [recipeTags, setRecipeTags] = useState(parseKeywords(keywords) || []);
+
+  function calculateTotalTime(cookTime, prepTime) {
+    // Convert PT20M format to minutes
+    const cookTimeInMinutes = cookTime
+      ? parseInt(cookTime.substring(2, cookTime.length - 1))
+      : 0;
+    const prepTimeInMinutes = prepTime
+      ? parseInt(prepTime.substring(2, prepTime.length - 1))
+      : 0;
+    return cookTimeInMinutes + prepTimeInMinutes;
+  }
+
+  // Parse keywords string to an array of tags
+  function parseKeywords(keywords) {
+    return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
+  }
 
   const handleSaveRecipe = async () => {
     if (
@@ -71,9 +94,8 @@ export const RecipePage = ({ token, setToken, recipeId }) => {
     ) {
       alert("Please fill out all the required fields");
     } else {
-      let data = await updateRecipe(
+      let data = await createRecipe(
         token,
-        recipeId,
         recipeName,
         recipeDescription,
         recipeTags,
@@ -85,7 +107,8 @@ export const RecipePage = ({ token, setToken, recipeId }) => {
         imageUrl
       );
       setToken(data.token);
-      setEditMode(!editMode);
+      setRecipeId(data.recipe._id);
+      navigate(`/recipes/${data.recipe._id}`);
     }
   };
 

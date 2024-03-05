@@ -106,7 +106,10 @@ export const updateRecipe = async (
     body: JSON.stringify(payload),
   };
 
-  const response = await fetch(`${BACKEND_URL}/recipes/${recipeId}`, requestOptions);
+  const response = await fetch(
+    `${BACKEND_URL}/recipes/${recipeId}`,
+    requestOptions
+  );
 
   if (response.status !== 200) {
     throw new Error("Unable to make POST request for fetch posts");
@@ -125,12 +128,12 @@ export const getRecipeById = async (recipeId, token) => {
   };
 
   const response = await fetch(
-    `${BACKEND_URL}/users/${recipeId}`,
+    `${BACKEND_URL}/recipes/${recipeId}`,
     requestOptions
   );
 
   if (response.status !== 200) {
-    throw new Error("Unable to get user. Does this user exist?");
+    throw new Error("Unable to get recipe. Does this recipe exist?");
   }
   // console.log("user", response)
   const data = await response.json();
