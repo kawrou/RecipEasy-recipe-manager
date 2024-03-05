@@ -18,3 +18,21 @@ export const getRecipes = async (token) => {
   const data = await response.json();
   return data;
 };
+
+// export const getRecipeById = async (token, recipeId) => {
+//   const requestOptions = {
+//     method: 'GET',
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+
+//   const response = await fetch(`${BACKEND_URL}/recipes/${recipeId}`, requestOptions);
+
+//   if (response.status !== 200) {
+//     throw new Error(`Unable to fetch recipe with ID ${recipeId}`);
+//   }
+
+//   const data = await response.json();
+//   return data.recipe; 
+// };

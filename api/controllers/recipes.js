@@ -166,7 +166,6 @@ const updateRecipe = async (req, res) => {
 };
 
 const getRecipeById = async (req, res) => {
-  console.log("recipe id ----------------------", req.params.recipe_id);
   const recipeId = req.params.recipe_id;
   const recipeData = await Recipe.findById(recipeId);
   const newToken = generateToken(req.user_id);
@@ -176,11 +175,28 @@ const getRecipeById = async (req, res) => {
 };
 
 
+// ignore and keep henry's work after merge 
+const getUserRecipes = async (req, res) => {
+  try {
+    const ownerId = req.params.ownerId;
+    const recipeData = await Recipe.find({ owner: ownerId });
+    const newToken = generateToken(req.user_id);
+    console.log(ownerId)
+    console.log(recipeData)
+    res.status(200).json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
   create: create,
   updateRecipe: updateRecipe,
   getRecipeById: getRecipeById,
+  getUserRecipes: getUserRecipes
 };
 
 

@@ -13,4 +13,8 @@ router.post("/", RecipesController.create);
 router.patch("/:recipe_id", RecipesController.updateRecipe);
 router.get("/:recipe_id", RecipesController.getRecipeById);
 
+
+// keep Henry's work and delete this during merge
+router.get("/", RecipesController.getUserRecipes);
+
 module.exports = router;
