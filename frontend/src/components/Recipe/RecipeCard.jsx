@@ -35,7 +35,7 @@ const RecipeCard = ({ recipe }) => {
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
       {recipeData && (
-        <div className="lg:w-1/5 md:w-1/2 w-full p-4">
+        <div className="w-full p-4">
           <div className="bg-white border rounded-3xl overflow-hidden flex flex-col items-center">
             <div className="w-3/4 mt-4 mb-4 ml-4 mr-4 pb-20 pt-5">
               <img

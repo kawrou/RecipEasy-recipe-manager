@@ -59,7 +59,7 @@ export const RecipeCollection = () => {
         handleSubmit={handleSubmit}
       />
       <h2> My Recipes</h2>
-      <div className="feed" role="feed">
+      <div className="grid grid-cols-4 gap-2" role="feed">
         {renderPageContent()}
       </div>
     </>
