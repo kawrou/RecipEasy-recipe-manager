@@ -48,15 +48,16 @@ export const Tags = ({ tags, setTags, editMode }) => {
               </svg>
             </span>
           ))}
-        </div>
-        <input
+          <input
           id="tags-input"
-          className="p-2.5 flex-auto bg-transparent text-md text-gray-900 focus:outline-none "
+          className="p-2.5 w-fill flex-auto bg-transparent text-md text-gray-900 focus:outline-none "
           placeholder="Add tags here..."
           value={tagsInput}
           onChange={(e) => setTagsInput(e.target.value)}
           onKeyDown={handleTagsInput}
         />
+        </div>
+        
       </div>
       ):(
         <div className="flex flex-wrap gap-2">
