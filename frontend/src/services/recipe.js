@@ -22,3 +22,25 @@ export const scrapeRecipe = async (url, token) => {
     throw error;
   }
 };
+
+export const getRecipeById = async (recipeId, token) => {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(
+    `${BACKEND_URL}/users/${recipeId}`,
+    requestOptions
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Unable to get user. Does this user exist?");
+  }
+  // console.log("user", response)
+  const data = await response.json();
+
+  return data;
+};

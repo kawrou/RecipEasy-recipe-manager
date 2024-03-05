@@ -1,12 +1,33 @@
 import React from 'react';
 import timeTakenIcon from '../../assets/timeTakenIcon.svg';
+import { getRecipeById } from '../../services/recipe';
 
 const RecipeCard = ({ recipe }) => {
   const placeholderImage = 'https://via.placeholder.com/300';
   const defaultName = 'Recipe Name';
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getRecipeById(recipeId);
+        setRecipeData(data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    if (recipeId) {
+      fetchData();
+    }
+  }, [recipeId]);
+
   return (
     <div className="flex justify-center items-center h-full">
+       {/* ... loading and error states as before ... */}
+    {recipeData && (
       <div className="lg:w-1/5 md:w-1/2 w-full p-4">
         <div className="bg-white border rounded-3xl overflow-hidden flex flex-col items-center">
           <div className="w-3/4 mt-4 mb-4 ml-4 mr-4 pb-20 pt-5"> 
@@ -32,6 +53,7 @@ const RecipeCard = ({ recipe }) => {
           </div>
         </div>
       </div>
+    )}
     </div>
   );
 };

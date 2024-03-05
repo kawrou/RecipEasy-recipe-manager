@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchRecipes } from "../../hooks/useFetchRecipe";
-import { getRecipes } from "../../services/getRecipes";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
@@ -34,11 +33,11 @@ export const RecipeCollection = () => {
 
   const renderPageContent = () => {
     if (loading) {
-      return <p>Loading ...</p>;
+      return <p>Loading...</p>;
     } else if (error) {
       return <p>Error: {error.message}</p>;
-    } else if (!loading && !error && recipes === undefined || recipes.length === 0) {
-      return <p> No recipes found</p>;
+    } else if (!recipes || recipes.length === 0) {
+      return <p>No recipes found</p>;
     } else {
       return recipes.map((recipe) => (
         <RecipeCard recipe={recipe} key={recipe._id} />
