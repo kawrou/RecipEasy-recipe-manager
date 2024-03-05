@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { toggleFavourite } from '../services/getRecipes';
+import React, { useState } from 'react';
+import { toggleFavourite } from '../services/recipe';
 
-const FavouriteButton = ({ recipeId, token, isFavourite }) => {
-  const [favStatus, setFavStatus] = useState(isFavourite);
+const FavouriteButton = ({ recipeId, token  }) => {
+  const [favStatus, setFavStatus] = useState(false);
 
-  useEffect(() => {
-    // Check if the recipe is already favourited by the logged-in user
-    setFavStatus(isFavourite);
-  }, [isFavourite]);
 
   const handleFavouriteButton = async () => {
     try {

@@ -22,3 +22,24 @@ export const scrapeRecipe = async (url, token) => {
     throw error;
   }
 };
+
+
+export const toggleFavourite = async (recipeId, token) => {
+  const requestOptions = {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content- Type": "application/json",
+    },
+    body: JSON.stringify({ recipeId }),
+};
+
+const response = await fetch(`${BACKEND_URL}/recipes/favouritedByOwner`, requestOptions);
+
+if (response.status !== 200) {
+  throw new Error("Failed to toggle favourite button")
+}
+
+  const data = await response.json();
+  return data;
+};

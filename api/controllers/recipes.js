@@ -154,7 +154,7 @@ const updateRecipe = async (req, res) => {
 
 const isFavourite = async (req, res) => {
   try {
-    const recipeId = req.params.recipe_id;
+    const recipeId = req.body.recipe_id;
     const user = await User.findById(req.user_id);
 
     if (!user) {
