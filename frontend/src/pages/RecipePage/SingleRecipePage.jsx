@@ -16,7 +16,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const RecipePage = ({ token, setToken }) => {
+export const SingleRecipePage = ({ token, setToken }) => {
   const navigate = useNavigate();
 
   const { recipe_id } = useParams();

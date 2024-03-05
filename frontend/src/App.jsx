@@ -6,7 +6,7 @@ import "./App.css";
 import HomePage from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
-import { RecipePage } from "./pages/RecipePage/RecipePage";
+import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
@@ -92,7 +92,7 @@ const App = () => {
         />
         <Route
           path={`/recipes/:recipe_id`}
-          element={<RecipePage token={token} setToken={setToken} />}
+          element={<SingleRecipePage token={token} setToken={setToken} />}
         />
         <Route path="/recipecollection" element={<RecipeCollection />} />
       </Routes>
