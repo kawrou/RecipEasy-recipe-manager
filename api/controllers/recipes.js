@@ -167,14 +167,10 @@ const updateRecipe = async (req, res) => {
 
 const isFavourite = async (req, res) => {
   try {
-    console.log("here")
-    console.log('Checking if recipe is favourite...');
     
     const recipeId = req.params.recipe_id;
-    console.log('Recipe ID:', recipeId);
     
     const user = await User.findById(req.user_id);
-    console.log('User:', user);
 
     if (!user) {
       console.log('User not found');
@@ -182,7 +178,6 @@ const isFavourite = async (req, res) => {
     }
 
     const recipe = await Recipe.findById(recipeId);
-    console.log('Recipe:', recipe);
 
     if (!recipe) {
       console.log('Recipe not found');
@@ -191,7 +186,6 @@ const isFavourite = async (req, res) => {
 
     // Toggle the favouritedByOwner field
     recipe.favouritedByOwner = !recipe.favouritedByOwner;
-    console.log('Favourite status toggled:', recipe.favouritedByOwner);
 
     // Save the updated recipe
     await recipe.save();
