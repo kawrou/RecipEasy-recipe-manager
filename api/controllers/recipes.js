@@ -35,10 +35,10 @@ const fetchRecipeData = async (req, res) => {
             (obj) => obj["@type"] === "Recipe"
           );
           recipeData = recipeObjects;
-          console.log("5: @graph - RecipeData", recipeData);
+          // console.log("5: @graph - RecipeData", recipeData);
         } else if (jsonData["@type"] === "Recipe") {
           recipeData = jsonData;
-          console.log("5: @type - RecipeData", recipeData);
+          // console.log("5: @type - RecipeData", recipeData);
         }
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -81,41 +81,9 @@ const fetchRecipeData = async (req, res) => {
       await browser.close();
     }
 
-    //We can start filtering recipeData here.
-    // We want:
-    // Recipe title - (name)
-    // recipe description - (description)
-    // servings - (recipeYield)
-    // tags - (keywords)
-    // time - (cookTime, prepTime)
-    // ingredients - (recipeIngredient)
-    // instructions - (recipeInstructions)
-    // url - (mainEntityOfPage)
-    // image - (image)
-    const filterRecipeData = (recipeData) => {
-      let recipeDataArray = Array.isArray(recipeData.recipe_data)
-        ? recipeData.recipe_data
-        : [recipeData.recipe_data];
-      console.log(recipeDataArray)
-    };
-
-    // Convert PT20M format to minutes
-    function calculateTotalTime(cookTime, prepTime) {
-      const cookTimeInMinutes = cookTime
-        ? parseInt(cookTime.substring(2, cookTime.length - 1))
-        : 0;
-      const prepTimeInMinutes = prepTime
-        ? parseInt(prepTime.substring(2, prepTime.lenght - 1))
-        : 0;
-      return cookTimeInMinutes + prepTimeInMinutes;
-    }
-
-    function parseKeywords(keywords) {
-      return keywords ? keywords.split(",").map((tag) => tag.trimg()) : [];
-    }
-
+    // const filteredRecipeData = extractedRecipeInfo(recipeData)
     // The returned JSON will probably need to be changed?
-    console.log("6 - Final Recipe Data:", recipeData);
+    // console.log("6 - Final Recipe Data:", recipeData);
     res.status(200).json({ recipe_data: recipeData });
   } catch (error) {
     console.log(Object.keys(error));
