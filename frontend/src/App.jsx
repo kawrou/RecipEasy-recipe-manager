@@ -10,7 +10,7 @@ import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
 import Navbar from "./components/Navbar";
-import FavouriteButton from "./components/FavouriteButton";
+import FavouriteButton from "./components/RecipePage/FavouriteButton";
 import RecipeScraper from "./components/RecipeScraper";
 import { useState } from "react";
 import { logout } from "./services/authentication";

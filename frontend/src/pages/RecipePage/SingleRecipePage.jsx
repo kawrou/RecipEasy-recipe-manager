@@ -15,6 +15,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
+import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
 
 export const SingleRecipePage = ({ token, setToken }) => {
   const navigate = useNavigate();
@@ -120,6 +121,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
           </div>
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
+          <FavouriteButton recipeId={recipe_id} token={token} />
         </div>
         <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
           <RecipeImage imageUrl={imageUrl} />
