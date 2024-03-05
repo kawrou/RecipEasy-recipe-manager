@@ -30,7 +30,7 @@ export const IngredientList = ({ recipeIngredients, setRecipeIngredients, editMo
         <div className="flex flex-col divide-y-2">
           {recipeIngredients.map((ingredient, index) => (
             editMode ? (
-              <div key={index} className="relative py-4">
+              <div key={index} className="flex items-center py-4">
                 <input
                   className="resize-none overflow-hidden placeholder:text-wrap w-full p-2.5 focus:outline-none text-md text-gray-900 bg-gray-50 rounded-xl border border-gray-300"
                   value={ingredient}
@@ -42,7 +42,7 @@ export const IngredientList = ({ recipeIngredients, setRecipeIngredients, editMo
                   placeholder="Enter your ingredient..."
                 />
                 <button
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 px-2 py-1 rounded text-white"
+                  className="px-2 py-1 rounded text-white"
                   onClick={() => handleRemoveIngredient(index)}
                 >
                   <FaTimes style={{ color: "gray" }} />{" "}
