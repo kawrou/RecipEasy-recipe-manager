@@ -18,7 +18,7 @@ export const QuantitySelector = ({ quantity, setQuantity }) => {
           <button
             type="button"
             onClick={handleDecrement}
-            className="z-40 bg-blue-100 hover:bg-gray-200 border border-blue-300 rounded-s-lg p-3 h-11 focus:ring-blue-100 focus:ring-2 focus:outline-none"
+            className="z-40 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-s-lg p-3 h-11 focus:ring-blue-100 focus:ring-2 focus:outline-none"
           >
             <svg
               className="w-3 h-3 text-gray-900"
