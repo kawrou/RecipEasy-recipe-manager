@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
 import { scrapeRecipe } from "./services/recipes";
 
 import "./App.css";
@@ -10,6 +9,8 @@ import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
+import RecipeScraper from "./components/RecipeScraper";
+import { useState } from "react";
 import { logout } from "./services/authentication";
 
 const App = () => {
@@ -84,6 +85,10 @@ const App = () => {
         />
         <Route
           path="/recipes/:recipe_id"
+          element={<SingleRecipePage token={token} setToken={setToken} />}
+        />
+        <Route
+          path="/recipes/favouritedByOwner/:recipe_id"
           element={<SingleRecipePage token={token} setToken={setToken} />}
         />
         <Route
