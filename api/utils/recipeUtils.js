@@ -16,17 +16,19 @@ function extractRecipeInfo(recipeData) {
     description,
     recipeYield,
     keywords,
+    recipeCuisine,
+    recipeCategory,
     cookTime,
     prepTime,
     recipeIngredient,
     recipeInstructions,
-    mainEntityOfPage,
     image,
   } = recipeData.recipe_data;
 
   recipeYield = parseYieldData(recipeYield);
   const totalTime = calculateTotalTime(cookTime, prepTime);
   const tags = parseKeywords(keywords);
+  recipeInstructions = parseRecipeInstructionsData(recipeInstructions);
   image = parseImageData(image);
 
   return {
@@ -37,7 +39,6 @@ function extractRecipeInfo(recipeData) {
     totalTime,
     recipeIngredient,
     recipeInstructions,
-    mainEntityOfPage,
     image,
   };
 }
@@ -89,6 +90,23 @@ function parseYieldData(recipeYield) {
   } else {
     // If it's neither a string nor a number, return 0
     return 0;
+  }
+}
+
+function parseRecipeInstructionsData(recipeInstructions) {
+  if (Array.isArray(recipeInstructions)) {
+    // Check if every element is a string
+    if (
+      recipeInstructions.every((instruction) => typeof instruction === "string")
+    ) {
+      return recipeInstructions;
+    } else {
+      // Extract text from objects
+      return recipeInstructions.map((instruction) => instruction.text);
+    }
+  } else {
+    // If it's not an array, return an empty array
+    return [];
   }
 }
 
