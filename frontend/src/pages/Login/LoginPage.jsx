@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
 
-export const LoginPage = ({ onLogin, setToken }) => {
+export const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -12,15 +12,14 @@ export const LoginPage = ({ onLogin, setToken }) => {
     event.preventDefault();
     try {
       const token = await login(email, password);
+      // if login successful - store token in local storage and pass token to app.jsx, redirect to homepage.
       window.localStorage.setItem("token", token);
-      console.log(token);
-      onLogin(true);
-      setToken(token);
+      onLogin(token);
       navigate("/");
     } catch (err) {
       console.error(err);
       setError("Invalid email or password");
-      alert("Please try again");
+      alert("Please try again")
     }
   };
   const handleEmailChange = (event) => {
@@ -133,3 +132,4 @@ export const LoginPage = ({ onLogin, setToken }) => {
     </>
   );
 };
+
