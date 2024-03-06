@@ -29,7 +29,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
           {isLoggedIn && (
             <NavLink
               className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500"
-              to="/recipecollection"
+              to="/myrecipes"
             >
               My Recipes
             </NavLink>

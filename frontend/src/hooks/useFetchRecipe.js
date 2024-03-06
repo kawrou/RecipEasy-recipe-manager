@@ -7,6 +7,8 @@ export const useFetchRecipes = (token, setToken) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       if (!token) {
         setLoading(false);
@@ -15,18 +17,27 @@ export const useFetchRecipes = (token, setToken) => {
 
       try {
         const data = await getAllRecipes(token);
-        setRecipes(data.recipes);
-        setLoading(false);
-        setToken(data.token);
+
+        if (isMounted) {
+          setRecipes(data.recipeData);
+          setLoading(false);
+          setToken(data.token);
+        }
       } catch (err) {
-        console.log(err)
-        setError(err);
-        setLoading(false);
+        console.error(err);
+        if (isMounted) {
+          setError(err);
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, [token]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, setToken]);
 
   return { recipes, loading, error };
 };
