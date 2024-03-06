@@ -30,10 +30,10 @@ export const InstructionList = ({
   };
 
   return (
-    <div className="flex w-1/2 flex-col pt-10 p-20 gap-7">
-      <div className="font-extrabold text-5xl text-left">Method</div>
+    <div className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white mr-5 ml-2.5 mb-20 h-fit">
+      <div className="font-kanit font-extrabold text-primary-500 text-6xl text-left">Method</div>
       <div className="flex flex-col">
-        <div className="flex flex-col">
+        <div className="flex flex-col font-poppins font-extralight text-gray-600">
           {recipeInstructions.map((instruction, index) => (
             <Instruction
               key={index}
@@ -48,14 +48,14 @@ export const InstructionList = ({
 
         {editMode && (
           <div className="flex justify-center items-center">
-            <div className="w-1/2 border border-gray-200" />{" "}
+            <div className="w-1/2 border border-tertiary-500" />{" "}
             <button
               className="px-2 py-1 rounded text-white"
               onClick={handleAddInstruction}
             >
-              <FaPlus style={{ color: "gray" }} />
+              <FaPlus className="text-secondary-500" />
             </button>
-            <div className="w-1/2 border border-gray-200" />{" "}
+            <div className="w-1/2 border border-tertiary-500" />{" "}
           </div>
         )}
       </div>

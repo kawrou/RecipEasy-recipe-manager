@@ -16,7 +16,13 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, url }) => {
+export const CreateRecipePage = ({
+  recipeData,
+  setRecipeData,
+  token,
+  setToken,
+  url,
+}) => {
   const navigate = useNavigate();
 
   const {
@@ -45,7 +51,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, u
     if (
       recipeName === "" ||
       yieldAmount === 0 ||
-      totalTime === 0 ||
+      recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
       instructions.some((instruction) => instruction === "")
     ) {
@@ -56,7 +62,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, u
         recipeName,
         recipeDescription,
         recipeTags,
-        totalTime,
+        recipeTotalTime,
         yieldAmount,
         ingredients,
         instructions,
@@ -70,10 +76,9 @@ export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, u
   };
 
   return (
-    <>
-      <div className="h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center">
-        <div className="flex justify-center w-1/2 flex-col pt-18 p-20 gap-7">
+    <div className="bg-tertiary-500">
+      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 py-20">
+        <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
           {/* title */}
           <RecipeName
             name={recipeName}
@@ -103,13 +108,13 @@ export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, u
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
-        <div className="flex flex-1 flex-col gap-10 justify-center p-20 ">
+        <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
-          <RecipeUrl recipeUrl={url} />
+          <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
-      <div className="w-screen h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center p-10 pb-0">
+      <div className="h-4 bg-tertiary-500" />
+      <div className="flex justify-center  pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList
           recipeIngredients={ingredients}
@@ -128,6 +133,6 @@ export const CreateRecipePage = ({ recipeData, setRecipeData, token, setToken, u
       ) : (
         <EditButton editMode={editMode} setEditMode={setEditMode} />
       )}
-    </>
+    </div>
   );
 };
