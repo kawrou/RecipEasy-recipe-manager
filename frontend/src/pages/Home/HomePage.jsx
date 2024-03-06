@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useState } from "react";
 import RecipeScraper from "../../components/RecipeScraper";
 
 export const HomePage = ({
@@ -8,17 +8,18 @@ export const HomePage = ({
   url,
   handleUrlChange,
 }) => {
+  // const navigate = useNavigate();
   // The logic for this will need to change which might break the tests later on
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (token && url) {
-      navigate("/recipes");
-    } else if (token) {
-      navigate("/recipe");
-    } else {
-      navigate("/login");
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (token && url) {
+  //     navigate("/recipes");
+  //   } else if (token) {
+  //     navigate("/recipe");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
   return (
     <div>
@@ -48,7 +49,6 @@ export const HomePage = ({
             token={token}
             url={url}
             handleUrlChange={handleUrlChange}
-            handleSubmit={handleSubmit}
             handleScrapeRecipe={handleScrapeRecipe}
           />
         </div>
