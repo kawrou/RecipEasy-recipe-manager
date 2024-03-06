@@ -11,12 +11,10 @@ describe("Recipe model", () => {
     await Recipe.deleteMany({});
     recipe = new Recipe({
       name: "Jalapeño & Coconut Chicken Thighs",
-      description:
-        "This is sort of what you'd get if a coconut chutney and a chicken traybake had a baby. It's deceptively simple to make and incredibly delicious.",
       tags: [],
       ownerId: "65ba5046a9d4c1867a4cd305",
       favouritedByOwner: false,
-      totalTime: "PT45M",
+      totalTime: 45,
       recipeYield: 4,
       recipeIngredient: [
         "2 tablespoons olive oil",
@@ -45,12 +43,6 @@ describe("Recipe model", () => {
     expect(recipe.name).toEqual("Jalapeño & Coconut Chicken Thighs");
   });
 
-  it("has a description", () => {
-    expect(recipe.description).toEqual(
-      "This is sort of what you'd get if a coconut chutney and a chicken traybake had a baby. It's deceptively simple to make and incredibly delicious."
-    );
-  });
-
   it("has an ownerId", () => {
     expect(recipe.ownerId).toEqual(
       new mongoose.Types.ObjectId("65ba5046a9d4c1867a4cd305")
@@ -62,7 +54,7 @@ describe("Recipe model", () => {
   });
 
   it("has a total time", () => {
-    expect(recipe.totalTime).toEqual("PT45M");
+    expect(recipe.totalTime).toEqual(45);
   });
 
   it("has a recipe yield", () => {
@@ -111,6 +103,6 @@ describe("Recipe model", () => {
     await recipe.save();
 
     const recipes = await Recipe.find();
-    expect(recipes[0].totalTime).toEqual("PT45M");
+    expect(recipes[0].totalTime).toEqual(45);
   });
 });

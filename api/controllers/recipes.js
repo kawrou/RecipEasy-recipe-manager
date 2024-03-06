@@ -1,11 +1,11 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
-
+const { generateToken } = require("../lib/token");
 const Recipe = require("../models/recipe");
 const User = require("../models/user");
+const { response } = require("../app");
 
-//NEED TO CREATE A NEW TOKEN TO GIVE BACK TO USER
 
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
@@ -55,11 +55,33 @@ const fetchRecipeData = async (req, res) => {
         'script[type="application/ld+json"]',
         (scripts) => {
           let jsonData;
+      const jsonLdData = await page.$$eval(
+        'script[type="application/ld+json"]',
+        (scripts) => {
+          let jsonData;
 
           scripts.forEach((script) => {
             try {
               const parsedData = JSON.parse(script.textContent);
+          scripts.forEach((script) => {
+            try {
+              const parsedData = JSON.parse(script.textContent);
 
+              if (parsedData["@graph"]) {
+                const recipeObjects = parsedData["@graph"].filter(
+                  (obj) => obj["@type"] === "Recipe"
+                );
+                jsonData = recipeObjects;
+              } else if (parsedData["@type"] === "Recipe") {
+                jsonData = parsedData;
+              }
+            } catch (error) {
+              console.error("Error parsing JSON-LD data:", error);
+            }
+          });
+          return jsonData;
+        }
+      );
               if (parsedData["@graph"]) {
                 const recipeObjects = parsedData["@graph"].filter(
                   (obj) => obj["@type"] === "Recipe"
@@ -97,7 +119,9 @@ const create = async (req, res) => {
   const user = await User.findById(req.user_id);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
+  // console.log(req.body);
   // create recipe
   try {
     const newRecipe = new Recipe({
@@ -113,12 +137,16 @@ const create = async (req, res) => {
       url: req.body.url,
       image: req.body.image,
       dateAdded: req.body.dateAdded,
+      dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
-    console.log("New recipe created:", newRecipe._id.toString());
-    res
-      .status(201)
-      .json({ message: "Recipe created successfully", recipe: newRecipe });
+    // console.log("New recipe created:", newRecipe._id.toString());
+    const newToken = generateToken(req.user_id);
+    res.status(201).json({
+      message: "Recipe created successfully",
+      recipe: newRecipe,
+      token: newToken,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -158,13 +186,36 @@ const updateRecipe = async (req, res) => {
     if (!updatedRecipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-
-    res
-      .status(200)
-      .json({ message: "Recipe updated successfully", updatedRecipe });
+    const newToken = generateToken(req.user_id);
+    res.status(200).json({
+      message: "Recipe updated successfully",
+      updatedRecipe,
+      token: newToken,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getRecipeById = async (req, res) => {
+  const recipeId = req.params.recipe_id;
+  const recipeData = await Recipe.findById(recipeId);
+  const newToken = generateToken(req.user_id);
+  res
+    .status(200)
+    .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
+};
+
+const getAllRecipesByUserId = async (req, res) => {
+  const userId = req.params.user_id;
+  const token = generateToken(req.user_id);
+  try{
+  const recipes = await Recipe.find({ownerId: userId});
+  res.status(200).json({recipes: recipes, token: token})
+  }
+  catch(error){
+  res.status(500).json({error: error.message})
   }
 };
 
@@ -172,6 +223,8 @@ const RecipesController = {
   fetchRecipeData: fetchRecipeData,
   create: create,
   updateRecipe: updateRecipe,
+  getRecipeById: getRecipeById,
+  getAllRecipesByUserId: getAllRecipesByUserId
 };
 
 module.exports = RecipesController;

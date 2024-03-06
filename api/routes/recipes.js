@@ -1,18 +1,13 @@
 const express = require("express");
-const RecipesController = require("../controllers/recipes");
+const RecipesController = require("../controllers/recipes.js")
 
 const router = express.Router();
 
-//TODO:
-// Move token checker back to app.js as all requests related to recipes will require tokenChecker
-const tokenChecker = require("../middleware/tokenChecker");
-
-router.get("/scrape-recipe",tokenChecker, RecipesController.fetchRecipeData);
-
+router.get("/scrape-recipe", RecipesController.fetchRecipeData);
+router.get("/:recipe_id", RecipesController.getRecipeById);
 router.post("/", RecipesController.create);
 
 // patch request most suitable - https://www.geeksforgeeks.org/what-is-the-difference-between-put-post-and-patch-in-restful-api/
 router.patch("/:recipe_id", RecipesController.updateRecipe);
-
+router.get('/myrecipes/:user_id', RecipesController.getAllRecipesByUserId); 
 module.exports = router;
-
