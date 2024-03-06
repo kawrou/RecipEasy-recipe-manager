@@ -22,12 +22,10 @@ const App = () => {
   );
 
   const handleScrapeRecipe = async () => {
-    console.log("Token:", token);
-    console.log("URL:", url);
     try {
       const scrapedData = await scrapeRecipe(url, token);
-      console.log(scrapedData);
-      setRecipeData(scrapedData);
+      setRecipeData(scrapedData.recipe_data);
+      setToken(scrapedData.token);
     } catch (error) {
       console.error("Error fetching recipe:", error);
     }
