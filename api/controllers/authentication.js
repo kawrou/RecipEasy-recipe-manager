@@ -18,8 +18,14 @@ const createToken = async (req, res) => {
   }
 };
 
+// uses token checker to test if a token is valid
+const checkToken = async (req, res) => {
+  res.json({ message: 'Token is valid' });
+}
+
 const AuthenticationController = {
   createToken: createToken,
+  checkToken: checkToken,
 };
 
 module.exports = AuthenticationController;

@@ -1,5 +1,6 @@
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { checkToken } from "../services/authentication";
 
 const RecipeScraper = ({
   url,
@@ -8,13 +9,18 @@ const RecipeScraper = ({
 }) => {
   const navigate = useNavigate();
 
-  // if the user is logged in - generate a recipe, else redirect to login page
   const handleClick = async () => {
-    if (localStorage.getItem('token')) {
+    try {
+      // check user is logged in with valid token - if not, redirect to /login
+      await checkToken(window.localStorage.getItem("token"))
       await handleScrapeRecipe();
       navigate('/recipes/create');
-    } else {
-      navigate('/login');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      } else {
+        console.error(error);
+      }
     }
   };
 
