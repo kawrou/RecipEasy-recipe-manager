@@ -16,7 +16,6 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
-  // modified to stop navbar showing logout when user is not logged in
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") !== null
