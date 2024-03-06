@@ -18,6 +18,7 @@ router.post("/", RecipesController.create);
 router.patch("/:recipe_id", RecipesController.updateRecipe);
 
 router.patch("/favouritedByOwner/:recipe_id", RecipesController.isFavourite);
-router.get('/myrecipes/:user_id', RecipesController.getAllRecipesByUserId); 
+// router.get('/myrecipes/:user_id', RecipesController.getAllRecipesByUserId); 
+router.get('/', RecipesController.getAllRecipesByUserId); 
 
 module.exports = router;

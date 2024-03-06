@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import timeTakenIcon from '../../assets/timeTakenIcon.svg';
 import { getRecipeById } from '../../services/recipes';
 import { Link } from 'react-router-dom';
+import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
 
-const RecipeCard = ({ recipe }) => {
+const RecipeCard = ({ recipe, token, setToken }) => {
   const placeholderImage = 'https://via.placeholder.com/300';
   const defaultName = 'Recipe Name';
 
@@ -56,6 +57,7 @@ const RecipeCard = ({ recipe }) => {
                 />
                 <p className="text-gray-700">{recipe.totalTime}</p>
                 <p className="text-gray-700"> mins</p>
+                <FavouriteButton recipeId={recipe._id} token={token} />
               </div>
             </div>
           </div>
