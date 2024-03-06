@@ -1,11 +1,11 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
-
 const { generateToken } = require("../lib/token");
-
 const Recipe = require("../models/recipe");
 const User = require("../models/user");
+const { response } = require("../app");
+
 
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url;
@@ -82,6 +82,15 @@ const fetchRecipeData = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+// Example usage:
+// const url = "https://www.mob.co.uk/recipes/jalepeno-coconut-chicken-thighs"; // Replace with the desired URL
+// fetchRecipeData(url)
+//   .then((recipeData) => {
+//     console.log("Recipe Data:", recipeData);
+//   })
+//   .catch((error) => {
+//     console.error("Error:", error);
+//   });
 
 const create = async (req, res) => {
   // find the user who created the recipe
@@ -89,7 +98,7 @@ const create = async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-  console.log(req.body);
+  // console.log(req.body);
   // create recipe
   try {
     const newRecipe = new Recipe({
@@ -107,7 +116,7 @@ const create = async (req, res) => {
       dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
-    console.log("New recipe created:", newRecipe._id.toString());
+    // console.log("New recipe created:", newRecipe._id.toString());
     const newToken = generateToken(req.user_id);
     res.status(201).json({
       message: "Recipe created successfully",
@@ -174,19 +183,15 @@ const getRecipeById = async (req, res) => {
     .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
 };
 
-
-// ignore and keep henry's work after merge 
-const getUserRecipes = async (req, res) => {
-  try {
-    const ownerId = req.params.ownerId;
-    const recipeData = await Recipe.find({ owner: ownerId });
-    const newToken = generateToken(req.user_id);
-    console.log(ownerId)
-    console.log(recipeData)
-    res.status(200).json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+const getAllRecipesByUserId = async (req, res) => {
+  const userId = req.params.user_id;
+  const token = generateToken(req.user_id);
+  try{
+  const recipes = await Recipe.find({ownerId: userId});
+  res.status(200).json({recipes: recipes, token: token})
+  }
+  catch(error){
+  res.status(500).json({error: error.message})
   }
 };
 
@@ -196,7 +201,7 @@ const RecipesController = {
   create: create,
   updateRecipe: updateRecipe,
   getRecipeById: getRecipeById,
-  getUserRecipes: getUserRecipes
+  getAllRecipesByUserId: getAllRecipesByUserId
 };
 
 
