@@ -28,8 +28,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken, url }) => {
     recipeIngredient,
     recipeInstructions,
     image,
-  } = recipeData.recipe_data;
-  setToken(recipeData.token)
+  } = recipeData;
 
   const [editMode, setEditMode] = useState(true);
 
@@ -65,6 +64,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken, url }) => {
         imageUrl
       );
       setToken(data.token);
+      setRecipeData(null);
       navigate(`/recipes/${data.recipe._id}`);
     }
   };
