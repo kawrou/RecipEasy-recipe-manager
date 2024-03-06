@@ -5,6 +5,7 @@ module.exports = {
   description:
     "Tangy tamarind, warming ginger and subtly chilli-infused coconut milk create a stunning, vibrant broth to cook mussels in. Served over rice, it’s a speedy dish that delivers serious comfort. Love mussels? Why not try them in this potato salad.",
   tags: [
+    "Fish curry recipes",
     "30-minute dinner",
     "30-minute meals",
     "coconut broth",
@@ -14,11 +15,6 @@ module.exports = {
     "easy seafood recipe",
     "Healthy midweek dinner",
     "midweek meal",
-    "mussels",
-    "mussels in coconut milk",
-    "recipes with tamarind paste",
-    "tamarind",
-    "Thai mussels",
   ],
   totalTime: 30,
   recipeYield: 4,
