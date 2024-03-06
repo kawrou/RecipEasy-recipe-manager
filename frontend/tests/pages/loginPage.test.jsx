@@ -26,8 +26,8 @@ vi.mock("../../src/services/authentication", () => {
 const completeLoginForm = async () => {
   const user = userEvent.setup();
 
-  const emailInputEl = screen.getByPlaceholderText("Email");
-  const passwordInputEl = screen.getByPlaceholderText("Password");
+  const emailInputEl = screen.getByPlaceholderText("name@company.com");
+  const passwordInputEl = screen.getByPlaceholderText("••••••••");
   const submitButtonEl = screen.getByRole("button");
 
   await user.type(emailInputEl, "test@email.com");
@@ -65,8 +65,8 @@ describe("Login Page", () => {
     login.mockRejectedValue(new Error("Error logging in"));
     const navigateMock = useNavigate();
 
-    await completeLoginForm();
-
+    await completeLoginForm() 
+    
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 });
