@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { checkToken } from "../services/authentication";
 
 const RecipeScraper = ({
   url,
@@ -7,6 +8,21 @@ const RecipeScraper = ({
   handleScrapeRecipe,
 }) => {
   const navigate = useNavigate();
+
+  const handleClick = async () => {
+    try {
+      // check user is logged in with valid token - if not, redirect to /login
+      await checkToken(window.localStorage.getItem("token"))
+      await handleScrapeRecipe();
+      navigate('/recipes/create');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      } else {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <div className="w-full pt-5">
@@ -21,8 +37,7 @@ const RecipeScraper = ({
         <button
           aria-label="Generate"
           onClick={async () => {
-            await handleScrapeRecipe();
-            navigate("/recipes/create");
+            handleClick()
           }}
           type="button"
           className="font-kanit font-bold text-lg text-white bg-secondary-500 hover:bg-blue-900 bg- rounded-lg px-5 py-2"
