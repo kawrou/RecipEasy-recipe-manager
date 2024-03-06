@@ -75,6 +75,7 @@ const App = () => {
           element={
             <CreateRecipePage
               recipeData={recipeData}
+              setRecipeData={setRecipeData}
               token={token}
               setToken={setToken}
               url={url}
