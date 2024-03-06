@@ -87,12 +87,13 @@ const App = () => {
               recipeData={recipeData}
               token={token}
               setToken={setToken}
+              url={url}
             />
           }
         />
         <Route
           path="/recipes/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
+          element={<SingleRecipePage token={token} setToken={setToken} url={url} />}
         />
         <Route
           path="/myrecipes"

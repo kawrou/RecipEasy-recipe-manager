@@ -16,64 +16,30 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const CreateRecipePage = ({ recipeData, token, setToken }) => {
+export const CreateRecipePage = ({ recipeData, token, setToken, url }) => {
   const navigate = useNavigate();
-
-  let recipeDataArray = Array.isArray(recipeData.recipe_data)
-    ? recipeData.recipe_data
-    : [recipeData.recipe_data];
 
   const {
     name,
     description,
     recipeYield,
-    cookTime,
-    prepTime,
+    tags,
+    totalTime,
     recipeIngredient,
     recipeInstructions,
     image,
-    url,
-    keywords,
-  } = recipeDataArray[0];
+  } = recipeData;
 
   const [editMode, setEditMode] = useState(true);
 
-  let instructionsArray = [];
-  if (Array.isArray(recipeInstructions)) {
-    instructionsArray = recipeInstructions.map(
-      (instruction) => instruction.text
-    );
-  } else {
-    instructionsArray = recipeInstructions || [];
-  }
-
-  const [recipeName, setRecipeName] = useState(name || "");
-  const [recipeDescription, setRecipeDescription] = useState(description || "");
-  const [yieldAmount, setYieldAmount] = useState(recipeYield || "");
-  const [totalTime, setTotalTime] = useState(
-    calculateTotalTime(cookTime, prepTime) || ""
-  );
-  const [ingredients, setIngredients] = useState(recipeIngredient || []);
+  const [recipeName, setRecipeName] = useState(name);
+  const [recipeDescription, setRecipeDescription] = useState(description);
+  const [yieldAmount, setYieldAmount] = useState(recipeYield);
+  const [recipeTotalTime, setRecipeTotalTime] = useState(totalTime);
+  const [ingredients, setIngredients] = useState(recipeIngredient);
   const [instructions, setInstructions] = useState(instructionsArray);
-  const [imageUrl, setImageUrl] = useState(image?.url || image || "");
-  const [recipeUrl, setRecipeUrl] = useState(url || "");
-  const [recipeTags, setRecipeTags] = useState(parseKeywords(keywords) || []);
-
-  function calculateTotalTime(cookTime, prepTime) {
-    // Convert PT20M format to minutes
-    const cookTimeInMinutes = cookTime
-      ? parseInt(cookTime.substring(2, cookTime.length - 1))
-      : 0;
-    const prepTimeInMinutes = prepTime
-      ? parseInt(prepTime.substring(2, prepTime.length - 1))
-      : 0;
-    return cookTimeInMinutes + prepTimeInMinutes;
-  }
-
-  // Parse keywords string to an array of tags
-  function parseKeywords(keywords) {
-    return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
-  }
+  const [imageUrl, setImageUrl] = useState(image);
+  const [recipeTags, setRecipeTags] = useState(tags);
 
   const handleSaveRecipe = async () => {
     if (
@@ -94,7 +60,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
         yieldAmount,
         ingredients,
         instructions,
-        recipeUrl,
+        url,
         imageUrl
       );
       setToken(data.token);
@@ -128,8 +94,8 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
             />
             {/* timeTaken */}
             <RecipeTimeTaken
-              timeTaken={totalTime}
-              setTimeTaken={setTotalTime}
+              timeTaken={recipeTotalTime}
+              setTimeTaken={setRecipeTotalTime}
               editMode={editMode}
             />
           </div>
@@ -138,7 +104,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center p-20 ">
           <RecipeImage imageUrl={imageUrl} />
-          <RecipeUrl recipeUrl={recipeUrl} />
+          <RecipeUrl recipeUrl={url} />
         </div>
       </div>
       <div className="w-screen h-4 bg-tertiary-500" />

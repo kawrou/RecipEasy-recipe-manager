@@ -8,6 +8,7 @@ const { response } = require("../app");
 
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
+  const newToken = generateToken(req.user_id);
 
   try {
     const response = await axios.get(url); // Use axios to get webpage and return a promise
@@ -80,10 +81,8 @@ const fetchRecipeData = async (req, res) => {
       await browser.close();
     }
 
-    // const filteredRecipeData = extractedRecipeInfo(recipeData)
-    // The returned JSON will probably need to be changed?
-    // console.log("6 - Final Recipe Data:", recipeData);
-    res.status(200).json({ recipe_data: recipeData });
+    const filteredRecipeData = extractedRecipeInfo(recipeData);
+    res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
     console.log(Object.keys(error));
     // console.error("Error fetching URL:", error);
@@ -95,7 +94,6 @@ const create = async (req, res) => {
   // find the user who created the recipe
   const user = await User.findById(req.user_id);
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
     return res.status(404).json({ message: "User not found" });
   }
   // console.log(req.body);
@@ -118,7 +116,7 @@ const create = async (req, res) => {
     });
     await newRecipe.save();
     // console.log("New recipe created:", newRecipe._id.toString());
-    const newToken = generateToken(req.user_id);
+
     res.status(201).json({
       message: "Recipe created successfully",
       recipe: newRecipe,
