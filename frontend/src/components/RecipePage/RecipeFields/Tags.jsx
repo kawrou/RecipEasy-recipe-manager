@@ -17,20 +17,20 @@ export const Tags = ({ tags, setTags, editMode }) => {
   };
 
   return (
-    <div>
+    <div className="font-kanit font-bold">
       <label
         htmlFor="tags-input"
-        className="block mb-2 text-sm text-left font-medium text-gray-400"
+        className="block mb-2 text-md text-left text-secondary-500"
       >
         Tags:
       </label>
       {editMode ? (
-      <div className="flex flex-wrap bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+      <div className="flex flex-wrap rounded-xl border border-blue-200 ">
         <div className="flex flex-wrap">
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="flex flex-wrap pl-4 pr-2 h-9 m-1 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-blue-500 text-white hover:bg-blue-600 hover:text-gray-100"
+              className="flex flex-wrap pl-4 pr-2 h-9 m-1 justify-between items-center text-lg rounded-xl cursor-pointer bg-secondary-500 text-white hover:bg-blue-800 hover:text-gray-100"
             >
               {tag}
               <svg
@@ -50,7 +50,7 @@ export const Tags = ({ tags, setTags, editMode }) => {
           ))}
           <input
           id="tags-input"
-          className="p-2.5 w-fill flex-auto bg-transparent text-md text-gray-900 focus:outline-none "
+          className="font-poppins font-light p-2.5 w-fill flex-auto bg-transparent text-md text-gray-600 focus:outline-none "
           placeholder="Add tags here..."
           value={tagsInput}
           onChange={(e) => setTagsInput(e.target.value)}
@@ -64,7 +64,7 @@ export const Tags = ({ tags, setTags, editMode }) => {
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="flex flex-wrap px-4 h-9 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-blue-500 text-white"
+              className="flex flex-wrap px-4 h-9 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-secondary-500 text-white"
             >
               {tag}
             </span>

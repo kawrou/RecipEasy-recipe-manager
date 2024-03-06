@@ -4,7 +4,7 @@ import { AutoHeightTextArea } from "../AutoHeightTextArea";
 export const RecipeName = ({ name, setName, editMode }) => {
   const [height, setHeight] = useState("auto");
   return (
-    <div className="text-6xl font-black text-left align-text-top ">
+    <div className="font-kanit text-6xl font-extrabold text-left align-text-top text-primary-500 ">
       {editMode ? (
         <AutoHeightTextArea
         text={name}

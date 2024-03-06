@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const RecipeScraper = ({ url, handleUrlChange, handleScrapeRecipe }) => {
+const RecipeScraper = ({
+  url,
+  handleUrlChange,
+  handleScrapeRecipe,
+}) => {
   const navigate = useNavigate();
 
   return (
