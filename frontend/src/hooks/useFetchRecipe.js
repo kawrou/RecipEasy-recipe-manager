@@ -1,7 +1,5 @@
-// useFetchRecipes.js
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-import { getRecipes } from "../services/getRecipes";
+import { getAllRecipes } from "../services/recipes";
 
 export const useFetchRecipes = (token, setToken) => {
   const [recipes, setRecipes] = useState([]);
@@ -16,7 +14,7 @@ export const useFetchRecipes = (token, setToken) => {
       }
 
       try {
-        const data = await getRecipes(token);
+        const data = await getAllRecipes(token);
         setRecipes(data.recipes);
         setLoading(false);
         setToken(data.token);

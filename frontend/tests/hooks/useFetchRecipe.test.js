@@ -1,11 +1,11 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { useFetchRecipes } from "../../src/hooks/useFetchRecipe";
 import { beforeEach, vi, describe, it, expect } from "vitest";
-import { getRecipes } from "../../src/services/getRecipes";
+import { getAllRecipes } from "../../src/services/recipes";
 
-vi.mock("../../src/services/getRecipes", () => {
-  const getRecipesMock = vi.fn();
-  return { getRecipes: getRecipesMock };
+vi.mock("../../src/services/recipes", () => {
+  const getAllRecipesMock = vi.fn();
+  return { getAllRecipes: getAllRecipesMock };
 });
 
 describe("useFetchRecipe hook:", () => {
@@ -20,7 +20,7 @@ describe("useFetchRecipe hook:", () => {
       { _id: "23456", title: "Test Recipe 2", duration: "35" },
     ];
 
-    getRecipes.mockResolvedValue({ recipes: mockRecipes, token: "newToken" });
+    getAllRecipes.mockResolvedValue({ recipes: mockRecipes, token: "newToken" });
     const { result } = renderHook(() => useFetchRecipes(token, setTokenMock));
 
     await waitFor(() => {
@@ -33,7 +33,6 @@ describe("useFetchRecipe hook:", () => {
 
   it("doesn't fetch recipes from DB when token isn't present", async () => {
     const token = null;
-    const getRecipesMock = vi.fn();
     const setTokenMock = vi.fn();
     const { result } = renderHook(() => useFetchRecipes(token, setTokenMock));
 
@@ -41,17 +40,16 @@ describe("useFetchRecipe hook:", () => {
       expect(result.current.loading).toBeFalsy();
       expect(result.current.error).toBeNull();
       expect(result.current.recipes).toEqual([]);
-      expect(getRecipesMock).not.toHaveBeenCalled();
+      expect(getAllRecipes).not.toHaveBeenCalled();
       expect(setTokenMock).not.toHaveBeenCalled();
     });
   });
 
   it("returns an error", async () => {
     const token = "test token";
-    const getRecipesMock = vi.fn();
     const setTokenMock = vi.fn();
 
-    getRecipes.mockRejectedValue(new Error("test error"));
+    getAllRecipes.mockRejectedValue(new Error("test error"));
     const { result } = renderHook(() => useFetchRecipes(token, setTokenMock));
 
     await waitFor(() => {
@@ -59,6 +57,7 @@ describe("useFetchRecipe hook:", () => {
       expect(result.current.error).toEqual(new Error("test error"));
       expect(result.current.recipes).toEqual([]);
       expect(setTokenMock).not.toHaveBeenCalled();
+      expect(getAllRecipes).toHaveBeenCalled();
     });
   });
 });

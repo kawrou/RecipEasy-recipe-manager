@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchRecipes } from "../../hooks/useFetchRecipe";
-import { getRecipes } from "../../services/getRecipes";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
