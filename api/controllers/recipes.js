@@ -6,7 +6,6 @@ const Recipe = require("../models/recipe");
 const User = require("../models/user");
 const { response } = require("../app");
 
-
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
 
@@ -55,33 +54,11 @@ const fetchRecipeData = async (req, res) => {
         'script[type="application/ld+json"]',
         (scripts) => {
           let jsonData;
-      const jsonLdData = await page.$$eval(
-        'script[type="application/ld+json"]',
-        (scripts) => {
-          let jsonData;
 
           scripts.forEach((script) => {
             try {
               const parsedData = JSON.parse(script.textContent);
-          scripts.forEach((script) => {
-            try {
-              const parsedData = JSON.parse(script.textContent);
 
-              if (parsedData["@graph"]) {
-                const recipeObjects = parsedData["@graph"].filter(
-                  (obj) => obj["@type"] === "Recipe"
-                );
-                jsonData = recipeObjects;
-              } else if (parsedData["@type"] === "Recipe") {
-                jsonData = parsedData;
-              }
-            } catch (error) {
-              console.error("Error parsing JSON-LD data:", error);
-            }
-          });
-          return jsonData;
-        }
-      );
               if (parsedData["@graph"]) {
                 const recipeObjects = parsedData["@graph"].filter(
                   (obj) => obj["@type"] === "Recipe"
@@ -210,12 +187,11 @@ const getRecipeById = async (req, res) => {
 const getAllRecipesByUserId = async (req, res) => {
   const userId = req.params.user_id;
   const token = generateToken(req.user_id);
-  try{
-  const recipes = await Recipe.find({ownerId: userId});
-  res.status(200).json({recipes: recipes, token: token})
-  }
-  catch(error){
-  res.status(500).json({error: error.message})
+  try {
+    const recipes = await Recipe.find({ ownerId: userId });
+    res.status(200).json({ recipes: recipes, token: token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -224,7 +200,7 @@ const RecipesController = {
   create: create,
   updateRecipe: updateRecipe,
   getRecipeById: getRecipeById,
-  getAllRecipesByUserId: getAllRecipesByUserId
+  getAllRecipesByUserId: getAllRecipesByUserId,
 };
 
 module.exports = RecipesController;
