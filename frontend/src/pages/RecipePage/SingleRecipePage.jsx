@@ -15,6 +15,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
+import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
 
 export const SingleRecipePage = ({ token, setToken }) => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
 
   return (
     <>
-      <div className="h-4 bg-gray-300" />
+      <div className="h-4 bg-tertiary-500" />
       <div className="flex divide-x justify-center">
         <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
           {/* title */}
@@ -120,13 +121,14 @@ export const SingleRecipePage = ({ token, setToken }) => {
           </div>
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
+          <FavouriteButton recipeId={recipe_id} token={token} />
         </div>
         <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
           <RecipeImage imageUrl={imageUrl} />
           <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
-      <div className="w-screen h-4 bg-gray-300" />
+      <div className="w-screen h-4 bg-tertiary-500" />
       <div className="flex divide-x justify-center p-10 pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList

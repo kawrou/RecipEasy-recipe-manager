@@ -1,72 +1,70 @@
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-
-
+import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Navbar = ({ isLoggedIn, onLogout }) => {
-  const [isOpen, setOpen] = useState(false);
+  const { pathname } = useLocation();
 
-  const toggleMenu = () => {
-    setOpen(!isOpen);
+  const isRootPath = () => {
+    return pathname === "/";
   };
 
   return (
-    <nav className="w-screen justify-between flex-wrap bg-white p-6">
-      {/* ... (other code) */}
-      <div
-        className={`lg:flex lg:items-center lg:w-auto ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        <div className="text-lg lg:items-center lg:flex-grow">
+    <div className="relative flex justify-center items-center w-screen h-16 bg-white ">
+      <NavLink className="absolute left-4" to="/">
+        <img src="../../../src/assets/recipeasyLogo.svg" className="w-14" />
+      </NavLink>
+
+      <div className="flex font-kanit text-lg items-center gap-5">
+        {!isRootPath() && (
           <NavLink
-            className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500 mr-4"
+            className="font-bold text-center text-secondary-500 hover:text-blue-900"
             to="/"
           >
             Home
           </NavLink>
-          {/* Conditionally render "My Recipes" link */}
-          {isLoggedIn && (
-            <NavLink
-              className="inline-block text-center lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-500"
-              to="/myrecipes"
-            >
-              My Recipes
-            </NavLink>
-          )}
-        </div>
+        )}
 
-        <div className="lg:flex lg:items-center lg:w-auto">
-          {/* Right-aligned Login, Logout, and Signup Links */}
-          {isLoggedIn ? (
-            <NavLink
-              onClick={onLogout}
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-red-600 border-red-600 hover:text-red-500 hover:bg-white mt-4 lg:mt-0 ml-auto"
-              to="/"
-            >
-              Log Out
-            </NavLink>
-          ) : (
-            <NavLink
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white bg-blue-600 border-blue-600 hover:text-blue-500 hover:bg-white mt-4 lg:mt-0 ml-auto"
-              to="/login"
-            >
-              Log In
-            </NavLink>
-          )}
-
-          {/* Conditionally render Sign Up link */}
-          {!isLoggedIn && (
-            <NavLink
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-gray-500 border-gray-500 hover:border-transparent hover:text-blue-500 hover:bg-white ml-2"
-              to="/signup"
-            >
-              Sign Up
-            </NavLink>
-          )}
-        </div>
+        {/* Conditionally render "My Recipes" link */}
+        {isLoggedIn && (
+          <NavLink
+            className="font-bold text-center text-primary-500 hover:text-rose-500"
+            to="/myrecipes"
+          >
+            My Recipes
+          </NavLink>
+        )}
       </div>
-    </nav>
+
+      <div className="absolute right-4 flex font-kanit items-center w-auto gap-2 ">
+        {/* Right-aligned Login, Logout, and Signup Links */}
+        {isLoggedIn ? (
+          <NavLink
+            onClick={onLogout}
+            className="text-lg px-4 py-2 border rounded-lg text-white bg-secondary-500 border-blue-600 hover:text-secondary-500 hover:bg-white"
+            to="/"
+          >
+            Log Out
+          </NavLink>
+        ) : (
+          <NavLink
+            className="text-lg px-4 py-2 border rounded-lg text-white bg-secondary-500 border-blue-600 hover:text-blue-500 hover:bg-white "
+            to="/login"
+          >
+            Log In
+          </NavLink>
+        )}
+
+        {/* Conditionally render Sign Up link */}
+        {!isLoggedIn && (
+          <NavLink
+            className="text-lg px-4 py-2 border rounded-lg text-primary-500 border-primary-500 hover:text-white hover:bg-primary-500"
+            to="/signup"
+          >
+            Sign Up
+          </NavLink>
+        )}
+      </div>
+    </div>
   );
 };
 
