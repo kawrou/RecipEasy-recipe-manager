@@ -1,7 +1,7 @@
 import { render, screen} from "@testing-library/react";
 import { vi, expect, describe, test, beforeEach, afterEach } from "vitest";
 import { userEvent } from "@testing-library/user-event";
-import { MyRecipes } from "../../src/pages/MyRecipes/MyRecipesPage";
+import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
 import { useNavigate } from "react-router-dom";
 import { useFetchRecipes } from "../../src/hooks/useFetchRecipe";
 
@@ -45,7 +45,7 @@ describe("Recipe collection", () => {
         error: null,
       });
 
-      render(<MyRecipes token={testToken} setToken={setTokenMock} />);
+      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
       //Renders the elements
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
         "Add a recipe"
@@ -71,7 +71,7 @@ describe("Recipe collection", () => {
         error: null,
       });
 
-      render(<MyRecipes token={testToken} setToken={setTokenMock} />);
+      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
 
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
         "Add a recipe"
@@ -97,7 +97,7 @@ describe("Recipe collection", () => {
         error: null,
       });
 
-      render(<MyRecipes token={testToken} setToken={setTokenMock} />);
+      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
 
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
         "Add a recipe"
@@ -123,7 +123,7 @@ describe("Recipe collection", () => {
         error: null,
       });
 
-      render(<MyRecipes token={testToken} setToken={setTokenMock} />);
+      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
 
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
         "Add a recipe"
@@ -143,7 +143,7 @@ describe("Recipe collection", () => {
     });
 
     // TODO: Test might be false positive
-    test("generate recipe btn navigates to recipe page", async () => {
+    test("generate recipe btn navigates to recipe MyRecipesPage", async () => {
       useFetchRecipes.mockReturnValue({
         recipes: [],
         loading: false,
@@ -151,7 +151,7 @@ describe("Recipe collection", () => {
       });
 
       render(
-        <MyRecipes
+        <MyRecipesPage
           token={testToken}
           setToken={setTokenMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
@@ -164,7 +164,7 @@ describe("Recipe collection", () => {
       expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
     });
 
-    test("enter Manually btn navigates to recipe page", async () => {
+    test("enter Manually btn navigates to recipe MyRecipesPage", async () => {
       useFetchRecipes.mockReturnValue({
         recipes: [],
         loading: false,
@@ -172,7 +172,7 @@ describe("Recipe collection", () => {
       });
 
       render(
-        <MyRecipes
+        <MyRecipesPage
           token={testToken}
           setToken={setTokenMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
@@ -192,7 +192,7 @@ describe("Recipe collection", () => {
       });
 
       render(
-        <MyRecipes
+        <MyRecipesPage
           token={null}
           setToken={setTokenMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
@@ -213,7 +213,7 @@ describe("Recipe collection", () => {
         error: { message: "some error message" },
       });
 
-      render(<MyRecipes token={testToken} setToken={setTokenMock} />);
+      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
 
       expect(useFetchRecipes).toHaveBeenCalledWith(testToken, setTokenMock);
       // expect(screen.getByText("Error: some error message")).toBeVisible();
