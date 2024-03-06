@@ -8,7 +8,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
-import { RecipeCollection } from "./pages/MyRecipes/MyRecipesPage";
+import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
 import { logout } from "./services/authentication";
 
@@ -88,7 +88,7 @@ const App = () => {
         <Route
           path="/myrecipes"
           element={
-            <RecipeCollection
+            <MyRecipesPage
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
               setToken={setToken}
