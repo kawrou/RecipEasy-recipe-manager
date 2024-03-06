@@ -28,7 +28,8 @@ export const CreateRecipePage = ({ recipeData, token, setToken, url }) => {
     recipeIngredient,
     recipeInstructions,
     image,
-  } = recipeData;
+  } = recipeData.recipe_data;
+  setToken(recipeData.token)
 
   const [editMode, setEditMode] = useState(true);
 
@@ -37,7 +38,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken, url }) => {
   const [yieldAmount, setYieldAmount] = useState(recipeYield);
   const [recipeTotalTime, setRecipeTotalTime] = useState(totalTime);
   const [ingredients, setIngredients] = useState(recipeIngredient);
-  const [instructions, setInstructions] = useState(instructionsArray);
+  const [instructions, setInstructions] = useState(recipeInstructions);
   const [imageUrl, setImageUrl] = useState(image);
   const [recipeTags, setRecipeTags] = useState(tags);
 
