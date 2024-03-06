@@ -16,6 +16,7 @@ const tokenChecker = (req, res, next) => {
     } else {
       // Add the user_id from the payload to the req object.
       req.user_id = payload.user_id;
+      console.log(payload)
       next();
     }
   });

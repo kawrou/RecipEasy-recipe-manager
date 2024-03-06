@@ -1,59 +1,39 @@
 import React, { useState } from "react";
-import { scrapeRecipe } from "../services/recipe";
-import "./RecipeScraper.css";
+import { useNavigate } from "react-router-dom";
 
-const RecipeScraper = ({ url, handleUrlChange, handleSubmit, token }) => {
-  const [recipeData, setRecipeData] = useState(null);
-
-  // COMMENT CAN BE DELETED AFTER REVIEWED
-  // Component only handles the FETCH call
-  // I think that the call should only be made if a token is present
-  // Otherwise the call will be made even though the user isn't logged in
-  const handleScrapeRecipe = async () => {
-    if (token && url) {
-      try {
-        const scrapedData = await scrapeRecipe(url);
-        setRecipeData(scrapedData);
-        // console.log(scrapedData);
-      } catch (error) {
-        console.error("Error fetching recipe:", error);
-      }
-    }
-  };
+const RecipeScraper = ({ url, handleUrlChange, handleScrapeRecipe }) => {
+  const navigate = useNavigate();
 
   return (
-    <form className="recipe-scrapper-container" onSubmit={handleSubmit}>
+    <div className="w-full pt-5">
       <input
         type="text"
         value={url}
         onChange={handleUrlChange}
-        className="input-box"
-        placeholder="Enter your recipe URL"
-        name="url-input"
+        className="font-poppins font-light w-full border rounded-lg py-2 px-2 focus:outline-none"
+        placeholder="Enter your recipe url..."
       />
-      <div className="flex items-center justify-center py-8">
+      <div className="flex items-center justify-center py-5 gap-5">
         <button
-          onClick={handleScrapeRecipe}
-          type="submit"
-          className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
+          aria-label="Generate"
+          onClick={async () => {
+            await handleScrapeRecipe();
+            navigate("/recipes/create");
+          }}
+          type="button"
+          className="font-kanit font-bold text-lg text-white bg-secondary-500 hover:bg-blue-900 bg- rounded-lg px-5 py-2"
         >
           Generate Recipe
         </button>
         <button
+          aria-label="Manually"
           type="submit"
-          className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
+          className="font-kanit font-bold text-lg text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white rounded-lg px-5 py-2"
         >
           Enter Manually
         </button>
       </div>
-
-      {/* {recipeData && (
-        <div>
-          <h2>Recipe Data</h2>
-          <pre>{JSON.stringify(recipeData, null, 2)}</pre>
-        </div>
-      )} */}
-    </form>
+    </div>
   );
 };
 

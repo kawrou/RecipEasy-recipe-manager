@@ -1,28 +1,25 @@
-// useFetchRecipes.js
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-import { getRecipes } from "../services/getRecipes";
+import { getAllRecipes } from "../services/recipes";
 
-export const useFetchRecipes = (token) => {
+export const useFetchRecipes = (token, setToken) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-//   const navigate = useNavigate();
-    
+
   useEffect(() => {
     const fetchData = async () => {
       if (!token) {
         setLoading(false);
-        // navigate("/login");
         return;
       }
 
       try {
-        const data = await getRecipes(token);
+        const data = await getAllRecipes(token);
         setRecipes(data.recipes);
         setLoading(false);
-        window.localStorage.setItem("token", data.token);
+        setToken(data.token);
       } catch (err) {
+        console.log(err)
         setError(err);
         setLoading(false);
       }
