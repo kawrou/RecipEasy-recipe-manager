@@ -1,9 +1,10 @@
 module.exports = {
   name: "Zucchini slice",
-  description:
-    "How to make our top-rated zucchini slice recipe of all time.",
+  description: "How to make our top-rated zucchini slice recipe of all time.",
   recipeYield: 15,
   tags: [
+    "lunch",
+    "main",
     "slice",
     "bake",
     "cheese",
@@ -15,8 +16,6 @@ module.exports = {
     "budget friendly",
     "lunch box",
     "dinner",
-    "lunch",
-    "main",
     "snack",
     "everyday",
     "simple",
@@ -51,8 +50,6 @@ module.exports = {
     "Beat the eggs in a large bowl until combined. Add the flour and beat until smooth, then add zucchini, onion, bacon, cheese and oil and stir to combine.",
     "Grease and line a 30 x 20cm lamington pan. Pour into the prepared pan and bake in oven for 30 minutes or until cooked through.",
   ],
-  mainEntityOfPage:
-    "//www.taste.com.au/recipes/zucchini-slice/eb7eed59-5f53-4f6f-bfb5-9b7e3f81a702",
   image:
     "https://img.taste.com.au/kQQ4Ruqi/taste/2016/11/zucchini-slice-10160-1.jpeg",
 };
