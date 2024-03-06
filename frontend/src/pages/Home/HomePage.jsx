@@ -5,7 +5,6 @@ import RecipeScraper from "../../components/RecipeScraper";
 export const HomePage = ({
   handleScrapeRecipe,
   token,
-  setToken,
   url,
   handleUrlChange,
 }) => {
@@ -30,13 +29,16 @@ export const HomePage = ({
             src="../../../src/assets/recipeasyLogo.svg"
             className="w-56 py-4"
           />
-          <h1 className="font-kanit font-extrabold text-primary-500 italic text-7xl pb-4">
+          <h1 className="font-kanit font-extrabold text-primary-500 italic text-6xl pb-4">
             Recipeasy
           </h1>
-          <h2 className="font-kanit font-medium text-primary-500 text-2xl pb-4">
+          <h2 className="font-kanit font-medium text-primary-500 text-xl pb-4">
             Your Hassle-Free Recipe Organiser
           </h2>
-          <p className="font-poppins py-5 font-extralight text-md text-gray-600">
+          <p
+            aria-label="Page Instructions"
+            className="font-poppins py-5 font-extralight text-md text-gray-600"
+          >
             Simply paste the URL of your favourite recipe page, or manually
             input your cherished recipes, and watch as Recipeasy effortlessly
             generates neatly organised recipes for you to store and access

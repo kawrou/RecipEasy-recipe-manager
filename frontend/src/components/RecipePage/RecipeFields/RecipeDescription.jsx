@@ -8,9 +8,9 @@ export const RecipeDescription = ({
 }) => {
   const [height, setHeight] = useState("auto");
   return (
-    <div className="text-left text-md">
+    <div className="font-poppins font-light text-gray-600 text-left text-md">
       {editMode ? (
-        <div className="block  p-2.5  text-gray-900 bg-gray-50 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+        <div className="block p-2.5 rounded-xl border border-blue-200 ">
           <AutoHeightTextArea
             text={description}
             setText={setDescription}

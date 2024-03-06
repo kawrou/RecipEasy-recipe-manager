@@ -7,7 +7,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
-import { RecipeCollection } from "./pages/RecipeCollection/RecipeCollection";
+import { MyRecipes } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
 import RecipeScraper from "./components/RecipeScraper";
 import { useState } from "react";
@@ -32,7 +32,7 @@ const App = () => {
       }
     } else {
       // Show error message if not logged in
-      setShowErrorMessage(true);
+      // setShowErrorMessage(true);
     }
   };
 
@@ -99,7 +99,18 @@ const App = () => {
           path="/recipes/favouritedByOwner/:recipe_id"
           element={<SingleRecipePage token={token} setToken={setToken} />}
         />
-        <Route path="/recipecollection" element={<RecipeCollection />} />
+        <Route
+          path="/myrecipes"
+          element={
+            <MyRecipes
+              handleScrapeRecipe={handleScrapeRecipe}
+              token={token}
+              setToken={setToken}
+              url={url}
+              handleUrlChange={handleUrlChange}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
