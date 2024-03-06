@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
 import { scrapeRecipe } from "./services/recipes";
 
 import "./App.css";
@@ -8,8 +7,10 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
-import { MyRecipes } from "./pages/MyRecipes/MyRecipesPage";
+import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
+import RecipeScraper from "./components/RecipeScraper";
+import { useState } from "react";
 import { logout } from "./services/authentication";
 
 const App = () => {
@@ -96,9 +97,13 @@ const App = () => {
           element={<SingleRecipePage token={token} setToken={setToken} url={url} />}
         />
         <Route
+          path="/recipes/favouritedByOwner/:recipe_id"
+          element={<SingleRecipePage token={token} setToken={setToken} />}
+        />
+        <Route
           path="/myrecipes"
           element={
-            <MyRecipes
+            <MyRecipesPage
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
               setToken={setToken}
