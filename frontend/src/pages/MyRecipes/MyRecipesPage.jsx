@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const MyRecipes = ({
+export const MyRecipesPage = ({
   handleScrapeRecipe,
   token,
   setToken,
@@ -11,7 +12,11 @@ export const MyRecipes = ({
   handleUrlChange,
 }) => {
   const navigate = useNavigate();
-  const { recipes, loading, error } = useFetchRecipes(token, setToken);
+  const { recipes, loading, error, fetchRecipes } = useFetchRecipes(token, setToken);
+
+  useEffect(() => {
+    fetchRecipes(); // Fetch recipes when the component mounts or when the token changes
+  }, [fetchRecipes]);
 
   const renderPageContent = () => {
     if (!loading && !token) {

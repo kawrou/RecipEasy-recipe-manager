@@ -75,7 +75,9 @@ const fetchRecipeData = async (req, res) => {
     }
 
     console.log("Recipe Data:", recipeData);
-    res.status(200).json({ recipe_data: recipeData });
+    const newToken = generateToken(req.user_id);
+
+    res.status(200).json({ recipe_data: recipeData,  token: newToken });
   } catch (error) {
     console.log(Object.keys(error));
     // console.error("Error fetching URL:", error);
@@ -184,16 +186,20 @@ const getRecipeById = async (req, res) => {
 };
 
 const getAllRecipesByUserId = async (req, res) => {
-  const userId = req.params.user_id;
-  const token = generateToken(req.user_id);
-  try{
-  const recipes = await Recipe.find({ownerId: userId});
-  res.status(200).json({recipes: recipes, token: token})
-  }
-  catch(error){
-  res.status(500).json({error: error.message})
+  try {
+    const user = await User.findOne({ _id: req.user_id });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const userId  = user._id;
+    const token = generateToken(req.user_id);
+    const recipes = await Recipe.find({ ownerId: userId });
+    res.status(200).json({ recipes: recipes, token: token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 
 const RecipesController = {
