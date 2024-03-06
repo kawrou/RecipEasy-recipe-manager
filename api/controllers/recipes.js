@@ -98,7 +98,7 @@ const create = async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-  console.log(req.body);
+  // console.log(req.body);
   // create recipe
   try {
     const newRecipe = new Recipe({
@@ -116,7 +116,7 @@ const create = async (req, res) => {
       dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
-    console.log("New recipe created:", newRecipe._id.toString());
+    // console.log("New recipe created:", newRecipe._id.toString());
     const newToken = generateToken(req.user_id);
     res.status(201).json({
       message: "Recipe created successfully",

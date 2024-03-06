@@ -138,7 +138,7 @@ describe("/recipes/:recipe_id", () => {
     await user.save();
     await recipe.save();
     token = createToken(user.id);
-    console.log("token ----------------------", token);
+    // console.log("token ----------------------", token);
   });
 
   afterAll(async () => {
@@ -229,12 +229,7 @@ describe("/recipes/:recipe_id", () => {
   });
 });
 
-//I think the below test can't work with the above test.
-//I've written it here for now but placed it as skip so it won't run.
-//I've created another test file that tests the route getRecipesByUserId.
-//If it can't be run together, can delete the below tests. 
-//Check out getRecipes.test.js to see test results.
-describe.skip("Get Recipes tests", () => {
+describe("Get Recipes tests", () => {
   const ownerId = new mongoose.Types.ObjectId();
   const currentDate = new Date();
   const recipe1 = new Recipe({
@@ -243,7 +238,7 @@ describe.skip("Get Recipes tests", () => {
     ownerId: ownerId,
     tags: ["test_tag_one", "test_tag_two"],
     favouritedByOwner: false,
-    totalTime: "test_time",
+    totalTime: 20,
     recipeYield: 1,
     recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
     recipeInstructions: ["test_instruction_one", "test_instruction_two"],
@@ -257,7 +252,7 @@ describe.skip("Get Recipes tests", () => {
     ownerId: ownerId,
     tags: ["test_tag_one", "test_tag_two"],
     favouritedByOwner: false,
-    totalTime: "test_time",
+    totalTime: 20,
     recipeYield: 1,
     recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
     recipeInstructions: ["test_instruction_one", "test_instruction_two"],
@@ -273,7 +268,7 @@ describe.skip("Get Recipes tests", () => {
     ownerId: ownerId2,
     tags: ["test_tag_one", "test_tag_two"],
     favouritedByOwner: false,
-    totalTime: "test_time",
+    totalTime: 20,
     recipeYield: 1,
     recipeIngredient: ["test_ingredient_one", "test_ingredient_two"],
     recipeInstructions: ["test_instruction_one", "test_instruction_two"],
@@ -296,7 +291,7 @@ describe.skip("Get Recipes tests", () => {
   describe("GET - all recipes - when token is present", () => {
     test("reponse code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
       const response = await request(app)
-        .get(`/recipes/${ownerId}`)
+        .get(`/recipes/myrecipes/${ownerId}`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
@@ -345,7 +340,7 @@ describe.skip("Get Recipes tests", () => {
     });
     test("Doesn't return the wrong recipe for the userID", async () => {
       const response = await request(app)
-        .get(`/recipes/${ownerId}`)
+        .get(`/recipes/myrecipes/${ownerId}`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
