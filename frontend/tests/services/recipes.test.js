@@ -1,5 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import * as recipeService from "../../src/services/recipes";
+import { vi, describe, test, expect } from "vitest";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 

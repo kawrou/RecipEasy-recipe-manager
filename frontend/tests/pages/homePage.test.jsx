@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
-import { vi, expect, describe, test } from "vitest";
+import { vi, expect, describe, test, beforeEach } from "vitest";
 
 // MOCKS
 // Mock useNavigate to test useNavigate logic in isolation

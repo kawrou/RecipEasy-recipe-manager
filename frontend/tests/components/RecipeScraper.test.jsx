@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { vi } from "vitest";
+import { vi, describe, it, test } from "vitest";
 import { expect } from "vitest";
 import * as recipeService from "../../src/services/recipes.js";
 import RecipeScraper from "../../src/components/RecipeScraper";
@@ -26,13 +26,15 @@ describe("Unit Test: RecipeScraper", () => {
       />
     );
 
-    const searchbar = screen.getByRole("textbox");
+    const scrapeBar = screen.getByRole("textbox");
+    const scrapeBarText = screen.getByPlaceholderText("Enter your recipe url...")
     const generateRecipeBtn = screen.getByRole("button", { name: "Generate" });
     const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
 
-    expect(searchbar).toBeInTheDocument();
-    expect(generateRecipeBtn).toBeInTheDocument();
-    expect(enterMaunallyBtn).toBeInTheDocument();
+    expect(scrapeBar).toBeVisible();
+    expect(scrapeBarText).toBeVisible();
+    expect(generateRecipeBtn).toBeVisible();
+    expect(enterMaunallyBtn).toBeVisible();
   });
 
   //TODO: I think this test isn't correct
