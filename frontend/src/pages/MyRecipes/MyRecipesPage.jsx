@@ -3,7 +3,7 @@ import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const RecipeCollection = ({
+export const MyRecipesPage = ({
   handleScrapeRecipe,
   token,
   setToken,
