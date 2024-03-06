@@ -1,10 +1,7 @@
-// useFetchRecipes.js
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { getRecipes } from "../services/getRecipes";
-import { getRecipes } from '../services/recipes';
+import { getAllRecipes } from "../services/recipes";
 
-export const useFetchRecipes = (token) => {
+export const useFetchRecipes = (token, setToken) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,16 +10,16 @@ export const useFetchRecipes = (token) => {
     const fetchData = async () => {
       if (!token) {
         setLoading(false);
-        // navigate("/login"); // Uncomment this line if you want to navigate to login when there's no token
         return;
       }
 
       try {
-        const data = await getRecipes(token);
-        setRecipes(data.recipeData); // Adjust the property here
+        const data = await getAllRecipes(token);
+        setRecipes(data.recipes);
         setLoading(false);
-        window.localStorage.setItem("token", data.token);
+        setToken(data.token);
       } catch (err) {
+        console.log(err)
         setError(err);
         setLoading(false);
       }
