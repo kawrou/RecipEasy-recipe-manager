@@ -110,7 +110,7 @@ export const CreateRecipePage = ({
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
-          <RecipeUrl recipeUrl={recipeUrl} />
+          <RecipeUrl recipeUrl={url} />
         </div>
       </div>
       <div className="h-4 bg-tertiary-500" />

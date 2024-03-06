@@ -16,7 +16,6 @@ function extractRecipeInfo(recipeData) {
     ? recipeData.recipe_data[0]
     : recipeData.recipe_data || recipeData;
 
-
   let {
     name,
     description,

@@ -81,6 +81,7 @@ const fetchRecipeData = async (req, res) => {
 
       await browser.close();
     }
+    console.log("RECIPE DATA-----------------",recipeData)
     const filteredRecipeData = extractRecipeInfo(recipeData);
     res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
