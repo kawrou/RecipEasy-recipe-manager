@@ -16,6 +16,7 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
+  const [user_id, setUser_id] = useState("");
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") !== null
@@ -43,10 +44,11 @@ const App = () => {
     }
   };
 
-  const handleLogin = (token) => {
+  const handleLogin = (token, user_id) => {
     // set token state and isLoggedIn to true if token is returned
     setIsLoggedIn(token !== null);
     setToken(token);
+    setUser_id(user_id);
   };
 
   return (
@@ -96,6 +98,7 @@ const App = () => {
             <MyRecipesPage
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
+              user_id={user_id}
               setToken={setToken}
               url={url}
               handleUrlChange={handleUrlChange}

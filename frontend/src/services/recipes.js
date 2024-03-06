@@ -161,15 +161,37 @@ console.log('Toggle favourite successful')
   return data;
 };
 
-export const getAllRecipes = async (token) => {
+// export const getAllRecipes = async (token, user_id) => {
+//   const payload = {
+//     user_id: user_id
+//   }
+//   const requestOptions = {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+//   console.log("---------------------" + user_id)
+//   const response = await fetch(`${BACKEND_URL}/recipes/myrecipes/${user_id}`, requestOptions);
+//   if (response.status !== 200) {
+//     throw new Error("Unable to fetch recipes");
+//   }
+
+//   const data = await response.json();
+//   return data;
+// };
+
+export const getAllRecipes = async (token, user_id) => {
   const requestOptions = {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
+  console.log(user_id);
+  const url = `${BACKEND_URL}/recipes/myrecipes/${user_id}`;
+  const response = await fetch(url, requestOptions);
 
-  const response = await fetch(`${BACKEND_URL}//myrecipes/${userId}`, requestOptions);
   if (response.status !== 200) {
     throw new Error("Unable to fetch recipes");
   }
