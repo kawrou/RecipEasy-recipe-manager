@@ -12,6 +12,10 @@
 const { parse } = require("iso8601-duration");
 
 function extractRecipeInfo(recipeData) {
+  let recipeDataArray = Array.isArray(recipeData.recipe_data)
+    ? recipeData.recipe_data
+    : [recipeData.recipe_data];
+
   let {
     name,
     description,
@@ -25,7 +29,7 @@ function extractRecipeInfo(recipeData) {
     recipeIngredient,
     recipeInstructions,
     image,
-  } = recipeData.recipe_data;
+  } = recipeDataArray[0];
 
   recipeYield = parseYieldData(recipeYield);
   totalTime = calculateTotalTime(cookTime, prepTime);
@@ -96,6 +100,11 @@ function generateTags(recipeCuisine, recipeCategory, keywords) {
 
   // Remove duplicates
   tags = [...new Set(tags)];
+
+  // Limit to 10 tags
+  if (tags.length > 10) {
+    tags = tags.slice(0, 10);
+  }
 
   return tags;
 }
