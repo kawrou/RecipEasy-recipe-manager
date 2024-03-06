@@ -9,6 +9,7 @@
 // instructions - (recipeInstructions)
 // url - (mainEntityOfPage)
 // image - (image)
+const { parse } = require("iso8601-duration");
 
 function extractRecipeInfo(recipeData) {
   let {
@@ -18,6 +19,7 @@ function extractRecipeInfo(recipeData) {
     keywords,
     recipeCuisine,
     recipeCategory,
+    totalTime,
     cookTime,
     prepTime,
     recipeIngredient,
@@ -26,36 +28,76 @@ function extractRecipeInfo(recipeData) {
   } = recipeData.recipe_data;
 
   recipeYield = parseYieldData(recipeYield);
-  const totalTime = calculateTotalTime(cookTime, prepTime);
-  const tags = parseKeywords(keywords);
+  totalTime = calculateTotalTime(cookTime, prepTime);
+  const tags = generateTags(recipeCuisine, recipeCategory, keywords);
   recipeInstructions = parseRecipeInstructionsData(recipeInstructions);
   image = parseImageData(image);
 
   return {
-    name,
-    description,
+    name: name || "",
+    description: description || "",
     recipeYield,
     tags,
     totalTime,
-    recipeIngredient,
+    recipeIngredient: recipeIngredient || [],
     recipeInstructions,
     image,
   };
 }
 
-function calculateTotalTime(cookTime, prepTime) {
-  // Convert PT20M format to minutes
-  const cookTimeInMinutes = cookTime
-    ? parseInt(cookTime.substring(2, cookTime.length - 1))
-    : 0;
-  const prepTimeInMinutes = prepTime
-    ? parseInt(prepTime.substring(2, prepTime.length - 1))
-    : 0;
-  return cookTimeInMinutes + prepTimeInMinutes;
+function calculateTotalTime(cookTime, prepTime, totalTime) {
+  // Convert cookTime and prepTime to minutes
+  let cookTimeInMinutes = 0;
+  let prepTimeInMinutes = 0;
+
+  if (cookTime) {
+    const { hours, minutes } = parse(cookTime);
+    cookTimeInMinutes = hours * 60 + minutes;
+  }
+
+  if (prepTime) {
+    const { hours, minutes } = parse(prepTime);
+    prepTimeInMinutes = hours * 60 + minutes;
+  }
+
+  // If totalTime is provided, return it
+  if (totalTime) {
+    return totalTime;
+  }
+
+  // If either cookTime or prepTime exists, return the sum of both
+  if (cookTime || prepTime) {
+    return cookTimeInMinutes + prepTimeInMinutes;
+  }
+
+  // If none of them exist, return zero
+  return 0;
 }
 
-function parseKeywords(keywords) {
-  return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
+function generateTags(recipeCuisine, recipeCategory, keywords) {
+  let tags = [];
+
+  // Look for recipeCuisine
+  if (recipeCuisine) {
+    tags.push(recipeCuisine);
+  }
+
+  // Look for recipeCategory
+  if (recipeCategory) {
+    const categories = recipeCategory.split(", ");
+    tags = [...tags, ...categories];
+  }
+
+  // Look for keywords
+  if (keywords) {
+    const keywordsfield = keywords.split(", ");
+    tags = [...tags, ...keywordsfield];
+  }
+
+  // Remove duplicates
+  tags = [...new Set(tags)];
+
+  return tags;
 }
 
 function parseImageData(image) {

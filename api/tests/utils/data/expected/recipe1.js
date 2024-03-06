@@ -1,9 +1,10 @@
 module.exports = {
   name: "Zucchini slice",
-  description:
-    "How to make our top-rated zucchini slice recipe of all time.",
+  description: "How to make our top-rated zucchini slice recipe of all time.",
   recipeYield: 15,
   tags: [
+    "lunch",
+    "main",
     "slice",
     "bake",
     "cheese",
@@ -15,8 +16,6 @@ module.exports = {
     "budget friendly",
     "lunch box",
     "dinner",
-    "lunch",
-    "main",
     "snack",
     "everyday",
     "simple",

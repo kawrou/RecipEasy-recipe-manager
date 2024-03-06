@@ -5,6 +5,10 @@ module.exports = {
     "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1001464_11-ed687dd.jpg?resize=768,574",
   name: "Best ever chocolate brownies recipe",
   tags: [
+    "American",
+    "Afternoon tea",
+    "Dessert",
+    "Treat",
     "Best",
     "Best-ever",
     "Brownies",
