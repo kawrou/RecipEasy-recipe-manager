@@ -12,8 +12,8 @@ export const LoginPage = ({ onLogin }) => {
     event.preventDefault();
     try {
       const token = await login(email, password);
+      // if login successful - store token in local storage and pass token to app.jsx, redirect to homepage.
       window.localStorage.setItem("token", token);
-      // explain
       onLogin(token);
       navigate("/");
     } catch (err) {

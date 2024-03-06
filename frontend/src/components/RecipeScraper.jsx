@@ -8,15 +8,15 @@ const RecipeScraper = ({
 }) => {
   const navigate = useNavigate();
 
-  // const handleClick = async () => {
-  //   console.log("HERE")
-  //   if (localStorage.getItem('token')) {
-  //     await handleScrapeRecipe();
-  //     navigate('/recipes/create');
-  //   } else {
-  //     navigate('/login');
-  //   }
-  // };
+  // if the user is logged in - generate a recipe, else redirect to login page
+  const handleClick = async () => {
+    if (localStorage.getItem('token')) {
+      await handleScrapeRecipe();
+      navigate('/recipes/create');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="w-full pt-5">
@@ -31,8 +31,7 @@ const RecipeScraper = ({
         <button
           aria-label="Generate"
           onClick={async () => {
-            await handleScrapeRecipe()
-            navigate('/recipes/create')
+            handleClick()
           }}
           type="button"
           className="font-kanit font-bold text-lg text-white bg-secondary-500 hover:bg-blue-900 bg- rounded-lg px-5 py-2"

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import { scrapeRecipe } from "./services/recipes";
 
@@ -15,6 +15,7 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
+  // modified to stop navbar showing logout when user is not logged in
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") !== null
@@ -45,8 +46,8 @@ const App = () => {
   };
 
   const handleLogin = (token) => {
+    // set token state and isLoggedIn to true if token is returned
     setIsLoggedIn(token !== null);
-    console.log('token - ', token)
     setToken(token);
   };
 
