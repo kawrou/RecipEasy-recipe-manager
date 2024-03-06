@@ -16,23 +16,18 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [recipeId, setRecipeId] = useState("");
+  const [token, setToken] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("token") !== null
+  );
 
   const handleScrapeRecipe = async () => {
-    console.log("Token:", token);
-    console.log("URL:", url);
-    if (token && url) {
-      try {
-        const scrapedData = await scrapeRecipe(url, token);
-        console.log(scrapedData);
-        setRecipeData(scrapedData);
-      } catch (error) {
-        console.error("Error fetching recipe:", error);
-      }
-    } else {
-      // Show error message if not logged in
-      // setShowErrorMessage(true);
+    try {
+      const scrapedData = await scrapeRecipe(url, token);
+      setRecipeData(scrapedData.recipe_data);
+      setToken(scrapedData.token);
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
     }
   };
 
@@ -40,24 +35,18 @@ const App = () => {
     setUrl(e.target.value);
   };
 
-  // console.log(recipeData);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("token") !== null
-  );
-
   const handleLogout = async () => {
     await logout();
-    setIsLoggedIn(false);
     setToken(null);
     if (window.location.pathname === "/") {
       window.location.reload();
     }
   };
 
-  const handleLogin = (status) => {
-    setIsLoggedIn(status);
-    // setToken(newToken);
+  const handleLogin = (token) => {
+    // set token state and isLoggedIn to true if token is returned
+    setIsLoggedIn(token !== null);
+    setToken(token);
   };
 
   return (
@@ -78,7 +67,7 @@ const App = () => {
         />
         <Route
           path="/login"
-          element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
+          element={<LoginPage onLogin={handleLogin} />}
         />
         <Route path="/signup" element={<SignupPage />} />
         <Route
@@ -86,14 +75,16 @@ const App = () => {
           element={
             <CreateRecipePage
               recipeData={recipeData}
+              setRecipeData={setRecipeData}
               token={token}
               setToken={setToken}
+              url={url}
             />
           }
         />
         <Route
           path="/recipes/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
+          element={<SingleRecipePage token={token} setToken={setToken} url={url} />}
         />
         <Route
           path="/recipes/favouritedByOwner/:recipe_id"
