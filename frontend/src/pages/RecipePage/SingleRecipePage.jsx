@@ -119,7 +119,18 @@ export const SingleRecipePage = ({ token, setToken }) => {
             />
           </div>
           {/* Tags */}
-          <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
+          <div className="flex gap-10 items-center">
+            <Tags
+              tags={recipeTags}
+              setTags={setRecipeTags}
+              editMode={editMode}
+            />
+            {!editMode && (
+              <div className="flex-none self-end">
+              <FavouriteButton recipeId={recipe_id} token={token} size={50}/>
+            </div>   
+            )}     
+          </div>
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />

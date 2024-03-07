@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { toggleFavourite } from '../../services/recipes';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
-export const FavouriteButton = ({ recipeId, token  }) => {
+export const FavouriteButton = ({ recipeId, token, size }) => {
   const [favStatus, setFavStatus] = useState(false);
   console.log('initialFavStatus', favStatus)
 
@@ -28,12 +29,8 @@ export const FavouriteButton = ({ recipeId, token  }) => {
 
   return (
     <div>
-      <button onClick={handleFavouriteButton} className="flex items-center">
-        <img
-          src={favStatus ? '/favourited.svg' : '/unfavourited.svg'}
-          alt={favStatus ? 'Favourite' : 'Unfavourite'}
-          className="h-8 w-8"
-        />
+      <button onClick={handleFavouriteButton}>
+        {favStatus ? <FaHeart className="text-primary-500" size={size}/> : <FaRegHeart className="text-primary-500" size={size}/>}
       </button>
     </div>
   );
