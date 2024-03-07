@@ -30,7 +30,7 @@ export const InstructionList = ({
   };
 
   return (
-    <div className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white mr-5 ml-2.5 mb-20 h-fit">
+    <div className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit">
       <div className="font-kanit font-extrabold text-primary-500 text-6xl text-left">Method</div>
       <div className="flex flex-col">
         <div className="flex flex-col font-poppins font-extralight text-gray-600">

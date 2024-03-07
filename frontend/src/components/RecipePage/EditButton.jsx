@@ -5,7 +5,7 @@ export const EditButton = ({ editMode, setEditMode }) => {
   return (
     <button
       className={
-        "fixed bottom-10 right-10 bg-white border border-primary-500 font-kanit font-bold text-lg text-primary-500 hover:bg-primary-500 hover:text-white h-12 px-4 rounded-lg flex items-center"
+        "fixed bottom-10 right-10 bg-white border border-primary-500 font-kanit font-bold text-lg text-primary-500 hover:bg-primary-500 hover:text-white h-12 px-4 rounded-lg flex items-center shadow-md"
       }
       onClick={() => setEditMode(!editMode)}
     >
