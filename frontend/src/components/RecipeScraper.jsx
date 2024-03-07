@@ -14,7 +14,6 @@ const RecipeScraper = ({
   // What is this 'manual' parameter?
   const handleClick = async (manual) => {
     try {
-      // check user is logged in with valid token - if not, redirect to /login
       // Should we be calling checkToken with (window.localStorage) instead of props.token?
       await checkToken(token);
       if (!manual) {
