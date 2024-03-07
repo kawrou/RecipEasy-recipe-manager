@@ -36,7 +36,7 @@ describe("Navbar", () => {
         userEvent.click(screen.getByText("Home"));
         
         // Using await before expect to wait for the expectation to resolve
-        await expect(screen.getByText("RecipEasy")).to.exist;
+        await expect(screen.getByText("Recipeasy")).to.exist;
 
     });
 
