@@ -64,7 +64,7 @@ export const Tags = ({ tags, setTags, editMode }) => {
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="flex flex-wrap px-4 h-9 justify-between items-center text-md font-medium rounded-xl cursor-pointer bg-secondary-500 text-white"
+              className="flex flex-wrap px-4 h-9 justify-between items-center text-lg rounded-xl cursor-pointer bg-secondary-500 text-white"
             >
               {tag}
             </span>

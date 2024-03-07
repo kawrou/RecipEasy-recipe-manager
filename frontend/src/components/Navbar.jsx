@@ -9,7 +9,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
   };
 
   return (
-    <div className="relative flex justify-center items-center w-screen h-16 bg-white ">
+    <div className="relative flex justify-center items-center h-16 bg-white ">
       <NavLink className="absolute left-4" to="/">
         <img src="../../../src/assets/recipeasyLogo.svg" className="w-14" />
       </NavLink>

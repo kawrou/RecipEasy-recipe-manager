@@ -5,40 +5,48 @@ const { generateToken } = require("../lib/token");
 const Recipe = require("../models/recipe");
 const User = require("../models/user");
 const { response } = require("../app");
-
+const { extractRecipeInfo } = require("../utils/recipeUtils");
 
 const fetchRecipeData = async (req, res) => {
-  const url = req.query.url;
-  console.log("Fetching URL:", url);
+  const url = req.query.url; // assigns url to a variable
+  const newToken = generateToken(req.user_id);
 
   try {
-    const response = await axios.get(url);
-    const html = response.data;
-    // console.log(response);
+    const response = await axios.get(url); // Use axios to get webpage and return a promise
+    const html = response.data; // assign all webpage data to html variable
 
+    //load the html tags into cheerio which is a library that has methods for finding and extracting html elements
     const $ = cheerio.load(html);
 
+    //JSON-LD is being used to semantically markup the data, to make them become not only machine-readable,
+    //but also machine-understanable by providing additional syntax to JSON for serialization of Linked Data.
     const jsonLD = $('script[type="application/ld+json"]');
     let recipeData;
 
+    //jsonLD is a collection of HTML elements
+    //each method from the cheerio library, takes a callback func with two parameters - index of the current element, and 'element' is reference to the current 'element'
+    //you can access and manipulate the element using the 'element' parameter
+    //console.log(`Element ${index}: ${element.html()}`); -> prints the html element and index to the console
     jsonLD.each((index, element) => {
-      const scriptContent = $(element).html();
+      const scriptContent = $(element).html(); // Gets the html elements and assign it to a variable
       try {
-        const jsonData = JSON.parse(scriptContent);
-
+        const jsonData = JSON.parse(scriptContent); //Turns the html elements into a JSON object with key/value pairs
         if (jsonData["@graph"]) {
           const recipeObjects = jsonData["@graph"].filter(
             (obj) => obj["@type"] === "Recipe"
           );
-          recipeData = recipeObjects;
+          recipeData = recipeObjects[0];
+          // console.log("5: @graph - RecipeData", recipeData);
         } else if (jsonData["@type"] === "Recipe") {
           recipeData = jsonData;
+          // console.log("5: @type - RecipeData", recipeData);
         }
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
     });
 
+    // Failsafe - If axios and cheerio doesn't work, use puppeteer
     if (!recipeData || recipeData.length === 0) {
       const browser = await puppeteer.launch({ headless: true });
       const page = await browser.newPage();
@@ -57,7 +65,7 @@ const fetchRecipeData = async (req, res) => {
                 const recipeObjects = parsedData["@graph"].filter(
                   (obj) => obj["@type"] === "Recipe"
                 );
-                jsonData = recipeObjects;
+                jsonData = recipeObjects[0];
               } else if (parsedData["@type"] === "Recipe") {
                 jsonData = parsedData;
               }
@@ -73,24 +81,16 @@ const fetchRecipeData = async (req, res) => {
 
       await browser.close();
     }
-
-    console.log("Recipe Data:", recipeData);
-    res.status(200).json({ recipe_data: recipeData });
+    console.log("before", recipeData, "after");
+    const filteredRecipeData = extractRecipeInfo(recipeData);
+    console.log(filteredRecipeData);
+    res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
-    console.log(Object.keys(error));
+    // console.log(Object.keys(error));
     // console.error("Error fetching URL:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-// Example usage:
-// const url = "https://www.mob.co.uk/recipes/jalepeno-coconut-chicken-thighs"; // Replace with the desired URL
-// fetchRecipeData(url)
-//   .then((recipeData) => {
-//     console.log("Recipe Data:", recipeData);
-//   })
-//   .catch((error) => {
-//     console.error("Error:", error);
-//   });
 
 const create = async (req, res) => {
   // find the user who created the recipe
@@ -113,6 +113,7 @@ const create = async (req, res) => {
       recipeInstructions: req.body.recipeInstructions,
       url: req.body.url,
       image: req.body.image,
+      dateAdded: req.body.dateAdded,
       dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
@@ -176,21 +177,20 @@ const updateRecipe = async (req, res) => {
 
 const toggleFavourite = async (req, res) => {
   try {
-    
     const recipeId = req.params.recipe_id;
-    
+
     const user = await User.findById(req.user_id);
 
     if (!user) {
-      console.log('User not found');
-      return res.status(404).json({ message: 'User not found' });
+      console.log("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
 
     const recipe = await Recipe.findById(recipeId);
 
     if (!recipe) {
-      console.log('Recipe not found');
-      return res.status(404).json({ message: 'Recipe not found' });
+      console.log("Recipe not found");
+      return res.status(404).json({ message: "Recipe not found" });
     }
 
     // Toggle the favouritedByOwner field
@@ -198,12 +198,12 @@ const toggleFavourite = async (req, res) => {
 
     // Save the updated recipe
     await recipe.save();
-    console.log('Recipe saved successfully');
+    console.log("Recipe saved successfully");
 
     res.status(200).json({ message: 'Recipe favourited/unfavourited successfully', recipe });
   } catch (error) {
-    console.error('Internal server error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Internal server error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -217,17 +217,14 @@ const getRecipeById = async (req, res) => {
 };
 
 const getAllRecipesByUserId = async (req, res) => {
-  const userId = req.params.user_id;
-  const token = generateToken(req.user_id);
-  try{
-  const recipes = await Recipe.find({ownerId: userId});
-  res.status(200).json({recipes: recipes, token: token})
-  }
-  catch(error){
-  res.status(500).json({error: error.message})
+  try {
+    const token = generateToken(req.user_id);
+    const recipes = await Recipe.find({ ownerId: req.user_id });
+    res.status(200).json({ recipes: recipes, token: token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
-
 
 const RecipesController = {
   fetchRecipeData: fetchRecipeData,
@@ -235,7 +232,7 @@ const RecipesController = {
   updateRecipe: updateRecipe,
   toggleFavourite: toggleFavourite,
   getRecipeById: getRecipeById,
-  getAllRecipesByUserId: getAllRecipesByUserId
+  getAllRecipesByUserId: getAllRecipesByUserId,
 };
 
 module.exports = RecipesController;

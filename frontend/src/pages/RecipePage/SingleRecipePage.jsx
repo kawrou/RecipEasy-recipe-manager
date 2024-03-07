@@ -26,13 +26,13 @@ export const SingleRecipePage = ({ token, setToken }) => {
 
   const [recipeName, setRecipeName] = useState("");
   const [recipeDescription, setRecipeDescription] = useState("");
-  const [yieldAmount, setYieldAmount] = useState("");
-  const [totalTime, setTotalTime] = useState("");
+  const [yieldAmount, setYieldAmount] = useState(0);
+  const [recipeTotalTime, setRecipeTotalTime] = useState(0);
   const [ingredients, setIngredients] = useState([]);
   const [instructions, setInstructions] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
-  const [recipeUrl, setRecipeUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
+  const [recipeUrl, setRecipeUrl] = useState("");
 
   useEffect(() => {
     if (token) {
@@ -41,7 +41,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
           setRecipeName(data.recipeData.name);
           setRecipeDescription(data.recipeData.description);
           setYieldAmount(data.recipeData.recipeYield);
-          setTotalTime(data.recipeData.totalTime);
+          setRecipeTotalTime(data.recipeData.totalTime);
           setIngredients(data.recipeData.recipeIngredient);
           setInstructions(data.recipeData.recipeInstructions);
           setImageUrl(data.recipeData.image);
@@ -64,7 +64,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
     if (
       recipeName === "" ||
       yieldAmount === 0 ||
-      totalTime === 0 ||
+      recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
       instructions.some((instruction) => instruction === "")
     ) {
@@ -76,7 +76,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
         recipeName,
         recipeDescription,
         recipeTags,
-        totalTime,
+        recipeTotalTime,
         yieldAmount,
         ingredients,
         instructions,
@@ -89,10 +89,9 @@ export const SingleRecipePage = ({ token, setToken }) => {
   };
 
   return (
-    <>
-      <div className="h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center">
-        <div className="flex flex-auto w-1/2 justify-center flex-col pt-18 p-20 gap-7">
+    <div className="bg-tertiary-500">
+      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 mb-2 py-20">
+        <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
           {/* title */}
           <RecipeName
             name={recipeName}
@@ -114,22 +113,21 @@ export const SingleRecipePage = ({ token, setToken }) => {
             />
             {/* timeTaken */}
             <RecipeTimeTaken
-              timeTaken={totalTime}
-              setTimeTaken={setTotalTime}
+              timeTaken={recipeTotalTime}
+              setTimeTaken={setRecipeTotalTime}
               editMode={editMode}
             />
           </div>
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
-          <FavouriteButton recipeId={recipe_id} token={token} />
         </div>
-        <div className="flex flex-col gap-10 w-1/2 justify-center p-20 ">
+        <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
           <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
-      <div className="w-screen h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center p-10 pb-0">
+      <div className="h-4 bg-tertiary-500" />
+      <div className="flex justify-center  pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList
           recipeIngredients={ingredients}
@@ -148,6 +146,6 @@ export const SingleRecipePage = ({ token, setToken }) => {
       ) : (
         <EditButton editMode={editMode} setEditMode={setEditMode} />
       )}
-    </>
+    </div>
   );
 };

@@ -16,35 +16,25 @@ import { logout } from "./services/authentication";
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [recipeId, setRecipeId] = useState("");
+  const [token, setToken] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("token") !== null
+  );
+
 
   const handleScrapeRecipe = async () => {
-    console.log("Token:", token);
-    console.log("URL:", url);
-    if (token && url) {
-      try {
-        const scrapedData = await scrapeRecipe(url, token);
-        console.log(scrapedData);
-        setRecipeData(scrapedData);
-      } catch (error) {
-        console.error("Error fetching recipe:", error);
-      }
-    } else {
-      // Show error message if not logged in
-      // setShowErrorMessage(true);
+    try {
+      const scrapedData = await scrapeRecipe(url, token);
+      setRecipeData(scrapedData.recipe_data);
+      setToken(scrapedData.token);
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
     }
   };
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
   };
-
-  console.log(recipeData);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("token") !== null
-  );
 
   const handleLogout = async () => {
     await logout();
@@ -55,64 +45,79 @@ const App = () => {
     }
   };
 
-  const handleLogin = (status) => {
-    setIsLoggedIn(status);
-    // setToken(newToken);
+  const handleLogin = (token) => {
+    // set token state and isLoggedIn to true if token is returned
+    setIsLoggedIn(token !== null);
+    setToken(token);
   };
 
   return (
-    <BrowserRouter>
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              setToken={setToken}
-              url={url}
-              handleUrlChange={handleUrlChange}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
-        />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/recipes/create"
-          element={
-            <CreateRecipePage
-              recipeData={recipeData}
-              token={token}
-              setToken={setToken}
-            />
-          }
-        />
-        <Route
-          path="/recipes/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
-        />
-        <Route
-          path="/recipes/favouritedByOwner/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
-        />
-        <Route
-          path="/myrecipes"
-          element={
-            <MyRecipesPage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              setToken={setToken}
-              url={url}
-              handleUrlChange={handleUrlChange}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <div className="flex flex-col w-screen min-h-screen">
+      <BrowserRouter>
+        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                url={url}
+                setUrl={setUrl}
+                handleUrlChange={handleUrlChange}
+                setRecipeData={setRecipeData}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                onLogin={handleLogin}
+                setToken={setToken}
+              />
+            }
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/recipes/create"
+            element={
+              <CreateRecipePage
+                recipeData={recipeData}
+                setRecipeData={setRecipeData}
+                token={token}
+                setToken={setToken}
+                url={url}
+              />
+            }
+          />
+          <Route
+            path="/recipes/:recipe_id"
+            element={
+              <SingleRecipePage token={token} setToken={setToken} url={url} />
+            }
+          />
+          <Route
+            path="/recipes/favouritedByOwner/:recipe_id"
+            element={<SingleRecipePage token={token} setToken={setToken} />}
+          />
+          <Route
+            path="/myrecipes"
+            element={
+              <MyRecipesPage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                setToken={setToken}
+                url={url}
+                setUrl={setUrl}
+                handleUrlChange={handleUrlChange}
+                setRecipeData={setRecipeData}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
