@@ -174,7 +174,7 @@ const updateRecipe = async (req, res) => {
   }
 };
 
-const isFavourite = async (req, res) => {
+const toggleFavourite = async (req, res) => {
   try {
     
     const recipeId = req.params.recipe_id;
@@ -200,7 +200,7 @@ const isFavourite = async (req, res) => {
     await recipe.save();
     console.log('Recipe saved successfully');
 
-    res.status(200).json({ message: 'Recipe favourited successfully', recipe });
+    res.status(200).json({ message: 'Recipe favourited/unfavourited successfully', recipe });
   } catch (error) {
     console.error('Internal server error:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -233,7 +233,7 @@ const RecipesController = {
   fetchRecipeData: fetchRecipeData,
   create: create,
   updateRecipe: updateRecipe,
-  isFavourite: isFavourite,
+  toggleFavourite: toggleFavourite,
   getRecipeById: getRecipeById,
   getAllRecipesByUserId: getAllRecipesByUserId
 };
