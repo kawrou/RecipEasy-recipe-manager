@@ -17,6 +17,7 @@ const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("token"));
+  const [userId, setUserId] = useState("")
   const [recipeId, setRecipeId] = useState("");
 
   const handleScrapeRecipe = async () => {
