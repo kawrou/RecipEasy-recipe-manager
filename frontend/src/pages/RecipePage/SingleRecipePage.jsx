@@ -120,6 +120,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
           </div>
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
+          <FavouriteButton recipeId={recipe_id} token={token} />
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
