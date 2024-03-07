@@ -61,6 +61,7 @@ const App = () => {
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
               url={url}
+              setUrl={setUrl}
               handleUrlChange={handleUrlChange}
               setRecipeData={setRecipeData}
             />

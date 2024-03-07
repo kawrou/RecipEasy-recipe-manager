@@ -4,6 +4,7 @@ import { checkToken } from "../services/authentication";
 
 const RecipeScraper = ({
   url,
+  setUrl,
   handleUrlChange,
   handleScrapeRecipe,
   setRecipeData,
@@ -17,7 +18,8 @@ const RecipeScraper = ({
       if (!manual) {
         await handleScrapeRecipe();
       } else {
-        setRecipeData(null);
+        setRecipeData(undefined);
+        setUrl(undefined);
       }
       navigate("/recipes/create");
     } catch (error) {

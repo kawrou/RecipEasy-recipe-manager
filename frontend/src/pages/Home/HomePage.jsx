@@ -4,6 +4,7 @@ export const HomePage = ({
   handleScrapeRecipe,
   token,
   url,
+  setUrl,
   handleUrlChange,
   setRecipeData,
 }) => {
@@ -35,6 +36,7 @@ export const HomePage = ({
             <RecipeScraper
               token={token}
               url={url}
+              setUrl={setUrl}
               handleUrlChange={handleUrlChange}
               handleScrapeRecipe={handleScrapeRecipe}
               setRecipeData={setRecipeData}

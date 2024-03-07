@@ -37,7 +37,7 @@ export const CreateRecipePage = ({
   const [recipeTags, setRecipeTags] = useState([]);
 
   useEffect(() => {
-    if (recipeData !== null) {
+    if (recipeData) {
       const {
         name = "",
         description = "",
