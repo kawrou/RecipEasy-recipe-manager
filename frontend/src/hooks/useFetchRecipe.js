@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getAllRecipes } from "../services/recipes";
 
 export const useFetchRecipes = (token, setToken) => {
@@ -6,27 +6,27 @@ export const useFetchRecipes = (token, setToken) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchRecipes = useCallback(async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await getAllRecipes(token);
+      setRecipes(data.recipes);
+      setLoading(false);
+      setToken(data.token);
+    } catch (err) {
+      console.log(err);
+      setError(err);
+      setLoading(false);
+    }
+  }, [token, setToken]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    fetchRecipes();
+  }, [fetchRecipes]);
 
-      try {
-        const data = await getAllRecipes(token);
-        setRecipes(data.recipes);
-        setLoading(false);
-        setToken(data.token);
-      } catch (err) {
-        console.log(err)
-        setError(err);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [token]);
-
-  return { recipes, loading, error };
+  return { recipes, loading, error, fetchRecipes };
 };

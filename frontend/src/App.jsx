@@ -21,6 +21,7 @@ const App = () => {
     localStorage.getItem("token") !== null
   );
 
+
   const handleScrapeRecipe = async () => {
     try {
       const scrapedData = await scrapeRecipe(url, token);
@@ -37,6 +38,7 @@ const App = () => {
 
   const handleLogout = async () => {
     await logout();
+    setIsLoggedIn(false);
     setToken(null);
     if (window.location.pathname === "/") {
       window.location.reload();
@@ -52,62 +54,70 @@ const App = () => {
   return (
     <div className="flex flex-col w-screen min-h-screen">
       <BrowserRouter>
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              url={url}
-              setUrl={setUrl}
-              handleUrlChange={handleUrlChange}
-              setRecipeData={setRecipeData}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={<LoginPage onLogin={handleLogin} />}
-        />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/recipes/create"
-          element={
-            <CreateRecipePage
-              recipeData={recipeData}
-              setRecipeData={setRecipeData}
-              token={token}
-              setToken={setToken}
-              url={url}
-            />
-          }
-        />
-        <Route
-          path="/recipes/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} url={url} />}
-        />
-        <Route
-          path="/recipes/favouritedByOwner/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
-        />
-        <Route
-          path="/myrecipes"
-          element={
-            <MyRecipesPage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              setToken={setToken}
-              url={url}
-              handleUrlChange={handleUrlChange}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                url={url}
+                setUrl={setUrl}
+                handleUrlChange={handleUrlChange}
+                setRecipeData={setRecipeData}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                onLogin={handleLogin}
+                setToken={setToken}
+              />
+            }
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/recipes/create"
+            element={
+              <CreateRecipePage
+                recipeData={recipeData}
+                setRecipeData={setRecipeData}
+                token={token}
+                setToken={setToken}
+                url={url}
+              />
+            }
+          />
+          <Route
+            path="/recipes/:recipe_id"
+            element={
+              <SingleRecipePage token={token} setToken={setToken} url={url} />
+            }
+          />
+          <Route
+            path="/recipes/favouritedByOwner/:recipe_id"
+            element={<SingleRecipePage token={token} setToken={setToken} />}
+          />
+          <Route
+            path="/myrecipes"
+            element={
+              <MyRecipesPage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                setToken={setToken}
+                url={url}
+                setUrl={setUrl}
+                handleUrlChange={handleUrlChange}
+                setRecipeData={setRecipeData}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
-    
   );
 };
 

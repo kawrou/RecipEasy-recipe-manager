@@ -81,9 +81,9 @@ const fetchRecipeData = async (req, res) => {
 
       await browser.close();
     }
-    console.log("before",recipeData, "after")
+    console.log("before", recipeData, "after");
     const filteredRecipeData = extractRecipeInfo(recipeData);
-    console.log(filteredRecipeData)
+    console.log(filteredRecipeData);
     res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
     // console.log(Object.keys(error));
@@ -217,10 +217,9 @@ const getRecipeById = async (req, res) => {
 };
 
 const getAllRecipesByUserId = async (req, res) => {
-  const userId = req.params.user_id;
-  const token = generateToken(req.user_id);
   try {
-    const recipes = await Recipe.find({ ownerId: userId });
+    const token = generateToken(req.user_id);
+    const recipes = await Recipe.find({ ownerId: req.user_id });
     res.status(200).json({ recipes: recipes, token: token });
   } catch (error) {
     res.status(500).json({ error: error.message });

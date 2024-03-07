@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
 
-export const LoginPage = ({ onLogin }) => {
+export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,10 +11,10 @@ export const LoginPage = ({ onLogin }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const token = await login(email, password);
-      // if login successful - store token in local storage and pass token to app.jsx, redirect to homepage.
-      window.localStorage.setItem("token", token);
-      onLogin(token);
+      const data = await login(email, password);
+      window.localStorage.setItem("token", data.token);
+      onLogin(data.token);
+      setToken(data.token);
       navigate("/");
     } catch (err) {
       console.error(err);
