@@ -12,11 +12,7 @@
 const { parse } = require("iso8601-duration");
 
 function extractRecipeInfo(recipeData) {
-  let extractedRecipeData = Array.isArray(recipeData.recipe_data)
-    ? recipeData.recipe_data[0]
-    : recipeData.recipe_data || recipeData;
-
-
+  let extractedRecipeData = recipeData.recipe_data || recipeData;
   let {
     name,
     description,
@@ -85,12 +81,17 @@ function generateTags(recipeCuisine, recipeCategory, keywords) {
   let tags = [];
 
   // Look for recipeCuisine
-  if (recipeCuisine) {
+  if (Array.isArray(recipeCuisine)) {
+    tags.push(...recipeCuisine);
+  } else if (recipeCuisine) {
     tags.push(recipeCuisine);
   }
 
   // Look for recipeCategory
-  if (recipeCategory) {
+  if (Array.isArray(recipeCategory)) {
+    const categories = recipeCategory.join(", ").split(", ");
+    tags = [...tags, ...categories];
+  } else if (recipeCategory) {
     const categories = recipeCategory.split(", ");
     tags = [...tags, ...categories];
   }
@@ -118,10 +119,10 @@ function parseImageData(image) {
   } else if (
     Array.isArray(image) &&
     image.length > 0 &&
-    typeof imageField[0] === "string"
+    typeof image[0] === "string"
   ) {
     // If imageField is an array of URL strings, return the first URL
-    return imageField[0];
+    return image[0];
   } else {
     return image;
   }

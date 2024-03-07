@@ -50,7 +50,8 @@ const App = () => {
   };
 
   return (
-    <BrowserRouter>
+    <div className="flex flex-col w-screen min-h-screen">
+      <BrowserRouter>
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <Routes>
         <Route
@@ -59,9 +60,10 @@ const App = () => {
             <HomePage
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
-              setToken={setToken}
               url={url}
+              setUrl={setUrl}
               handleUrlChange={handleUrlChange}
+              setRecipeData={setRecipeData}
             />
           }
         />
@@ -104,6 +106,8 @@ const App = () => {
         />
       </Routes>
     </BrowserRouter>
+    </div>
+    
   );
 };
 

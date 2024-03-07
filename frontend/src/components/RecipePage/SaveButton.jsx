@@ -4,9 +4,7 @@ import { FaSave } from "react-icons/fa";
 export const SaveButton = ({ handleSaveRecipe }) => {
   return (
     <button
-      className={
-        "fixed bottom-10 right-10 bg-blue-500 hover:bg-blue-700 text-white font-bold h-10 px-4 rounded-lg flex items-center"
-      }
+      className="fixed bottom-10 right-10 bg-secondary-500 hover:bg-blue-900 text-white font-kanit font-bold text-lg h-12 px-4 rounded-lg flex items-center"
       onClick={handleSaveRecipe}
     >
       <>
