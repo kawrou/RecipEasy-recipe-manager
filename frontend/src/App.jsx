@@ -60,9 +60,9 @@ const App = () => {
             <HomePage
               handleScrapeRecipe={handleScrapeRecipe}
               token={token}
-              setToken={setToken}
               url={url}
               handleUrlChange={handleUrlChange}
+              setRecipeData={setRecipeData}
             />
           }
         />

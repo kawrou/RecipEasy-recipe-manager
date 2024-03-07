@@ -5,6 +5,7 @@ export const HomePage = ({
   token,
   url,
   handleUrlChange,
+  setRecipeData,
 }) => {
   return (
     <div className="flex flex-col justify-center items-center flex-auto">
@@ -36,6 +37,7 @@ export const HomePage = ({
               url={url}
               handleUrlChange={handleUrlChange}
               handleScrapeRecipe={handleScrapeRecipe}
+              setRecipeData={setRecipeData}
             />
           </div>
         </div>

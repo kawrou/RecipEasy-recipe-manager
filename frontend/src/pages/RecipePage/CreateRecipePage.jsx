@@ -25,27 +25,40 @@ export const CreateRecipePage = ({
 }) => {
   const navigate = useNavigate();
 
-  const {
-    name,
-    description,
-    recipeYield,
-    tags,
-    totalTime,
-    recipeIngredient,
-    recipeInstructions,
-    image,
-  } = recipeData;
-
   const [editMode, setEditMode] = useState(true);
 
-  const [recipeName, setRecipeName] = useState(name);
-  const [recipeDescription, setRecipeDescription] = useState(description);
-  const [yieldAmount, setYieldAmount] = useState(recipeYield);
-  const [recipeTotalTime, setRecipeTotalTime] = useState(totalTime);
-  const [ingredients, setIngredients] = useState(recipeIngredient);
-  const [instructions, setInstructions] = useState(recipeInstructions);
-  const [imageUrl, setImageUrl] = useState(image);
-  const [recipeTags, setRecipeTags] = useState(tags);
+  const [recipeName, setRecipeName] = useState("");
+  const [recipeDescription, setRecipeDescription] = useState("");
+  const [yieldAmount, setYieldAmount] = useState(0);
+  const [recipeTotalTime, setRecipeTotalTime] = useState(0);
+  const [ingredients, setIngredients] = useState([]);
+  const [instructions, setInstructions] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [recipeTags, setRecipeTags] = useState([]);
+
+  useEffect(() => {
+    if (recipeData !== null) {
+      const {
+        name = "",
+        description = "",
+        recipeYield = 0,
+        tags = [],
+        totalTime = 0,
+        recipeIngredient = [],
+        recipeInstructions = [],
+        image = "",
+      } = recipeData;
+
+      setRecipeName(name);
+      setRecipeDescription(description);
+      setYieldAmount(recipeYield);
+      setRecipeTotalTime(totalTime);
+      setIngredients(recipeIngredient);
+      setInstructions(recipeInstructions);
+      setImageUrl(image);
+      setRecipeTags(tags);
+    }
+  }, [recipeData]);
 
   const handleSaveRecipe = async () => {
     if (
