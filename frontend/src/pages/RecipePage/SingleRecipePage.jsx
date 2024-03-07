@@ -90,7 +90,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
 
   return (
     <div className="bg-tertiary-500">
-      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 py-20">
+      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 mb-2 py-20">
         <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
           {/* title */}
           <RecipeName
