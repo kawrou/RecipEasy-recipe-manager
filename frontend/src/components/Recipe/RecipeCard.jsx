@@ -24,6 +24,7 @@ const RecipeCard = ({ recipe, token, setToken }) => {
       } finally {
         setIsLoading(false);
       }
+      return token
     };
 
     if (recipe._id) {
@@ -34,13 +35,13 @@ const RecipeCard = ({ recipe, token, setToken }) => {
   return (
     <Link
       to={`/recipes/${recipe._id}`}
-      className="flex justify-center items-center h-full z-0"
+      className="flex flex-none justify-center items-center h-full"
     >
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
       {recipeData && (
         <div className="w-full p-4">
-          <div className="bg-white rounded-3xl overflow-hidden flex flex-col gap-4 items-center shadow-md p-4">
+          <div className="bg-white rounded-3xl overflow-hidden flex flex-col gap-4 items-center shadow-md p-5">
             <div className="w-full ">
               <div
                 className="bg-cover bg-center h-48 rounded-2xl"
@@ -52,19 +53,21 @@ const RecipeCard = ({ recipe, token, setToken }) => {
                 {recipe.name || defaultName}
               </h2>
               <div className="flex items-center justify-between">
-                <div className="flex font-kanit font-bold gap-0.5 text-secondary-500">
+                <div className="flex items-center font-kanit font-bold gap-0.5 text-secondary-500">
                   <img
-                    className="w-6 h-6 mr-2"
+                    className="size-8 mr-2"
                     src={timeTakenIcon}
                     alt="Timer Image"
                   />
-                  <p >{recipe.totalTime}</p>
-                  <p > mins</p>
+                  <p>{recipe.totalTime}</p>
+                  <p> mins</p>
                 </div>
 
-                <div className="z-10">
-                  <FavouriteButton recipeId={recipe._id} token={token} />
-                </div>
+                <FavouriteButton
+                  recipeId={recipe._id}
+                  token={token}
+                  size={30}
+                />
               </div>
             </div>
           </div>

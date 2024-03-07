@@ -90,7 +90,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
 
   return (
     <div className="bg-tertiary-500">
-      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 mb-2 py-20">
+      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white shadow-md rounded-3xl m-5 mb-2 py-20">
         <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
           {/* title */}
           <RecipeName
@@ -119,7 +119,18 @@ export const SingleRecipePage = ({ token, setToken }) => {
             />
           </div>
           {/* Tags */}
-          <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
+          <div className="flex gap-10 items-center">
+            <Tags
+              tags={recipeTags}
+              setTags={setRecipeTags}
+              editMode={editMode}
+            />
+            {!editMode && (
+              <div className="flex-none self-end">
+              <FavouriteButton recipeId={recipe_id} token={token} size={50}/>
+            </div>   
+            )}     
+          </div>
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />

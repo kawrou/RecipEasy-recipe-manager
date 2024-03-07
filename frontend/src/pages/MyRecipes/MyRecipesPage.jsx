@@ -75,15 +75,13 @@ export const MyRecipesPage = ({
         </div>
       </div>
 
-      <div className="">
-        <div className="flex flex-col items-center mx-20 my-10">
-          <h2 className="font-kanit font-extrabold text-5xl text-primary-500 bg-white w-fit px-5 py-3 mb-6 rounded-3xl shadow-md">
-            {" "}
-            My Recipes
-          </h2>
-          <div className="grid grid-cols-4 gap-2" role="feed">
-            {renderPageContent()}
-          </div>
+      <div className="flex flex-col items-center mx-20 my-10">
+        <h2 className="font-kanit font-extrabold text-5xl text-primary-500 bg-white w-fit px-5 py-3 mb-6 rounded-3xl shadow-md">
+          {" "}
+          My Recipes
+        </h2>
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 flex-wrap" role="feed">
+          {renderPageContent()}
         </div>
       </div>
     </div>
