@@ -17,7 +17,7 @@ const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState("");
   const [recipeId, setRecipeId] = useState("");
 
   const handleScrapeRecipe = async () => {
@@ -51,6 +51,7 @@ const App = () => {
     await logout();
     setIsLoggedIn(false);
     setToken(null);
+    setUserId(null);
     if (window.location.pathname === "/") {
       window.location.reload();
     }
@@ -64,61 +65,66 @@ const App = () => {
   return (
     <div className="flex flex-col w-screen min-h-screen">
       <BrowserRouter>
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              url={url}
-              setUrl={setUrl}
-              handleUrlChange={handleUrlChange}
-              setRecipeData={setRecipeData}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
-        />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/recipes/create"
-          element={
-            <CreateRecipePage
-              recipeData={recipeData}
-              token={token}
-              setToken={setToken}
-            />
-          }
-        />
-        <Route
-          path="/recipes/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
-        />
-        <Route
-          path="/recipes/favouritedByOwner/:recipe_id"
-          element={<SingleRecipePage token={token} setToken={setToken} />}
-        />
-        <Route
-          path="/myrecipes"
-          element={
-            <MyRecipesPage
-              handleScrapeRecipe={handleScrapeRecipe}
-              token={token}
-              user_id={user_id}
-              setToken={setToken}
-              url={url}
-              handleUrlChange={handleUrlChange}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                url={url}
+                setUrl={setUrl}
+                handleUrlChange={handleUrlChange}
+                setRecipeData={setRecipeData}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                onLogin={handleLogin}
+                setToken={setToken}
+                setUserId={setUserId}
+              />
+            }
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/recipes/create"
+            element={
+              <CreateRecipePage
+                recipeData={recipeData}
+                token={token}
+                setToken={setToken}
+              />
+            }
+          />
+          <Route
+            path="/recipes/:recipe_id"
+            element={<SingleRecipePage token={token} setToken={setToken} />}
+          />
+          <Route
+            path="/recipes/favouritedByOwner/:recipe_id"
+            element={<SingleRecipePage token={token} setToken={setToken} />}
+          />
+          <Route
+            path="/myrecipes"
+            element={
+              <MyRecipesPage
+                handleScrapeRecipe={handleScrapeRecipe}
+                token={token}
+                userId={userId}
+                setToken={setToken}
+                url={url}
+                handleUrlChange={handleUrlChange}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
-    
   );
 };
 

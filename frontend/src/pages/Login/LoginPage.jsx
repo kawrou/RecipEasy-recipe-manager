@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
 
-export const LoginPage = ({ onLogin, setToken }) => {
+export const LoginPage = ({ onLogin, setToken, setUserId }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,11 +11,13 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const token = await login(email, password);
-      window.localStorage.setItem("token", token);
-      console.log(token);
+      const data = await login(email, password);
+      window.localStorage.setItem("token", data.token);
+      console.log(data.token);
       onLogin(true);
-      setToken(token);
+      setToken(data.token);
+      setUserId(data.user_id)
+      console.log("----------------------->",data.user_id)
       navigate("/");
     } catch (err) {
       console.error(err);
