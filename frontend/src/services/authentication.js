@@ -20,6 +20,7 @@ export const login = async (email, password) => {
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
     let data = await response.json();
+  //TODO: Still unsure that user_id: data.user_id is necessary. Seems to work without it
     return { token: data.token, user_id: data.user_id };
   } else {
     throw new Error(
@@ -58,7 +59,7 @@ export const signup = async (email, password, username) => {
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.clear();
-  console.log(localStorage);
+  // console.log(localStorage);
 };
 
 export const checkToken = async (token) => {
@@ -68,13 +69,11 @@ export const checkToken = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  console.log(token)
+  // console.log(token)
   const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
   if (!response.ok) {
     const error = new Error("Token not valid");
     error.response = response;
     throw error;
   }
-  const data = await response.json();
-  return data;
 };
