@@ -32,7 +32,7 @@ export const FavouriteButton = ({ recipeId, token  }) => {
         <img
           src={favStatus ? '/favourited.svg' : '/unfavourited.svg'}
           alt={favStatus ? 'Favourite' : 'Unfavourite'}
-          className="h-8 w-8"
+          className="h-10 w-10"
         />
       </button>
     </div>

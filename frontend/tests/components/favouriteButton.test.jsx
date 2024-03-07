@@ -9,22 +9,22 @@ describe('FavouriteButton', () => {
     expect(unfavouritedButton).toBeInTheDocument();
   });
 
-  test.todo('clicking favourite button toggles favourite status and changes the image', async () => {
+  test('clicking favourite button toggles favourite status and changes the image', async () => {
     const { getByAltText } = render(<FavouriteButton />);
     const button = getByAltText('Unfavourite');
 
     fireEvent.click(button);
 
-    // Wait for the state change to reflect in the button's alt attribute
+    // Wait for the state change to reflect in the button's src attribute
     await waitFor(() => {
-        expect(button.alt).toBe('Favourite');
+        expect(button.src).toContain('favourited.svg');
     });
 
     fireEvent.click(button);
 
-    // Wait for the state change to reflect in the button's alt attribute
+    // Wait for the state change to reflect in the button's src attribute
     await waitFor(() => {
-        expect(button.alt).toBe('Unfavourite');
+        expect(button.src).toContain('unfavourited.svg');
     });
 });
 
