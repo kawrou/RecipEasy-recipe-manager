@@ -37,6 +37,7 @@ describe("authentication service", () => {
       expect(options.headers["Content-Type"]).toEqual("application/json");
     });
 
+    //TODO: This test is passing but the actual service has a data.user_id which is strange
     test("returns the token if the request was a success", async () => {
       const testEmail = "test@testEmail.com";
       const testPassword = "12345678";

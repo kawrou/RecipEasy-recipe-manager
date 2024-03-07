@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { checkToken } from "../services/authentication";
 
 const RecipeScraper = ({
+  token, 
   url,
   setUrl,
   handleUrlChange,
@@ -10,11 +11,12 @@ const RecipeScraper = ({
   setRecipeData,
 }) => {
   const navigate = useNavigate();
-
+  // What is this 'manual' parameter?
   const handleClick = async (manual) => {
     try {
       // check user is logged in with valid token - if not, redirect to /login
-      await checkToken(window.localStorage.getItem("token"));
+      // Should we be calling checkToken with (window.localStorage) instead of props.token?
+      await checkToken(token);
       if (!manual) {
         await handleScrapeRecipe();
       } else {
@@ -23,6 +25,7 @@ const RecipeScraper = ({
       }
       navigate("/recipes/create");
     } catch (error) {
+      console.log('error', error)
       if (error.response && error.response.status === 401) {
         navigate("/login");
       } else {
