@@ -190,7 +190,7 @@ export const getAllRecipes = async (token, user_id) => {
   };
   console.log(user_id);
   const url = `${BACKEND_URL}/recipes/myrecipes/${user_id}`;
-  const response = await fetch(url, requestOptions);
+  // const response = await fetch(url, requestOptions);
 
   const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
   if (response.status !== 200) {

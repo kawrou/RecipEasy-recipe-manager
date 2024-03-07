@@ -4,17 +4,30 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, s
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    // Calculate and set the initial height after component mounts
-    if (textareaRef.current) {
-      const style = window.getComputedStyle(textareaRef.current);
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.max(
-        parseFloat(style.fontSize),
-        textareaRef.current.scrollHeight
-      )}px`;
-      setHeight(textareaRef.current.style.height);
-    }
-  }, []);
+    const handleResize = () => {
+      // Calculate and set the initial height after component mounts
+      if (textareaRef.current) {
+        const style = window.getComputedStyle(textareaRef.current);
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${Math.max(
+          parseFloat(style.fontSize),
+          textareaRef.current.scrollHeight
+        )}px`;
+        setHeight(textareaRef.current.style.height);
+      }
+    };
+  
+    // Add event listener for resize
+    window.addEventListener('resize', handleResize);
+  
+    // Call handleResize initially to calculate height
+    handleResize();
+  
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [text]); // Depend on text for changes in textarea content
 
   const handleTextAreaHeightChange = (event) => {
     const { value, style } = event.target;

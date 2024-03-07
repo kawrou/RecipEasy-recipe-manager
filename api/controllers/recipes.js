@@ -30,7 +30,8 @@ const fetchRecipeData = async (req, res) => {
           const recipeObjects = jsonData["@graph"].filter(
             (obj) => obj["@type"] === "Recipe"
           );
-          recipeData = recipeObjects;
+          recipeData = recipeObjects[0];
+          // console.log("5: @graph - RecipeData", recipeData);
         } else if (jsonData["@type"] === "Recipe") {
           recipeData = jsonData;
         }
@@ -57,7 +58,7 @@ const fetchRecipeData = async (req, res) => {
                 const recipeObjects = parsedData["@graph"].filter(
                   (obj) => obj["@type"] === "Recipe"
                 );
-                jsonData = recipeObjects;
+                jsonData = recipeObjects[0];
               } else if (parsedData["@type"] === "Recipe") {
                 jsonData = parsedData;
               }
@@ -73,13 +74,12 @@ const fetchRecipeData = async (req, res) => {
 
       await browser.close();
     }
-
-    console.log("Recipe Data:", recipeData);
-    const newToken = generateToken(req.user_id);
-
-    res.status(200).json({ recipe_data: recipeData,  token: newToken });
+    console.log("before",recipeData, "after")
+    const filteredRecipeData = extractRecipeInfo(recipeData);
+    console.log(filteredRecipeData)
+    res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
-    console.log(Object.keys(error));
+    // console.log(Object.keys(error));
     // console.error("Error fetching URL:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }

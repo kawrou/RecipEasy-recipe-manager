@@ -16,70 +16,55 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const CreateRecipePage = ({ recipeData, token, setToken }) => {
+export const CreateRecipePage = ({
+  recipeData,
+  setRecipeData,
+  token,
+  setToken,
+  url,
+}) => {
   const navigate = useNavigate();
-
-  let recipeDataArray = Array.isArray(recipeData.recipe_data)
-    ? recipeData.recipe_data
-    : [recipeData.recipe_data];
-
-  const {
-    name,
-    description,
-    recipeYield,
-    cookTime,
-    prepTime,
-    recipeIngredient,
-    recipeInstructions,
-    image,
-    url,
-    keywords,
-  } = recipeDataArray[0];
 
   const [editMode, setEditMode] = useState(true);
 
-  let instructionsArray = [];
-  if (Array.isArray(recipeInstructions)) {
-    instructionsArray = recipeInstructions.map(
-      (instruction) => instruction.text
-    );
-  } else {
-    instructionsArray = recipeInstructions || [];
-  }
+  const [recipeName, setRecipeName] = useState("");
+  const [recipeDescription, setRecipeDescription] = useState("");
+  const [yieldAmount, setYieldAmount] = useState(0);
+  const [recipeTotalTime, setRecipeTotalTime] = useState(0);
+  const [ingredients, setIngredients] = useState([]);
+  const [instructions, setInstructions] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [recipeTags, setRecipeTags] = useState([]);
 
-  const [recipeName, setRecipeName] = useState(name || "");
-  const [recipeDescription, setRecipeDescription] = useState(description || "");
-  const [yieldAmount, setYieldAmount] = useState(recipeYield || "");
-  const [totalTime, setTotalTime] = useState(
-    calculateTotalTime(cookTime, prepTime) || ""
-  );
-  const [ingredients, setIngredients] = useState(recipeIngredient || []);
-  const [instructions, setInstructions] = useState(instructionsArray);
-  const [imageUrl, setImageUrl] = useState(image?.url || image || "");
-  const [recipeUrl, setRecipeUrl] = useState(url || "");
-  const [recipeTags, setRecipeTags] = useState(parseKeywords(keywords) || []);
+  useEffect(() => {
+    if (recipeData) {
+      const {
+        name = "",
+        description = "",
+        recipeYield = 0,
+        tags = [],
+        totalTime = 0,
+        recipeIngredient = [],
+        recipeInstructions = [],
+        image = "",
+      } = recipeData;
 
-  function calculateTotalTime(cookTime, prepTime) {
-    // Convert PT20M format to minutes
-    const cookTimeInMinutes = cookTime
-      ? parseInt(cookTime.substring(2, cookTime.length - 1))
-      : 0;
-    const prepTimeInMinutes = prepTime
-      ? parseInt(prepTime.substring(2, prepTime.length - 1))
-      : 0;
-    return cookTimeInMinutes + prepTimeInMinutes;
-  }
-
-  // Parse keywords string to an array of tags
-  function parseKeywords(keywords) {
-    return keywords ? keywords.split(",").map((tag) => tag.trim()) : [];
-  }
+      setRecipeName(name);
+      setRecipeDescription(description);
+      setYieldAmount(recipeYield);
+      setRecipeTotalTime(totalTime);
+      setIngredients(recipeIngredient);
+      setInstructions(recipeInstructions);
+      setImageUrl(image);
+      setRecipeTags(tags);
+    }
+  }, [recipeData]);
 
   const handleSaveRecipe = async () => {
     if (
       recipeName === "" ||
       yieldAmount === 0 ||
-      totalTime === 0 ||
+      recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
       instructions.some((instruction) => instruction === "")
     ) {
@@ -90,7 +75,7 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
         recipeName,
         recipeDescription,
         recipeTags,
-        totalTime,
+        recipeTotalTime,
         yieldAmount,
         ingredients,
         instructions,
@@ -103,10 +88,9 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
   };
 
   return (
-    <>
-      <div className="h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center">
-        <div className="flex justify-center w-1/2 flex-col pt-18 p-20 gap-7">
+    <div className="bg-tertiary-500">
+      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white rounded-3xl m-5 mb-2 py-20">
+        <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
           {/* title */}
           <RecipeName
             name={recipeName}
@@ -136,13 +120,13 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
           {/* Tags */}
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
-        <div className="flex flex-1 flex-col gap-10 justify-center p-20 ">
+        <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
           <RecipeUrl recipeUrl={recipeUrl} />
         </div>
       </div>
-      <div className="w-screen h-4 bg-tertiary-500" />
-      <div className="flex divide-x justify-center p-10 pb-0">
+      <div className="h-4 bg-tertiary-500" />
+      <div className="flex justify-center  pb-0">
         {/* Loop over recipeIngredients array */}
         <IngredientList
           recipeIngredients={ingredients}
@@ -161,6 +145,6 @@ export const CreateRecipePage = ({ recipeData, token, setToken }) => {
       ) : (
         <EditButton editMode={editMode} setEditMode={setEditMode} />
       )}
-    </>
+    </div>
   );
 };
