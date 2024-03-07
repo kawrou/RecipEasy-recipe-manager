@@ -95,7 +95,10 @@ describe("Unit Test: RecipeScraper", () => {
     });
 
     //TODO: Our code doesn't stop us from calling handleScrapeRecipe when URL is empty
-    // If we don't want to handle that in our frontend code, then delete this test
+    // Currently it navigates us to recipes/create with an empty page, 
+    // just like if we clicked "Enter Manually".
+    // If we don't want to handle that in our frontend code, then change the assertion
+    // of this test to expect it to navigate to recipes/create
     test.todo("scrapeRecipe func not called when empty URL", async () => {
       // const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
       const navigateMock = useNavigate();
@@ -111,8 +114,13 @@ describe("Unit Test: RecipeScraper", () => {
       });
       await userEvent.click(generateRecipeBtn);
 
-      expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
-      expect(navigateMock);
+      //Option 1:
+      // expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
+      // expect(navigateMock).not.toHaveBeenCalled();
+      
+      //Option 2:
+      // expect(handleScrapeRecipeMock).toHaveBeenCalled();
+      // expect(navigateMock).toHaveBeenCalledWith("/recipes/create")
     });
   });
   describe("Enter Manually button", () => {

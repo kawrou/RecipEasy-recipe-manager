@@ -14,7 +14,7 @@ const RecipeScraper = ({
   // What is this 'manual' parameter?
   const handleClick = async (manual) => {
     try {
-      // Should we be calling checkToken with (window.localStorage) instead of props.token?
+      // Changed to props.token instead of window.localStorage.getItem()
       await checkToken(token);
       if (!manual) {
         await handleScrapeRecipe();
