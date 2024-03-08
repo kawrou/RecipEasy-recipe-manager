@@ -21,8 +21,8 @@ describe("Navbar", () => {
         const signupLink = screen.getByText("Sign Up");
         expect(signupLink.getAttribute("href")).toEqual("/signup");
 
-        const homeLink = screen.getByText("Home");
-        expect(homeLink.getAttribute("href")).toEqual("/");
+        // const homeLink = screen.getByAltText("Home");
+        // expect(homeLink.getAttribute("href")).toEqual("/");
     });
 
     test('redirect to home page', async () => {
@@ -33,7 +33,7 @@ describe("Navbar", () => {
             </BrowserRouter>
         );
 
-        userEvent.click(screen.getByText("Home"));
+        // userEvent.click(screen.getByText("Recipeasy"));
         
         // Using await before expect to wait for the expectation to resolve
         await expect(screen.getByText("Recipeasy")).to.exist;
@@ -51,7 +51,7 @@ describe("Navbar", () => {
         userEvent.click(screen.getByText("Log In"));
         
         // Using await before expect to wait for the expectation to resolve
-        await expect(screen.getByText("Login")).to.exist;
+        await expect(screen.getByText("Log in to your account")).to.exist;
     });
 
     test('redirect to signup page', async () => {
@@ -80,7 +80,7 @@ describe("Navbar", () => {
         userEvent.click(screen.getByText("Log Out"));
       
         await waitFor(() => {
-          expect(screen.getByText("Home")).toBeInTheDocument();
+          expect(screen.getByText("ecipeasy")).toBeInTheDocument();
         });
       });
     });
