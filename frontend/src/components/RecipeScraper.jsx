@@ -34,7 +34,7 @@ const RecipeScraper = ({
   };
 
   return (
-    <div className="w-full pt-5">
+    <div className="w-full pt-5" aria-label="Recipe Url Form">
       <input
         type="text"
         value={url}
