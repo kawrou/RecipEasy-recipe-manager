@@ -24,6 +24,7 @@ const RecipeCard = ({ recipe, token, setToken }) => {
       } finally {
         setIsLoading(false);
       }
+      return token
     };
 
     if (recipe._id) {
@@ -34,33 +35,39 @@ const RecipeCard = ({ recipe, token, setToken }) => {
   return (
     <Link
       to={`/recipes/${recipe._id}`}
-      className="flex justify-center items-center h-full"
+      className="flex flex-none justify-center items-center h-full"
     >
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
       {recipeData && (
         <div className="w-full p-4">
-          <div className="bg-white border rounded-3xl overflow-hidden flex flex-col items-center">
-            <div className="w-3/4 mt-4 mb-4 ml-4 mr-4 pb-20 pt-5">
-              <img
-                className="w-full h-48 rounded-3xl"
-                src={recipe.image || placeholderImage}
-                alt={recipe.name || defaultName}
-              />
+          <div className="bg-white rounded-3xl overflow-hidden flex flex-col gap-4 items-center shadow-md p-5">
+            <div className="w-full ">
+              <div
+                className="bg-cover bg-center h-48 rounded-2xl"
+                style={{ backgroundImage: `url(${recipe.image})` }}
+              ></div>
             </div>
-            <div className="w-full p-6 text-left">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <div className="w-full text-left">
+              <h2 className="font-kanit text-2xl font-bold text-primary-500 mb-3">
                 {recipe.name || defaultName}
               </h2>
-              <div className="flex items-center">
-                <img
-                  className="w-6 h-6 mr-2"
-                  src={timeTakenIcon}
-                  alt="Timer Image"
+              <div className="flex items-center justify-between">
+                <div className="flex items-center font-kanit font-bold gap-0.5 text-secondary-500">
+                  <img
+                    className="size-8 mr-2"
+                    src={timeTakenIcon}
+                    alt="Timer Image"
+                  />
+                  <p>{recipe.totalTime}</p>
+                  <p> mins</p>
+                </div>
+
+                <FavouriteButton
+                  recipeId={recipe._id}
+                  token={token}
+                  size={30}
                 />
-                <p className="text-gray-700">{recipe.totalTime}</p>
-                <p className="text-gray-700"> mins</p>
-                <FavouriteButton recipeId={recipe._id} token={token} />
               </div>
             </div>
           </div>

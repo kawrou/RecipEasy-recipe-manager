@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { toggleFavourite } from '../../services/recipes';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
-export const FavouriteButton = ({ recipeId, token  }) => {
+export const FavouriteButton = ({ recipeId, token, size }) => {
   const [favStatus, setFavStatus] = useState(false);
   console.log('initialFavStatus', favStatus)
 

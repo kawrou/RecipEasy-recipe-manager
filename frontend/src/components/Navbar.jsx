@@ -8,6 +8,19 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
     return pathname === "/";
   };
 
+  const isLoginPath = () => {
+    return pathname === "/login"
+  }
+
+  const isSignUpPath = () => {
+    return pathname === "/signup"
+  }
+
+  if (isLoginPath() || isSignUpPath()) {
+    return null;
+  }
+
+
   return (
     <div className="relative flex justify-center items-center h-16 bg-white ">
       <NavLink className="absolute left-4" to="/">
@@ -47,7 +60,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
           </NavLink>
         ) : (
           <NavLink
-            className="text-lg px-4 py-2 border rounded-lg text-white bg-secondary-500 border-blue-600 hover:text-blue-500 hover:bg-white "
+            className="text-lg px-4 py-2 border rounded-lg text-white bg-secondary-500 border-blue-600 hover:text-secondary-500 hover:bg-white "
             to="/login"
           >
             Log In
