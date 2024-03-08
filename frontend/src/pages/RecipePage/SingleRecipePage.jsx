@@ -127,7 +127,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
             />
             {!editMode && (
               <div className="flex-none self-end">
-              <FavouriteButton recipeId={recipe_id} token={token} size={50}/>
+              <FavouriteButton recipeId={recipe_id} token={token}/>
             </div>   
             )}     
           </div>
