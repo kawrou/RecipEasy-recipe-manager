@@ -1,0 +1,315 @@
+{
+	"info": {
+		"_postman_id": "ea5de35d-519e-4827-beee-679726eb82b0",
+		"name": "RecipEasy",
+		"description": "A collection of request to interact with our RecipEasy APIs.\n\nCurrently not implemented: \nGet recipesByRecipeID",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33057460"
+	},
+	"item": [
+		{
+			"name": "Sign up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"newUser@test.com\", \"password\": \"test\", \"username\": \"newUser\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				},
+				"description": "A POST request for creating a \"new user\" that simulates the frontend interaction by a user.\n\nNew values need to be inputted in the body for 'email', 'password', and 'username'."
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"newUser@test.com\", \"password\": \"test\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/tokens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tokens"
+					]
+				},
+				"description": "Simulates the interaction of logging in.\n\nSends a POST request to the API and, on success, returns a token.\n\nThe recieved token must be used for interacting with other features of the app.\n\nChange the values inside email and password to simulate logging into different users."
+			},
+			"response": []
+		},
+		{
+			"name": "Scrape Recipe",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjVlZWRkNTJmMjFlNDJhODRlZWNiZjYzIiwiaWF0IjoxNzEwMTUzMzQzLCJleHAiOjE3MTAxNTM5NDN9.Qtlm4b47SZ0lMfEl9o418evQLFssE3CGBRY6rBB5KBY",
+						"description": "Need to get token from login first and paste it in after Bearer without quote marks\n",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/recipes/scrape-recipe?url=https://www.jamieoliver.com/recipes/potato-recipes/easy-potato-dauphinoise/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recipes",
+						"scrape-recipe"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://www.jamieoliver.com/recipes/potato-recipes/easy-potato-dauphinoise/",
+							"description": "Paste the URL of the page you want to get recipe data from. "
+						}
+					]
+				},
+				"description": "Simulates a user getting recipe information from a website.\n\nSends a GET request to the API.\n\nYou must paste in a webpage URL as a value in the URL field in 'Params'.\n\nInside 'Headers', you must paste in the token received after logging in.\n\nPaste it in as value to the Authorization row. Paste it right after 'Bearer' and without any quoatation marks."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Recipe",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const currentDate = new Date().toISOString();",
+							"pm.variables.set(\"currentDate\", currentDate);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer example-token",
+						"description": "Paste your token here",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test-recipe\",\n    \"description\": \"test_description\",\n    \"tags\": [\n        \"test_tag_one\",\n        \"test_tag_two\"\n    ],\n    \"favouritedByOwner\": false,\n    \"totalTime\": 10,\n    \"recipeYield\": 1,\n    \"recipeIngredient\": [\n        \"test_ingredient_one\",\n        \"test_ingredient_two\"\n    ],\n    \"recipeInstructions\": [\n        \"test_instruction_one\",\n        \"test_instruction_two\"\n    ],\n    \"url\": \"test_url\",\n    \"image\": \"test_url\",\n    \"dateAdded\": \"{{currentDate}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/recipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recipes"
+					]
+				},
+				"description": "This simulates the creation of a new recipe by a user.\n\nSends a POST request to the API to create a new recipe.\n\nYou can the value for each of the keys to see how it saves the recipe in the database.\n\nThe ownerId is created through authentation of the token sent with the request.\n\nThere is a variable for \"current date\" as the request must send a valid date object.\n\nYou can use received token to make further requests."
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Recipe",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"recipe_id\", \"paste_recipe_id\"); ",
+							"// Replace the id after \"recipe_id\" with the actual ID of the recipe",
+							"",
+							"const currentDate = new Date().toISOString();",
+							"pm.variables.set(\"currentDate\", currentDate);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer example-token",
+						"description": "Paste a token here.",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "//Update the fields with values you want \n//Make sure the owner ID is correct and matches one you created in the database\n{\n    \"name\": \"updated recipe name\",\n    \"description\": \"updated recipe description\",\n    \"tags\": [\n        \"updated tag 1\",\n        \"updated tag 2\"\n    ],\n    \"favouritedByOwner\": false,\n    \"totalTime\": 10,\n    \"recipeYield\": 1,\n    \"recipeIngredient\": [\n        \"updated recipe 1\",\n        \"updated recipe 2\"\n    ],\n    \"recipeInstructions\": [\n        \"updated instructions 1\",\n        \"updated instructions 2\"\n    ],\n    \"url\": \"test_url\",\n    \"image\": \"test_url\",\n    \"dateAdded\": \"{{currentDate}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/recipes/{{recipe_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recipes",
+						"{{recipe_id}}"
+					]
+				},
+				"description": "Simulates a user editing a recipe that's already been created.\n\nMake sure to use the correct 'recipe_id\" inside the Pre-req."
+			},
+			"response": []
+		},
+		{
+			"name": "Favourite a recipe",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"recipe_id\", \"paste_recipe_id\"); "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer example_token",
+						"description": "Paste a token here.",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/recipes/favouritedByOwner/{{recipe_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recipes",
+						"favouritedByOwner",
+						"{{recipe_id}}"
+					]
+				},
+				"description": "Simulates a PATCH request for favouriting a recipe in the database.\n\nRemember to paste a valid recipe_id inside the 'Pre-Req' to supply a recipe_id for the URL route."
+			},
+			"response": []
+		},
+		{
+			"name": "myRecipes by userID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer example-token",
+						"description": "Paste a token here.",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/recipes/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recipes",
+						""
+					]
+				},
+				"description": "Simulates a user going on to their \"My Recipes\" page.\n\nSends a GET request to fetch all recipes by userId.\n\nThe userId is decoded from the token being sent with the request."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "recipe_id",
+			"value": "65e67065cfe4c3fdbb8615e4"
+		},
+		{
+			"key": "user_id",
+			"value": "0"
+		}
+	]
+}
