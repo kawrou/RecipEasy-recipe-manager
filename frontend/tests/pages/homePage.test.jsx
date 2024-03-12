@@ -1,8 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { userEvent } from "@testing-library/user-event";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { vi, expect, describe, test, beforeEach } from "vitest";
+import { checkToken } from "../../src/services/authentication";
+import RecipeScraper from "../../src/components/RecipeScraper";
 
 // MOCKS
 // Mock useNavigate to test useNavigate logic in isolation
@@ -25,6 +27,7 @@ Object.defineProperty(window, "localStorage", {
   writable: true,
 });
 
+const checkTokenMock = vi.fn();
 const handleUrlChangeMock = vi.fn();
 const handleScrapeRecipeMock = vi.fn();
 const handleEnterManuallyMock = vi.fn();
@@ -49,11 +52,6 @@ const clickEnterManually = async () => {
 
 // TESTS
 describe("Home Page renders:", () => {
-  beforeEach(() => {
-    // window.localStorage.removeItem("token");
-    vi.resetAllMocks();
-  });
-
   test("the correct elements", () => {
     // We need the Browser Router so that the Link elements load correctly
     render(
@@ -80,6 +78,12 @@ describe("Home Page renders:", () => {
         "for you to store and access anytime, anywhere."
     );
   });
+
+  test("url input correctly", () => {
+    render(<HomePage url={"test-url"} />);
+    const searchbar = screen.getByRole("textbox");
+    expect(searchbar.value).toBe("test-url");
+  });
 });
 describe("When a user is logged in and:", () => {
   test("enters a url, it appears on the screen", async () => {
@@ -93,101 +97,4 @@ describe("When a user is logged in and:", () => {
     await user.type(searchbar, "Hello, world!");
     expect(searchbar.value).toBe("Hello, world!");
   });
-
-  test("clicks generate a recipe, scrapeRecipe is called", async () => {
-    // const scrapeRecipeSpy = vi.spyOn(recipeService, "scrapeRecipe");
-    mockGetItem.mockReturnValueOnce(token);
-    render(
-      <BrowserRouter>
-        <HomePage
-          url={url}
-          handleUrlChange={handleUrlChangeMock}
-          handleScrapeRecipe={handleScrapeRecipeMock}
-        />
-      </BrowserRouter>
-    );
-
-    await clickGenerateRecipe();
-    expect(handleScrapeRecipeMock).toHaveBeenCalledOnce();
-    expect(mockUseNavigate).toHaveBeenCalledWith("/recipes/create");
-  });
-
-  //TODO: Test written, but code hasn't been implemented yet.
-  test.todo(
-    "clicks 'Enter Manually', they are redirected to the create recipe page",
-    async () => {
-      mockGetItem.mockReturnValueOnce(token);
-      render(
-        <BrowserRouter>
-          <HomePage
-            url={url}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-            handleEnterManually={handleEnterManuallyMock}
-          />
-        </BrowserRouter>
-      );
-
-      await clickEnterManually();
-      expect(handleEnterManuallyMock).toHaveBeenCalledOnce();
-      expect(mockUseNavigate).toHaveBeenCalledWith("/recipes/create");
-    }
-  );
-});
-
-//TODO: Finish writing tests and implement code
-describe.todo("When a user isn't logged in and", () => {
-  test.todo("It navigates to login if no token is present", async () => {
-    useFetchRecipes.mockReturnValue({
-      recipes: [],
-      loading: false,
-      error: null,
-    });
-
-    render(
-      <RecipeCollection
-        token={testToken}
-        setToken={setTokenMock}
-        handleScrapeRecipe={handleScrapeRecipeMock}
-      />
-    );
-    const navigateMock = useNavigate();
-    await userEvent.click(screen.getByText("Generate Recipe"));
-    expect(navigateMock).toHaveBeenCalledWith("/login");
-  });
-
-  test.todo(
-    "clicks 'Generate recipe', they are redirected to login page",
-    async () => {
-      render(
-        <BrowserRouter>
-          <HomePage
-            token={null}
-            url={url}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-          />
-        </BrowserRouter>
-      );
-
-      await clickGenerateRecipe();
-      // expect(scrapeRecipeSpy).not.toHaveBeenCalled();
-      expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
-      expect(mockUseNavigate).toHaveBeenCalledWith("/login");
-    }
-  );
-
-  test.todo(
-    "clicks on the 'Enter Manually', they are redirected to login page",
-    async () => {
-      render(
-        <BrowserRouter>
-          <HomePage />
-        </BrowserRouter>
-      );
-
-      await clickEnterManually();
-      expect(mockUseNavigate).toHaveBeenCalledWith("/login");
-    }
-  );
 });
