@@ -4,10 +4,11 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 export const FavouriteButton = ({ recipeId, token, size }) => {
   const [favStatus, setFavStatus] = useState(false);
-  console.log('initialFavStatus', favStatus)
+  // console.log('initialFavStatus', favStatus)
 
   useEffect(() =>{
     const storedFavStatus = localStorage.getItem(`favouritedByOwner_${recipeId}`);
+    // console.log(storedFavStatus)
     if (storedFavStatus) {
       setFavStatus(JSON.parse(storedFavStatus));
     }
@@ -29,8 +30,8 @@ export const FavouriteButton = ({ recipeId, token, size }) => {
 
   return (
     <div>
-      <button onClick={handleFavouriteButton}>
-        {favStatus ? <FaHeart className="text-primary-500" size={size}/> : <FaRegHeart className="text-primary-500" size={size}/>}
+      <button onClick={handleFavouriteButton} aria-label='favourite-button'>
+        {favStatus ? <FaHeart className="text-primary-500" size={size} aria-label='heart-icon'/> : <FaRegHeart className="text-primary-500" size={size} aria-label='reg-heart-icon'/>}
       </button>
     </div>
   );
