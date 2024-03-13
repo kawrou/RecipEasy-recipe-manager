@@ -34,8 +34,7 @@ describe("When a user clicks the button:", () => {
       name: "favourite-button",
     });
 
-    await user.click(favouriteBtn);
-    await user.click(favouriteBtn);
+    await user.dblClick(favouriteBtn);
     const regHeartIcon = screen.getByLabelText("reg-heart-icon");
     expect(regHeartIcon).toBeVisible();
   });
