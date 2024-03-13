@@ -8,7 +8,6 @@ import { vi, beforeEach } from "vitest";
 
 describe("When a user clicks the button:", () => {
   beforeEach(() => {
-    //I think this can be removed if FavouriteBtn is able to be refactored to use tokens and props.
     localStorage.clear();
     vi.resetAllMocks();
   });
