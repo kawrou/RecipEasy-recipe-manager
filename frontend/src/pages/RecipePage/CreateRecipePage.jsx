@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios"
 import { createRecipe } from "../../services/recipes";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
@@ -73,12 +73,8 @@ export const CreateRecipePage = ({
     } else {
       try {
         let imageUrlToSend = imageUrl; // Default to current imageUrl
-        if (!imageUrl) {
-          // If no imageUrl is set, then it means we need to upload the image
-          if (!selectedImage) {
-            alert("Please select an image to upload");
-            return;
-          }
+        if (selectedImage) {
+          // If selectedImage exists, upload the image
           const imageFormData = new FormData();
           imageFormData.append('file', selectedImage);
           const imageResponse = await axios.post('http://localhost:3000/upload', imageFormData);
@@ -143,7 +139,7 @@ export const CreateRecipePage = ({
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
-          <RecipeImage imageUrl={imageUrl} setImageUrl={setImageUrl}/>
+        <RecipeImage imageUrl={imageUrl} setImageUrl={setImageUrl} setSelectedImage={setSelectedImage} selectedImage={selectedImage}/>
           <RecipeUrl recipeUrl={url} />
         </div>
       </div>

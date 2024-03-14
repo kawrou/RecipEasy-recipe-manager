@@ -1,22 +1,14 @@
 import React, { useState } from "react";
-import axios from 'axios'
 
-export const RecipeImage = ({ imageUrl, setImageUrl }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+
+export const RecipeImage = ({ imageUrl, setImageUrl, setSelectedImage, selectedImage }) => {
+
 
   // Function to handle file selection
   const handleUpload = () => {
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append('file', selectedImage);
-      axios.post('http://localhost:3000/upload', formData)
-        .then(res => {
-          const { url } = res.data;
-          setImageUrl(url);
-        })
-        .catch(err => console.error(err));
+    setSelectedImage(selectedImage);
     }
-  }
+  
 
   return (
     <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square">
