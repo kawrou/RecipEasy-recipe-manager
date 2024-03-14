@@ -20,6 +20,7 @@
     "iso8601-duration": "^2.1.2",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
+    "multer": "^1.4.5-lts.1",
     "puppeteer": "^22.3.0"
   },
   "devDependencies": {

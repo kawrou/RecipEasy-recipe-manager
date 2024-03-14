@@ -77,7 +77,7 @@ VITE_BACKEND_URL="http://localhost:3000"
 Create 'api/.env' with the following:
 
 ```
-MONGODB_URL="mongodb://0.0.0.0/acebook"
+MONGODB_URL="mongodb://0.0.0.0/recipeasy"
 NODE_ENV="development"
 JWT_SECRET="secret"
 ```
