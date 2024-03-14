@@ -11,7 +11,8 @@ import { SignupPage } from "../../src/pages/Signup/SignupPage";
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
   const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  return { useNavigate: useNavigateMock };
+  const navLinkMock = vi.fn()
+  return { useNavigate: useNavigateMock, NavLink: navLinkMock };
 });
 
 // Mocking the signup service
