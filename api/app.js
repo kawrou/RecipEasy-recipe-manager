@@ -1,13 +1,36 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const multer = require('multer');
+const path = require('path');
 const usersRouter = require("./routes/users");
 const authenticationRouter = require("./routes/authentication");
 const recipeRouter = require("./routes/recipes");
 const tokenChecker = require("./middleware/tokenChecker");
+const Recipe = require("./models/recipe");
 
 const app = express();
+
+//Upload path for images
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage: storage
+})
+
+app.post("/upload", upload.single('file'), (req, res) => {
+  Recipe.create({image: req.file.filename})
+  .then(result => res.json(result))
+  .catch(err => console.log(err))
+
+})
 
 // Allow requests from any client
 // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS

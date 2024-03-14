@@ -35,6 +35,7 @@ export const CreateRecipePage = ({
   const [instructions, setInstructions] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     if (recipeData) {
@@ -70,23 +71,43 @@ export const CreateRecipePage = ({
     ) {
       alert("Please fill out all the required fields");
     } else {
-      let data = await createRecipe(
-        token,
-        recipeName,
-        recipeDescription,
-        recipeTags,
-        recipeTotalTime,
-        yieldAmount,
-        ingredients,
-        instructions,
-        url,
-        imageUrl
-      );
-      setToken(data.token);
-      setRecipeData(null);
-      navigate(`/recipes/${data.recipe._id}`);
+      try {
+        let imageUrlToSend = imageUrl; // Default to current imageUrl
+        if (!imageUrl) {
+          // If no imageUrl is set, then it means we need to upload the image
+          if (!selectedImage) {
+            alert("Please select an image to upload");
+            return;
+          }
+          const imageFormData = new FormData();
+          imageFormData.append('file', selectedImage);
+          const imageResponse = await axios.post('http://localhost:3000/upload', imageFormData);
+          imageUrlToSend = imageResponse.data.url;
+        }
+  
+        const data = await createRecipe(
+          token,
+          recipeName,
+          recipeDescription,
+          recipeTags,
+          recipeTotalTime,
+          yieldAmount,
+          ingredients,
+          instructions,
+          url,
+          imageUrlToSend
+        );
+  
+        setToken(data.token);
+        setRecipeData(null);
+        navigate(`/recipes/${data.recipe._id}`);
+      } catch (error) {
+        console.error("Error saving recipe:", error);
+        alert("Error saving recipe. Please try again later.");
+      }
     }
   };
+  
 
   return (
     <div className="bg-tertiary-500">
