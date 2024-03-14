@@ -4,7 +4,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 export const FavouriteButton = ({ recipeId, token, size }) => {
   const [favStatus, setFavStatus] = useState(false);
-  console.log('initialFavStatus', favStatus)
+ // console.log('initialFavStatus', favStatus)
 
   useEffect(() =>{
     const storedFavStatus = localStorage.getItem(`favouritedByOwner_${recipeId}`);
@@ -18,7 +18,7 @@ export const FavouriteButton = ({ recipeId, token, size }) => {
     try {
       // Call the toggleFavourite function to toggle the favourite status
       await toggleFavourite(recipeId, token);
-      console.log('Toggle favourite successful');
+     // console.log('Toggle favourite successful');
       // Update the local state to reflect if favourited
       setFavStatus(prevStatus => !prevStatus);
       localStorage.setItem(`favouritedByOwner_${recipeId}`, JSON.stringify(!favStatus))

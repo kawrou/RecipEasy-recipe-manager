@@ -72,13 +72,13 @@ export const CreateRecipePage = ({
       alert("Please fill out all the required fields");
     } else {
       try {
-        let imageUrlToSend = imageUrl; // Default to current imageUrl
+        let uploadedImageUrl = imageUrl;
         if (selectedImage) {
           // If selectedImage exists, upload the image
           const imageFormData = new FormData();
           imageFormData.append('file', selectedImage);
           const imageResponse = await axios.post('http://localhost:3000/upload', imageFormData);
-          imageUrlToSend = imageResponse.data.url;
+          uploadedImageUrl = imageResponse.data.url;
         }
   
         const data = await createRecipe(
@@ -91,7 +91,7 @@ export const CreateRecipePage = ({
           ingredients,
           instructions,
           url,
-          imageUrlToSend
+          uploadedImageUrl
         );
   
         setToken(data.token);

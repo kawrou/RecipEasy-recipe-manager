@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 
 
-export const RecipeImage = ({ imageUrl, setImageUrl, setSelectedImage, selectedImage }) => {
-
-
-  // Function to handle file selection
-  const handleUpload = () => {
-    setSelectedImage(selectedImage);
-    }
-  
-
+export const RecipeImage = ({ imageUrl, setSelectedImage }) => {
   return (
     <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square">
       {imageUrl ? (
@@ -22,16 +14,13 @@ export const RecipeImage = ({ imageUrl, setImageUrl, setSelectedImage, selectedI
           <input
             type="file"
             accept="image/*"
-            onChange={e => setSelectedImage(e.target.files[0])}
+            onChange={(e) => setSelectedImage(e.target.files[0])}
             className="hidden"
             id="imageInput"
           />
-          <button onClick={handleUpload}> Upload Image </button>
           <label htmlFor="imageInput" className="cursor-pointer">
             <div className="h-full flex justify-center items-center">
-              <span className="text-gray-400">
-                Click to upload an image
-              </span>
+              <span className="text-gray-400">Click to upload an image</span>
             </div>
           </label>
         </div>

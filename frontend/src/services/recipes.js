@@ -67,6 +67,8 @@ export const createRecipe = async (
   }
 
   const data = await response.json();
+  console.log(payload);
+  console.log("------------------------------", data);
   return data;
 };
 
