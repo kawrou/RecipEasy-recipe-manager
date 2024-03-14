@@ -122,7 +122,7 @@ export const CreateRecipePage = ({
           <Tags tags={recipeTags} setTags={setRecipeTags} editMode={editMode} />
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
-          <RecipeImage imageUrl={imageUrl} />
+          <RecipeImage imageUrl={imageUrl} setImageUrl={setImageUrl}/>
           <RecipeUrl recipeUrl={url} />
         </div>
       </div>
