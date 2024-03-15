@@ -1,18 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
-
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../src/services/authentication";
-
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
+
+// Note: 
+// As 'react-router-dom' is mocked either for unit testing or TDDing purposes
+// it makes it difficult to test the functionality of the NavLink component as it won't render
+// A better approach might be an intergration style of test that won't require mocking 'react-router-dom'
 
 // Mocking React Router's useNavigate function
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Create a mock function for useNavigate
-  const navLinkMock = vi.fn()
-  return { useNavigate: useNavigateMock, NavLink: navLinkMock };
+  // Wrap our navigateMock inside a wrapper. Actually it is a little unecessary.
+  const useNavigateMock = () => navigateMock; 
+  const navLinkMock = vi.fn();
+  return {
+    useNavigate: useNavigateMock,
+    NavLink: navLinkMock,
+  };
 });
 
 // Mocking the signup service
@@ -53,10 +60,10 @@ describe("Signup Page", () => {
     render(<SignupPage />);
 
     //Need to do this to access the mocked useNavigate from above
-    const navigateMock = useNavigate(); 
+    const navigateMock = useNavigate();
 
     await completeSignupForm();
-    
+
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 
@@ -86,8 +93,11 @@ describe("Signup Page", () => {
     await user.type(usernameInputEl, "incorrect");
     await user.click(submitButtonEl);
 
-    await expect(screen.getAllByText("Enter a valid email address.")).to.exist;
-    await expect(screen.getAllByText("Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character.")).to.exist;
+    await expect(screen.getByText("Enter a valid email address.")).toBeVisible();
+    await expect(
+      screen.getByText(
+        "Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character."
+      )
+    ).toBeVisible();
   });
-  
 });
