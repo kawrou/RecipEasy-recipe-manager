@@ -52,10 +52,11 @@ describe("Signup Page", () => {
   test("navigates to /login on successful signup", async () => {
     render(<SignupPage />);
 
-    const navigateMock = useNavigate();
+    //Need to do this to access the mocked useNavigate from above
+    const navigateMock = useNavigate(); 
 
     await completeSignupForm();
-
+    
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 
@@ -88,5 +89,5 @@ describe("Signup Page", () => {
     await expect(screen.getAllByText("Enter a valid email address.")).to.exist;
     await expect(screen.getAllByText("Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character.")).to.exist;
   });
-
+  
 });
