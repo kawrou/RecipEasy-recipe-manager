@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../src/services/authentication";
-import { SignupPage } from "../../src/pages/Signup/SignupPage";
+import { signup } from "../../../src/services/authentication";
+import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 
 // Note: 
 // As 'react-router-dom' is mocked either for unit testing or TDDing purposes
@@ -16,14 +16,16 @@ vi.mock("react-router-dom", () => {
   // Wrap our navigateMock inside a wrapper. Actually it is a little unecessary.
   const useNavigateMock = () => navigateMock; 
   const navLinkMock = vi.fn();
+  const LinkMock = vi.fn();
   return {
     useNavigate: useNavigateMock,
     NavLink: navLinkMock,
+    Link: LinkMock,
   };
 });
 
 // Mocking the signup service
-vi.mock("../../src/services/authentication", () => {
+vi.mock("../../../src/services/authentication", () => {
   const signupMock = vi.fn();
   return { signup: signupMock };
 });
