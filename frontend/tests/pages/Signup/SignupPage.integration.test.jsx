@@ -1,7 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, vi } from "vitest";
-import { MemoryRouter, useNavigate, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import * as authentication from "../../../src/services/authentication";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
