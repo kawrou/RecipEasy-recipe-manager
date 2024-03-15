@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, Link } from "react-router-dom";
 
 import { signup } from "../../services/authentication";
 
@@ -183,22 +183,22 @@ export const SignupPage = () => {
 
                 <p className="text-sm font-light text-gray-500">
                   Already have an account?{" "}
-                  <a
-                    href="/login"
+                  <Link
+                    to="/login"
                     className="font-medium text-primary-500 hover:text-rose-400"
                   >
                     Login here
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>
           </div>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="font-medium text-sm text-primary-500 hover:text-rose-400 pt-5"
           >
             ← Back to homepage
-          </a>
+          </Link>
         </div>
       </section>
     </>
