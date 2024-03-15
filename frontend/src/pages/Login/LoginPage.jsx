@@ -39,7 +39,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
             className="flex items-center mb-6 text-5xl font-kanit font-bold italic text-primary-500 hover:text-primary-500"
           >
             <img
-              class="w-16 mb-1.5 -mr-0.5"
+              className="w-16 mb-1.5 -mr-0.5"
               src="../../../src/assets/recipeasyLogo.svg"
               alt="logo"
             />
@@ -53,7 +53,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
-                    for="email"
+                    htmlFor="email"
                     className="block mb-2 text-sm text-left font-light text-gray-600"
                   >
                     Your email
@@ -70,7 +70,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                 </div>
                 <div>
                   <label
-                    for="password"
+                    htmlFor="password"
                     className="block mb-2 text-sm text-left font-light text-gray-600"
                   >
                     Password

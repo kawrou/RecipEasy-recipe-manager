@@ -96,7 +96,7 @@ export const SignupPage = () => {
             className="flex items-center mb-6 text-5xl font-kanit font-bold italic text-primary-500 hover:text-primary-500"
           >
             <img
-              class="w-16 mb-1.5 -mr-0.5"
+              className="w-16 mb-1.5 -mr-0.5"
               src="../../../src/assets/recipeasyLogo.svg"
               alt="logo"
             />
