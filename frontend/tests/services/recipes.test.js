@@ -259,13 +259,65 @@ describe("recipe service", () => {
       expect(result.recipeData).toEqual(responseDataMock);
       expect(result.token).toEqual("newToken");
     });
-    test.todo("failed request throws an error");
+    test("failed request throws an error", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ message: "Internal server error" }),
+        { status: 500 }
+      );
+
+      await expect(
+        recipeService.getRecipeById(1234, mockToken)
+      ).rejects.toThrow("Unable to get recipe. Does this recipe exist?");
+    });
   });
+
   describe("toggleFavourite - PATCH req", () => {
-    test.todo("request sent with correct URL, method, header, and body");
-    test.todo("succesful request responds with 200 and a token");
-    test.todo("failed request throws an error");
+    test("request sent with correct URL, method, header, and body", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify(
+          { message: "Recipe favourited successfully", token: "newToken" },
+          { status: 200 }
+        )
+      );
+
+      await recipeService.toggleFavourite(1234, mockToken);
+
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+
+      expect(url).toEqual(`${BACKEND_URL}/recipes/favouritedByOwner/1234`);
+      expect(options.method).toEqual("PATCH");
+      expect(options.headers).toEqual({
+        Authorization: `Bearer ${mockToken}`,
+        "Content-Type": "application/json",
+      });
+    });
+    test("succesful request responds with 200 and a token", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify(
+          { message: "Recipe favourited successfully", token: "newToken" },
+          { status: 200 }
+        )
+      );
+
+      const result = await recipeService.toggleFavourite(1234, mockToken);
+
+      expect(result.message).toEqual("Recipe favourited successfully");
+      expect(result.token).toEqual("newToken");
+    });
+    test("failed request throws an error", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ message: "Internal server error" }),
+        { status: 500 }
+      );
+
+      await expect(
+        recipeService.toggleFavourite(1234, mockToken)
+      ).rejects.toThrow("Failed to toggle favourite button");
+    });
   });
+  
   describe("getAllRecipes - GET req", () => {
     test.todo("request sent with correct URL, method, header, and body");
     test.todo("succesful request responds with 200, token and data");
