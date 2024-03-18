@@ -70,6 +70,7 @@ export const CreateRecipePage = ({
     ) {
       alert("Please fill out all the required fields");
     } else {
+      //Do we need a Try/Catch block here?
       let data = await createRecipe(
         token,
         recipeName,
@@ -83,6 +84,7 @@ export const CreateRecipePage = ({
         imageUrl
       );
       setToken(data.token);
+      //setRecipeData is set to null so that upon revisit, the page will be empty
       setRecipeData(null);
       navigate(`/recipes/${data.recipe._id}`);
     }

@@ -59,7 +59,7 @@ export const createRecipe = async (
     },
     body: JSON.stringify(payload),
   };
-
+  //Place in a try/catch block
   const response = await fetch(`${BACKEND_URL}/recipes/`, requestOptions);
 
   if (response.status !== 201) {
