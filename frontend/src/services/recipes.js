@@ -66,13 +66,13 @@ export const createRecipe = async (
     if (response.status !== 201) {
       throw new Error("Error saving new recipe");
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error saving recipe:", error);
     throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const updateRecipe = async (
@@ -120,13 +120,13 @@ export const updateRecipe = async (
     if (response.status !== 200) {
       throw new Error("Error updating recipe");
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error updating recipe:", error);
     throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const getRecipeById = async (recipeId, token) => {
@@ -146,13 +146,13 @@ export const getRecipeById = async (recipeId, token) => {
     if (response.status !== 200) {
       throw new Error("Unable to get recipe. Does this recipe exist?");
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error getting recipe by ID:", error);
     throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const toggleFavourite = async (recipeId, token) => {
@@ -173,13 +173,13 @@ export const toggleFavourite = async (recipeId, token) => {
     if (response.status !== 200) {
       throw new Error("Failed to toggle favourite button");
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error favouriting recipe:", error);
     throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const getAllRecipes = async (token) => {
@@ -196,11 +196,11 @@ export const getAllRecipes = async (token) => {
     if (response.status !== 200) {
       throw new Error("Unable to fetch recipes");
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error retrieving all recipes:", error);
     throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
