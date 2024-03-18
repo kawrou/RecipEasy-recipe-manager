@@ -161,6 +161,7 @@ console.log('Toggle favourite successful')
   return data;
 };
 
+//TODO: Refactor to use Try/Catch block
 export const getAllRecipes = async (token) => {
   const requestOptions = {
     method: "GET",

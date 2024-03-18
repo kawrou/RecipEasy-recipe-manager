@@ -317,10 +317,49 @@ describe("recipe service", () => {
       ).rejects.toThrow("Failed to toggle favourite button");
     });
   });
-  
+
   describe("getAllRecipes - GET req", () => {
-    test.todo("request sent with correct URL, method, header, and body");
-    test.todo("succesful request responds with 200, token and data");
-    test.todo("failed request throws an error");
+    test("request sent with correct URL, method, header, and body", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify(
+          { recipes: responseDataMock, token: "newToken" },
+          { status: 200 }
+        )
+      );
+
+      await recipeService.getAllRecipes(mockToken);
+
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+
+      expect(url).toEqual(`${BACKEND_URL}/recipes`);
+      expect(options.method).toEqual("GET");
+      expect(options.headers).toEqual({ Authorization: `Bearer ${mockToken}` });
+    });
+
+    test("succesful request responds with 200, token and data", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify(
+          { recipes: responseDataMock, token: "newToken" },
+          { status: 200 }
+        )
+      );
+
+      const result = await recipeService.getAllRecipes(mockToken);
+
+      expect(result.recipes).toEqual(responseDataMock);
+      expect(result.token).toEqual("newToken");
+    });
+    test("failed request throws an error", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ error: "Internal server error" }),
+        { status: 500 }
+      );
+
+      await expect(recipeService.getAllRecipes(mockToken)).rejects.toThrow(
+        "Unable to fetch recipes"
+      );
+    });
   });
 });
