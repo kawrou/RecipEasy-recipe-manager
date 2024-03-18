@@ -67,8 +67,12 @@ const responseDataMock = {
 // Invalid URL (recipeID), invalid / missing token, empty response body?, network errors, response time-out
 
 describe("recipe service", () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
   describe("scrapeRecipe - GET req", () => {
-    //Test that when you send a request with a url and a token, you get back a new token and some data
+    //Reponse should be 200, should return scrapedRecipeData and a new token. 
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ recipeData: [], token: "newToken" }),
@@ -94,7 +98,8 @@ describe("recipe service", () => {
         headers: { Authorization: `Bearer ${mockToken}` },
       });
     });
-    test("successful request returns data", async () => {
+
+    test("successful request returns data and a new token", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ recipeData: [], token: "newToken" }),
         {
@@ -123,7 +128,7 @@ describe("recipe service", () => {
     });
   });
   describe("createRecipe - POST req", () => {
-    //Will need to send a mocked Recipe and mock the response recipe which is a Mongo object?
+    //Response should return 201, recipe data (or recipe._id), and a new token
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(JSON.stringify({ token: "newToken" }), {
         status: 201,
@@ -174,6 +179,7 @@ describe("recipe service", () => {
     });
   });
   describe("updateRecipe - PATCH req", () => {
+    //Response should return 200, and a new token
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({
@@ -198,6 +204,7 @@ describe("recipe service", () => {
       });
       expect(requestBody).toEqual(expectedPayload);
     });
+
     test("successful request responds with a token", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({
@@ -214,6 +221,7 @@ describe("recipe service", () => {
       expect(result.message).toEqual("Recipe updated successfully");
       expect(result.token).toEqual("newToken");
     });
+
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
@@ -225,6 +233,7 @@ describe("recipe service", () => {
     });
   });
   describe("getRecipeById - GET req", () => {
+    //Response should return 200, recipe data, and a new token
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({
@@ -239,7 +248,6 @@ describe("recipe service", () => {
       const fetchArguments = fetch.mock.lastCall;
       const url = fetchArguments[0];
       const options = fetchArguments[1];
-      // const requestBody = JSON.parse(options.body);
 
       expect(url).toEqual(`${BACKEND_URL}/recipes/1234`);
       expect(options.method).toEqual("GET");
@@ -259,6 +267,7 @@ describe("recipe service", () => {
       expect(result.recipeData).toEqual(responseDataMock);
       expect(result.token).toEqual("newToken");
     });
+
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
@@ -272,6 +281,7 @@ describe("recipe service", () => {
   });
 
   describe("toggleFavourite - PATCH req", () => {
+    //Respone should return 200, and a new token
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify(
@@ -293,6 +303,7 @@ describe("recipe service", () => {
         "Content-Type": "application/json",
       });
     });
+
     test("succesful request responds with 200 and a token", async () => {
       fetch.mockResponseOnce(
         JSON.stringify(
@@ -306,6 +317,7 @@ describe("recipe service", () => {
       expect(result.message).toEqual("Recipe favourited successfully");
       expect(result.token).toEqual("newToken");
     });
+
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
@@ -319,10 +331,11 @@ describe("recipe service", () => {
   });
 
   describe("getAllRecipes - GET req", () => {
+    //Response should return 200 and an array of recipe objects
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify(
-          { recipes: responseDataMock, token: "newToken" },
+          { recipes: [responseDataMock], token: "newToken" },
           { status: 200 }
         )
       );
@@ -341,16 +354,17 @@ describe("recipe service", () => {
     test("succesful request responds with 200, token and data", async () => {
       fetch.mockResponseOnce(
         JSON.stringify(
-          { recipes: responseDataMock, token: "newToken" },
+          { recipes: [responseDataMock], token: "newToken" },
           { status: 200 }
         )
       );
 
       const result = await recipeService.getAllRecipes(mockToken);
 
-      expect(result.recipes).toEqual(responseDataMock);
+      expect(result.recipes).toEqual([responseDataMock]);
       expect(result.token).toEqual("newToken");
     });
+
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ error: "Internal server error" }),

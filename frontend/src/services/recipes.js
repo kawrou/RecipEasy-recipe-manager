@@ -59,11 +59,16 @@ export const createRecipe = async (
     },
     body: JSON.stringify(payload),
   };
-  //Place in a try/catch block
-  const response = await fetch(`${BACKEND_URL}/recipes/`, requestOptions);
 
-  if (response.status !== 201) {
-    throw new Error("Error saving new recipe");
+  try {
+    const response = await fetch(`${BACKEND_URL}/recipes/`, requestOptions);
+
+    if (response.status !== 201) {
+      throw new Error("Error saving new recipe");
+    }
+  } catch (error) {
+    console.error("Error saving recipe:", error);
+    throw error;
   }
 
   const data = await response.json();
@@ -106,13 +111,18 @@ export const updateRecipe = async (
     body: JSON.stringify(payload),
   };
 
-  const response = await fetch(
-    `${BACKEND_URL}/recipes/${recipeId}`,
-    requestOptions
-  );
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/recipes/${recipeId}`,
+      requestOptions
+    );
 
-  if (response.status !== 200) {
-    throw new Error("Error updating recipe");
+    if (response.status !== 200) {
+      throw new Error("Error updating recipe");
+    }
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    throw error;
   }
 
   const data = await response.json();
@@ -127,17 +137,21 @@ export const getRecipeById = async (recipeId, token) => {
     },
   };
 
-  const response = await fetch(
-    `${BACKEND_URL}/recipes/${recipeId}`,
-    requestOptions
-  );
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/recipes/${recipeId}`,
+      requestOptions
+    );
 
-  if (response.status !== 200) {
-    throw new Error("Unable to get recipe. Does this recipe exist?");
+    if (response.status !== 200) {
+      throw new Error("Unable to get recipe. Does this recipe exist?");
+    }
+  } catch (error) {
+    console.error("Error getting recipe by ID:", error);
+    throw error;
   }
-  // console.log("user", response)
-  const data = await response.json();
 
+  const data = await response.json();
   return data;
 };
 
@@ -146,22 +160,28 @@ export const toggleFavourite = async (recipeId, token) => {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-};
-const response = await fetch(`${BACKEND_URL}/recipes/favouritedByOwner/${recipeId}`, requestOptions);
+  };
 
-if (response.status !== 200) {
-  throw new Error("Failed to toggle favourite button")
-}
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/recipes/favouritedByOwner/${recipeId}`,
+      requestOptions
+    );
 
-console.log('Toggle favourite successful')
+    if (response.status !== 200) {
+      throw new Error("Failed to toggle favourite button");
+    }
+  } catch (error) {
+    console.error("Error favouriting recipe:", error);
+    throw error;
+  }
+
   const data = await response.json();
-  console.log('Response data:', data);
   return data;
 };
 
-//TODO: Refactor to use Try/Catch block
 export const getAllRecipes = async (token) => {
   const requestOptions = {
     method: "GET",
@@ -170,10 +190,15 @@ export const getAllRecipes = async (token) => {
     },
   };
 
-  const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
+  try {
+    const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
 
-  if (response.status !== 200) {
-    throw new Error("Unable to fetch recipes");
+    if (response.status !== 200) {
+      throw new Error("Unable to fetch recipes");
+    }
+  } catch (error) {
+    console.error("Error retrieving all recipes:", error);
+    throw error;
   }
 
   const data = await response.json();
