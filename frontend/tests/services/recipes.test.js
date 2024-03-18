@@ -225,8 +225,40 @@ describe("recipe service", () => {
     });
   });
   describe("getRecipeById - GET req", () => {
-    test.todo("request sent with correct URL, method, header, and body");
-    test.todo("succesful request responds with 200, token and data");
+    test("request sent with correct URL, method, header, and body", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({
+          recipeData: responseDataMock,
+          user_id: 1234,
+          token: "newToken",
+        })
+      );
+
+      await recipeService.getRecipeById(1234, mockToken);
+
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+      // const requestBody = JSON.parse(options.body);
+
+      expect(url).toEqual(`${BACKEND_URL}/recipes/1234`);
+      expect(options.method).toEqual("GET");
+      expect(options.headers).toEqual({ Authorization: `Bearer ${mockToken}` });
+    });
+
+    test("succesful request responds with 200, token and data", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({
+          recipeData: responseDataMock,
+          user_id: 1234,
+          token: "newToken",
+        })
+      );
+
+      const result = await recipeService.getRecipeById(1234, mockToken);
+      expect(result.recipeData).toEqual(responseDataMock);
+      expect(result.token).toEqual("newToken");
+    });
     test.todo("failed request throws an error");
   });
   describe("toggleFavourite - PATCH req", () => {
