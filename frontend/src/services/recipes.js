@@ -63,7 +63,7 @@ export const createRecipe = async (
   const response = await fetch(`${BACKEND_URL}/recipes/`, requestOptions);
 
   if (response.status !== 201) {
-    throw new Error("Unable to make POST request for fetch posts");
+    throw new Error("Error saving new recipe");
   }
 
   const data = await response.json();
@@ -112,7 +112,7 @@ export const updateRecipe = async (
   );
 
   if (response.status !== 200) {
-    throw new Error("Unable to make POST request for fetch posts");
+    throw new Error("Error updating recipe");
   }
 
   const data = await response.json();
