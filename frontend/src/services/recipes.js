@@ -142,6 +142,7 @@ export const updateRecipeImage = async (token, recipeId, imageUrl) => {
           throw new Error("Unable to make PATCH request to update image");
       }
       const data = await response.json();
+      console.log("Data from updateRecipeImage:", data);
       return data;
   } catch (error) {
       console.error("Error updating recipe image:", error);

@@ -5,11 +5,13 @@ export const ImageUpload = ({ recipeId, token }) => {
     const [recipeImage, setRecipeImage] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-   const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
+    const [uploadSucess, setUploadSucess] = useState(false)
+    const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
 
     const handleImageChange = (e) => {
         setRecipeImage(e.target.files[0])
         setImagePreview(URL.createObjectURL(e.target.files[0]))
+        setUploadSucess(false)
     }
 
     const uploadImage = async (e) => {
@@ -37,8 +39,10 @@ export const ImageUpload = ({ recipeId, token }) => {
 
                await updateRecipeImage(token, recipeId, imageURL);
                setIsLoading(false);
+               setUploadSucess(true)
+
             }
-            //here can sent the imageURL into the mongoDb database
+
             console.log(imageURL);
 
         } catch (error) {
@@ -66,11 +70,11 @@ export const ImageUpload = ({ recipeId, token }) => {
                         }
                     </div>
                 </form>
-                <div>
-                    {imagePreview && (
-                        <img src={imagePreview} alt="recipeImage" className="mt-4" />
-                    )}
-                </div>
+                {uploadSucess && (
+                    <div className="mt-4 text-sm font-semibold text-blue-900">
+                        Image uploaded successfully! Save to view
+                    </div>
+                )}
             </div>
         </section>
     )
