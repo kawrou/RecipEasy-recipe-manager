@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { updateRecipeImage } from "../../../services/recipes";
 
-export const ImageUpload = () => {
+export const ImageUpload = ({ recipeId, token }) => {
     const [recipeImage, setRecipeImage] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-   // const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
+   const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
 
     const handleImageChange = (e) => {
         setRecipeImage(e.target.files[0])
@@ -22,7 +23,7 @@ export const ImageUpload = () => {
                 const image = new FormData()
                 image.append("file", recipeImage)
                 image.append("cloud_name", "dmzyjpbtb")
-                image.append("upload_preset", "mvrksupa")
+                image.append("upload_preset", upload_preset)
                const response = await fetch(
                 "https://api.cloudinary.com/v1_1/dmzyjpbtb/image/upload",
              {
@@ -31,12 +32,14 @@ export const ImageUpload = () => {
              }
                )
                const imgData = await response.json()
-               console.log(imgData)
                imageURL= imgData.url.toString()
                setImagePreview(null)
+
+               await updateRecipeImage(token, recipeId, imageURL);
+               setIsLoading(false);
             }
             //here can sent the imageURL into the mongoDb database
-            alert(imageURL);
+            console.log(imageURL);
 
         } catch (error) {
             console.log(error)

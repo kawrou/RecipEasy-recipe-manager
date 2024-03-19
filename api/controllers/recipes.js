@@ -207,6 +207,40 @@ const isFavourite = async (req, res) => {
   }
 };
 
+const updateRecipeImage = async (req, res) => {
+  try {
+    const recipeId = req.params.recipe_id;
+    const user = await User.findById(req.user_id);
+    if (!user) {
+      console.log("user not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Assuming the new image URL is sent in the request body under the key 'image'
+    const newImageUrl = req.body.image;
+    if (!newImageUrl) {
+      return res.status(400).json({ message: "No image URL provided" });
+    }
+
+    // Update the recipe with the new image URL
+    const updatedRecipe = await Recipe.findOneAndUpdate(
+      { _id: recipeId, ownerId: user._id }, // Ensure that only the owner can update the recipe image
+      { $set: { image: newImageUrl } },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: "Recipe not found or user not authorized to update this recipe" });
+    }
+
+    const newToken = generateToken(req.user_id);
+    res.status(200).json({ message: "Recipe image updated successfully", recipe: updatedRecipe, token: newToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getRecipeById = async (req, res) => {
   const recipeId = req.params.recipe_id;
   const recipeData = await Recipe.findById(recipeId);
@@ -233,6 +267,7 @@ const RecipesController = {
   isFavourite: isFavourite,
   getRecipeById: getRecipeById,
   getAllRecipesByUserId: getAllRecipesByUserId,
+  updateRecipeImage: updateRecipeImage,
 };
 
 module.exports = RecipesController;
