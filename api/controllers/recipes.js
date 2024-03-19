@@ -222,16 +222,20 @@ const updateRecipeImage = async (req, res) => {
       return res.status(400).json({ message: "No image URL provided" });
     }
 
+    console.log(`Updating recipe ${recipeId} for user ${req.user_id} with new image URL: ${newImageUrl}`);
+
     // Update the recipe with the new image URL
     const updatedRecipe = await Recipe.findOneAndUpdate(
-      { _id: recipeId, ownerId: user._id }, // Ensure that only the owner can update the recipe image
+      { _id: recipeId, ownerId: user._id }, 
       { $set: { image: newImageUrl } },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
     if (!updatedRecipe) {
+      console.log("Recipe not found or user not authorized to update this recipe");
       return res.status(404).json({ message: "Recipe not found or user not authorized to update this recipe" });
     }
+    console.log(`Recipe image updated successfully: ${updatedRecipe}`);
 
     const newToken = generateToken(req.user_id);
     res.status(200).json({ message: "Recipe image updated successfully", recipe: updatedRecipe, token: newToken });
