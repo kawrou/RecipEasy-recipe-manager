@@ -12,7 +12,7 @@ import { RecipeYield } from "../../components/RecipePage/RecipeFields/RecipeYiel
 import { RecipeTimeTaken } from "../../components/RecipePage/RecipeFields/RecipeTimeTaken";
 import { RecipeImage } from "../../components/RecipePage/RecipeFields/RecipeImage";
 import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
-import {ImageUpload} from "../../components/RecipePage/RecipeFields/ImageUpload";
+// import {ImageUpload} from "../../components/RecipePage/RecipeFields/ImageUpload";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
@@ -123,7 +123,6 @@ export const CreateRecipePage = ({
         </div>
         <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
           <RecipeImage imageUrl={imageUrl} />
-          <ImageUpload />
           <RecipeUrl recipeUrl={url} />
         </div>
       </div>
