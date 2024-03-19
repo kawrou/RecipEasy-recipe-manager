@@ -138,6 +138,8 @@ export const SingleRecipePage = ({ token, setToken }) => {
           {editMode && (
             <ImageUpload
               setImageUrl={setImageUrl}
+              recipeId={recipe_id}
+              token={token}
             />
           )}
           <RecipeUrl recipeUrl={recipeUrl} />
