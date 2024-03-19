@@ -47,31 +47,28 @@ export const ImageUpload = () => {
 
     return (
         <section>
-        <div className="container">
-            <h2>Upload Image</h2>
-            <div> 
-                <form onSubmit={uploadImage}>
-                    <p> 
-                        <label> Recipe Image</label>
-                        <input type="file" name="image" onChange={handleImageChange}/>
-                    </p>
-                    <p>
+            <div className="container mx-auto p-4">
+                <form onSubmit={uploadImage} className="rounded-md overflow-hidden flex items-center">
+                    <div className="ml-auto flex space-x-2">
+                        <label htmlFor="fileInput" className="bg-indigo-50 hover:bg-gray-200 text-secondary-500 font-kanit font-bold text-lg h-12 px-4 rounded-lg flex items-center cursor-pointer">
+                            Choose File
+                            <input id="fileInput" type="file" name="image" onChange={handleImageChange} className="hidden" />
+                        </label>
                         {
                             isLoading ? ("Uploading...") : (
-                                <button type="submit">
+                                <button className="bg-secondary-500 hover:bg-blue-900 text-white font-kanit font-bold text-lg h-12 px-4 rounded-lg flex items-center shadow-md" type="submit">
                                     Upload Image
                                 </button>
                             )
                         }
-                    </p>
+                    </div>
                 </form>
                 <div>
                     {imagePreview && (
-                        <img src={imagePreview && imagePreview} alt="recipeImage" />
+                        <img src={imagePreview} alt="recipeImage" className="mt-4" />
                     )}
                 </div>
             </div>
-        </div>
         </section>
     )
 }
