@@ -11,7 +11,7 @@ const RecipeSchema = new mongoose.Schema({
   recipeIngredient: [{ type: String, required: true }],
   recipeInstructions: [{ type: String, required: true }],
   url: { type: String, required: false },
-  image: { type: String, required: true },
+  image: { type: String, required: false },
   dateAdded: { type: Date, required: true },
 });
 

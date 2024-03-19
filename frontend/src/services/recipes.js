@@ -119,6 +119,37 @@ export const updateRecipe = async (
   return data;
 };
 
+export const updateRecipeImage = async (token, recipeId, imageUrl) => {
+  const payload = {
+      image: imageUrl,
+  };
+
+  const requestOptions = {
+      method: "PATCH",
+      headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+  };
+
+  try {
+      const response = await fetch(
+          `${BACKEND_URL}/recipes/${recipeId}/update-image`,
+          requestOptions
+      );
+      if (response.status !== 200) {
+          throw new Error("Unable to make PATCH request to update image");
+      }
+      const data = await response.json();
+      console.log("Data from updateRecipeImage:", data);
+      return data;
+  } catch (error) {
+      console.error("Error updating recipe image:", error);
+      throw error;
+  }
+};
+
 export const getRecipeById = async (recipeId, token) => {
   const requestOptions = {
     method: "GET",
