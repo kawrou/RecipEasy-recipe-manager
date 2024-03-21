@@ -1,35 +1,41 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
+import { validateForm } from "../../Validators/validator";
 
 export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  //Error message isn't being used anywhere
   const [error, setError] = useState(null);
-  const [validation, setValidation] = useState({})
+  const [validation, setValidation] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const data = await login(email, password);
-      window.localStorage.setItem("token", data.token); //This is also redundant
-      onLogin(data.token); //This and the below code duplicates the setToken() func
-      setToken(data.token); //This is possibly redundant
-      navigate("/");
-    } catch (err) {
-      setError(err.message);
-      //This should be handled more gracefully
-      // alert("Please try again");
+    if (Object.keys(validation).length === 0) {
+      try {
+        const data = await login(email, password);
+        window.localStorage.setItem("token", data.token); //This is also redundant
+        onLogin(data.token); //This and the below code duplicates the setToken() func
+        setToken(data.token); //This is possibly redundant
+        navigate("/");
+      } catch (err) {
+        setError(err.message);
+      }
     }
   };
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    const { name, value } = e.target;
+    const validationErrors = validateForm({ name: value });
+    setValidation(validationErrors);
   };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    const { name, value } = e.target;
+    const validationErrors = validateForm({ name: value });
+    setValidation(validationErrors);
   };
 
   return (
@@ -69,6 +75,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={email}
                     onChange={handleEmailChange}
                   />
+                  {validation.email && <span>{validation.email}.</span>}
                 </div>
                 <div>
                   <label
@@ -86,6 +93,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
+                  {validation.password && <span>{validation.password}.</span>}
                 </div>
                 <button
                   type="submit"

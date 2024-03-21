@@ -4,6 +4,7 @@ import { test, vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../src/services/authentication";
+import { validateForm } from "../../src/Validators/validator";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
 
 //The login page should have a form.
@@ -24,7 +25,7 @@ import { LoginPage } from "../../src/pages/Login/LoginPage";
 //Can retest if login actually navigates to homepage or not
 
 //Validation logic:
-//Ca
+//Can be delegated to separate module
 
 //Input data into fields -> click button -> result
 //Result: Either succeed or fail
@@ -48,17 +49,22 @@ vi.mock("../../src/services/authentication", () => {
   return { login: loginMock };
 });
 
+vi.mock("../../src/Validators/validator", () => {
+  const validateFormMock = vi.fn();
+  return { validateForm: validateFormMock };
+});
+
+const user = userEvent.setup();
+
 // Reusable function for filling out login form
 const completeLoginForm = async () => {
-  const user = userEvent.setup();
-
   const emailInputEl = screen.getByLabelText("Your email");
   const passwordInputEl = screen.getByLabelText("Password");
   const submitButtonEl = screen.getByRole("button");
 
   await user.type(emailInputEl, "test@email.com");
   await user.type(passwordInputEl, "1234");
-  await user.type(submitButtonEl, "button");
+  await user.click(submitButtonEl, "button");
 };
 
 const navigateMock = useNavigate();
@@ -68,8 +74,14 @@ describe("Login Page", () => {
     vi.resetAllMocks();
   });
   describe("Login interactions:", () => {
+    beforeEach(() => {
+      render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
+    });
+
     test("allows a user to login", async () => {
-      render(<LoginPage />);
+      // render(<LoginPage />)
+
+      validateForm.mockReturnValue({});
 
       await completeLoginForm();
 
@@ -77,10 +89,9 @@ describe("Login Page", () => {
     });
 
     test("navigates to home page on successful login", async () => {
-      render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
-
+      // render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
+      validateForm.mockReturnValue({});
       login.mockResolvedValue("secrettoken123");
-      // const navigateMock = useNavigate();
 
       await completeLoginForm();
 
@@ -88,9 +99,9 @@ describe("Login Page", () => {
     });
 
     test("doens't navigate if email cannot be found", async () => {
-      // const navigateMock = useNavigate();
+      validateForm.mockReturnValue({});
 
-      render(<LoginPage />);
+      // render(<LoginPage />);
 
       login.mockRejectedValue(new Error("Email not found"));
 
@@ -100,9 +111,9 @@ describe("Login Page", () => {
     });
 
     test("doesn't navigate if email is incorrect", async () => {
-      // const navigateMock = useNavigate();
+      validateForm.mockReturnValue({});
 
-      render(<LoginPage />);
+      // render(<LoginPage />);
 
       login.mockRejectedValue(new Error("Password is incorrect"));
 
@@ -116,8 +127,8 @@ describe("Login Page", () => {
       ["Password is incorrect"],
       ["Login failed. Please try again"],
     ])("error messages is handled correctly: '%s'", async (errorMessage) => {
-      render(<LoginPage />);
-
+      // render(<LoginPage />);
+      validateForm.mockReturnValue({});
       login.mockRejectedValue(new Error(errorMessage));
 
       await completeLoginForm();
@@ -130,10 +141,8 @@ describe("Login Page", () => {
 
   describe("Form validation msg should appear", () => {
     beforeEach(() => {
-      
       render(<LoginPage />);
     });
-    const user = userEvent.setup();
 
     const typeEmailInput = async (value) => {
       const emailInputEl = screen.getByLabelText("Your email");
@@ -145,54 +154,78 @@ describe("Login Page", () => {
       await user.type(pwInputEl, value);
     };
 
-    test.todo("If a user's email doesn't have an '@'", async () => {
+    test("If a user's email doesn't have an '@'", async () => {
+      validateForm.mockReturnValue({
+        email: "Email is invalid. Please include an @",
+      });
+
       await typeEmailInput("test");
 
+      const emailValidationMsg = screen.getByText(
+        "Email is invalid. Please include an @."
+      );
+
+      expect(emailValidationMsg).toBeVisible();
+
+      // await waitFor(() => {
+      //   const emailValidationMsg = screen.getByText(
+      //     "Email is invalid. Please include an @."
+      //   );
+
+      //   expect(emailValidationMsg).toBeVisible();
+      // });
+    });
+
+    test("If a user's email doesn't have a domain extentension", async () => {
+      validateForm.mockReturnValue({
+        email: "Email is invalid. Please include a domain name in your email",
+      });
+
+      await typeEmailInput("test@");
+
+      const emailValidationMsg = screen.getByText(
+        "Email is invalid. Please include a domain name in your email."
+      );
+
+      expect(emailValidationMsg).toBeVisible();
+
+      // await waitFor(() => {
+      //   const emailValidationMsg = screen.getByText(
+      //     "Email is invalid. Please include a domain name in your email."
+      //   );
+
+      //   expect(emailValidationMsg).toBeVisible();
+      // });
+    });
+
+    test("If a user's email is invalid, it shouldn't navigate", async () => {
+      validateForm.mockReturnValue({email: "invalid"})
+
+      await typeEmailInput("test")
+      const submitButtonEl = screen.getByRole("button");
+      await user.click(submitButtonEl)
+
+      expect(login).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    test("If a user's password doesn't have a capital letter", async () => {
+      validateForm.mockReturnValue({
+        password: "Password must contain a capital letter",
+      });
+
+      await typePasswordInput("password");
+
       await waitFor(() => {
-        const emailValidationMsg = screen.getByText(
-          "Email is invalid. Please include an @."
+        const passwordValidationMsg = screen.getByText(
+          "Password must contain a capital letter."
         );
 
-        expect(emailValidationMsg).toBeVisible();
+        expect(passwordValidationMsg).toBeVisible();
       });
     });
 
-    test.todo(
-      "If a user's email doesn't have a domain extentension",
-      async () => {
-        await typeEmailInput("test@");
-
-        await waitFor(() => {
-          const emailValidationMsg = screen.getByText(
-            "Email is invalid. Please include a domain name in your email."
-          );
-
-          expect(emailValidationMsg).toBeVisible();
-        });
-      }
-    );
-
-    test.todo(
-      "If a user's email is invalid, it shouldn't navigate",
-      async () => {}
-    );
-
-    test.todo(
-      "If a user's password doesn't have a capital letter",
-      async () => {
-        await typePasswordInput("password");
-
-        await waitFor(() => {
-          const passwordValidationMsg = screen.getByText(
-            "Password must contain a capital letter."
-          );
-
-          expect(passwordValidationMsg).toBeVisible();
-        });
-      }
-    );
-
-    test.todo.each([
+    test.each([
       ["a"],
       ["aa"],
       ["aaa"],
@@ -201,6 +234,10 @@ describe("Login Page", () => {
       ["aaaaaa"],
       ["aaaaaaa"],
     ])("If a user's password isn't 8 chars long: '%s'", async (input) => {
+      validateForm.mockReturnValue({
+        password: "Password must be atleast 8 characters long",
+      });
+
       await typePasswordInput(input);
 
       await waitFor(() => {
@@ -212,22 +249,27 @@ describe("Login Page", () => {
       });
     });
 
-    test.todo(
-      "If a user's password doens't contain special characters",
-      async () => {
-        await typePasswordInput("password");
+    test("If a user's password doens't contain special characters", async () => {
+      validateForm.mockReturnValue({
+        password: "Password must contain atleast one special character",
+      });
 
-        await waitFor(() => {
-          const passwordValidationMsg = screen.getByText(
-            "Password must contain atleast one special character."
-          );
+      await typePasswordInput("password");
 
-          expect(passwordValidationMsg).toBeVisible();
-        });
-      }
-    );
+      await waitFor(() => {
+        const passwordValidationMsg = screen.getByText(
+          "Password must contain atleast one special character."
+        );
 
-    test.todo("If a user's password doens't contain a number", async () => {
+        expect(passwordValidationMsg).toBeVisible();
+      });
+    });
+
+    test("If a user's password doens't contain a number", async () => {
+      validateForm.mockReturnValue({
+        password: "Password must contain atleast one number",
+      });
+
       await typePasswordInput("password");
 
       await waitFor(() => {
@@ -239,6 +281,15 @@ describe("Login Page", () => {
       });
     });
 
-    test.todo("If a user's password is invalid, it shouldn't navigate");
+    test("If a user's password is invalid, it shouldn't navigate", async () => {
+      validateForm.mockReturnValue({email: "invalid"})
+
+      await typeEmailInput("test")
+      const submitButtonEl = screen.getByRole("button");
+      await user.click(submitButtonEl)
+
+      expect(login).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
   });
 });
