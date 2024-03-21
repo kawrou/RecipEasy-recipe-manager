@@ -8,6 +8,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const navigate = useNavigate();
   //Error message isn't being used anywhere
   const [error, setError] = useState(null);
+  const [validation, setValidation] = useState({})
 
   const handleSubmit = async (event) => {
     event.preventDefault();

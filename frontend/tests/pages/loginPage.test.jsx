@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { test, vi } from "vitest";
 
@@ -128,34 +128,39 @@ describe("Login Page", () => {
     });
   });
 
-  describe("Form validation should appear", () => {
-    test.todo(
-      "If a user's email doesn't have an '@'",
-      async () => {
-        const user = userEvent.setup();
-        render(<LoginPage />);
+  describe("Form validation msg should appear", () => {
+    beforeEach(() => {
+      
+      render(<LoginPage />);
+    });
+    const user = userEvent.setup();
 
-        const emailInputEl = screen.getByLabelText("Your email");
-        await user.type(emailInputEl, "test.com");
+    const typeEmailInput = async (value) => {
+      const emailInputEl = screen.getByLabelText("Your email");
+      await user.type(emailInputEl, value);
+    };
 
-        await waitFor(() => {
-          const emailValidationMsg = screen.getByText(
-            "Email is invalid. Please include an @."
-          );
+    const typePasswordInput = async (value) => {
+      const pwInputEl = screen.getByLabelText("Password");
+      await user.type(pwInputEl, value);
+    };
 
-          expect(emailValidationMsg).toBeVisible();
-        });
-      }
-    );
+    test.todo("If a user's email doesn't have an '@'", async () => {
+      await typeEmailInput("test");
+
+      await waitFor(() => {
+        const emailValidationMsg = screen.getByText(
+          "Email is invalid. Please include an @."
+        );
+
+        expect(emailValidationMsg).toBeVisible();
+      });
+    });
 
     test.todo(
       "If a user's email doesn't have a domain extentension",
       async () => {
-        const user = userEvent.setup();
-        render(<LoginPage />);
-
-        const emailInputEl = screen.getByLabelText("Your email");
-        await user.type(emailInputEl, "test@");
+        await typeEmailInput("test@");
 
         await waitFor(() => {
           const emailValidationMsg = screen.getByText(
@@ -175,15 +180,11 @@ describe("Login Page", () => {
     test.todo(
       "If a user's password doesn't have a capital letter",
       async () => {
-        const user = userEvent.setup();
-        render(<LoginPage />);
-
-        const passwordInputEl = screen.getByLabelText("Password");
-        await user.type(passwordInputEl, "password");
+        await typePasswordInput("password");
 
         await waitFor(() => {
           const passwordValidationMsg = screen.getByText(
-            "Password must have a capital letter"
+            "Password must contain a capital letter."
           );
 
           expect(passwordValidationMsg).toBeVisible();
@@ -191,43 +192,53 @@ describe("Login Page", () => {
       }
     );
 
-    test.todo.each([["a"], ["aa"], ["aaa"], ["aaaa"], ["aaaaa"], ["aaaaaa"], ["aaaaaaa"]])(
-      "If a user's password is too short: '%s'",
-      async () => {
-        const user = userEvent.setup();
-        render(<LoginPage />);
+    test.todo.each([
+      ["a"],
+      ["aa"],
+      ["aaa"],
+      ["aaaa"],
+      ["aaaaa"],
+      ["aaaaaa"],
+      ["aaaaaaa"],
+    ])("If a user's password isn't 8 chars long: '%s'", async (input) => {
+      await typePasswordInput(input);
 
-        const passwordInputEl = screen.getByLabelText("Password");
-        await user.type(passwordInputEl);
+      await waitFor(() => {
+        const passwordValidationMsg = screen.getByText(
+          "Password must be atleast 8 characters long."
+        );
 
-        await waitFor(() => {
-          const passwordValidationMsg = screen.getByText(
-            "Password must have a capital letter"
-          );
-
-          expect(passwordValidationMsg).toBeVisible();
-        });
-      }
-    );
+        expect(passwordValidationMsg).toBeVisible();
+      });
+    });
 
     test.todo(
       "If a user's password doens't contain special characters",
       async () => {
-        const user = userEvent.setup();
-        render(<LoginPage />);
-
-        const passwordInputEl = screen.getByLabelText("Password");
-        await user.type(passwordInputEl, "password");
+        await typePasswordInput("password");
 
         await waitFor(() => {
           const passwordValidationMsg = screen.getByText(
-            "Password must have a capital letter"
+            "Password must contain atleast one special character."
           );
 
           expect(passwordValidationMsg).toBeVisible();
         });
       }
     );
+
+    test.todo("If a user's password doens't contain a number", async () => {
+      await typePasswordInput("password");
+
+      await waitFor(() => {
+        const passwordValidationMsg = screen.getByText(
+          "Password must contain atleast one number."
+        );
+
+        expect(passwordValidationMsg).toBeVisible();
+      });
+    });
+
     test.todo("If a user's password is invalid, it shouldn't navigate");
   });
 });
