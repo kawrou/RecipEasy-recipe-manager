@@ -7,7 +7,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   //Error message isn't being used anywhere
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,11 +18,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
       setToken(data.token); //This is possibly redundant
       navigate("/");
     } catch (err) {
-      console.error(err);
-       //error & setError isn't being used anywhere yet.
-      setError("Invalid email or password");
+      setError(err.message);
       //This should be handled more gracefully
-      alert("Please try again");
+      // alert("Please try again");
     }
   };
   const handleEmailChange = (event) => {
@@ -94,6 +92,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                 >
                   Log in
                 </button>
+                {error && <span>{error}</span>}
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
                   <a
