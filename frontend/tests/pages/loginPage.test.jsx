@@ -16,12 +16,15 @@ import { LoginPage } from "../../src/pages/Login/LoginPage";
 //If login is unsuccesful, user doesn't get sent to another page
 //If login is unsuccesful, an error message lets the user know something is wrong
 //If login isn't valid(email & password), user doesn't get sent to another page
-//If login isn't valid(email & password), validation error message is handled gracefully
+//If login isn't valid(email & password), validation error message is handled gracefully (All the permutations)
 
 //Navigation (integration test?):
 //If a user clicks on home page link, they should be redirected to the homepage
 //If a user clicks on the title, they should be redirected to the homepage
 //Can retest if login actually navigates to homepage or not
+
+//Validation logic:
+//Ca
 
 //Input data into fields -> click button -> result
 //Result: Either succeed or fail
@@ -58,6 +61,8 @@ const completeLoginForm = async () => {
   await user.type(submitButtonEl, "button");
 };
 
+const navigateMock = useNavigate();
+
 describe("Login Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -75,30 +80,107 @@ describe("Login Page", () => {
       render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
 
       login.mockResolvedValue("secrettoken123");
-      const navigateMock = useNavigate();
+      // const navigateMock = useNavigate();
 
       await completeLoginForm();
 
       expect(navigateMock).toHaveBeenCalledWith("/");
     });
 
-    test("doens't navigate on unsuccesful login", async () => {
+    test("doens't navigate if email cannot be found", async () => {
+      // const navigateMock = useNavigate();
+
       render(<LoginPage />);
 
-      login.mockRejectedValue(new Error("Error logging in"));
-      const navigateMock = useNavigate();
+      login.mockRejectedValue(new Error("Email not found"));
 
       await completeLoginForm();
 
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
-    test.todo("error message handled gracefully on unsuccessful login")
+    test("doesn't navigate if email is incorrect", async () => {
+      // const navigateMock = useNavigate();
+
+      render(<LoginPage />);
+
+      login.mockRejectedValue(new Error("Password is incorrect"));
+
+      await completeLoginForm();
+
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    test("error message is handled when email cannot be found", async () => {
+      render(<LoginPage />);
+
+      login.mockRejectedValue(new Error("Email not found"));
+
+      await completeLoginForm();
+
+      const emailErrorMsg = screen.getByText("Email not found");
+
+      expect(emailErrorMsg).toBeVisible();
+    });
+
+    test("error message is handled when password is incorrect", async () => {
+      render(<LoginPage />);
+
+      login.mockRejectedValue(new Error("Password is incorrect"));
+
+      await completeLoginForm();
+
+      const passwordErrorMsg = screen.getByText("Password is incorrect");
+
+      expect(passwordErrorMsg).toBeVisible();
+    });
+
+    test("error message is handled when login fails", async () => {
+      render(<LoginPage />);
+
+      login.mockRejectedValue(new Error("Login failed. Please try again"));
+
+      await completeLoginForm();
+
+      const passwordErrorMsg = screen.getByText("Login failed. Please try again");
+
+      expect(passwordErrorMsg).toBeVisible();
+    })
   });
+
   describe("Form validation", () => {
-    test.todo("If a user's email is invalid, an error message should appear")
-    test.todo("If a user's email is invalid, it shouldn't navigate")
-    test.todo("If a user's password is invalid, an error message should appear")
-    test.todo("If a user's password is invalid, it shouldn't navigate")
-  })
+    test.todo(
+      "If a user's email doesn't have an '@', an error message should appear",
+      async () => {
+        render(<LoginPage />);
+
+        await completeLoginForm();
+
+        const emailValidationMsg = screen.getByText(
+          "Email is invalid. Please include an @."
+        );
+
+        expect(emailValidationMsg).toBeVisible();
+      }
+    );
+    test.todo(
+      "If a user's email doesn't have a domain extentension, an error message should appear",
+      async () => {
+        render(<LoginPage />);
+
+        await completeLoginForm();
+
+        const emailValidationMsg = screen.getByText(
+          "Email is invalid. Please include a domain name in your email."
+        );
+
+        expect(emailValidationMsg).toBeVisible();
+      }
+    );
+    test.todo("If a user's email is invalid, it shouldn't navigate");
+    test.todo(
+      "If a user's password is invalid, an error message should appear"
+    );
+    test.todo("If a user's password is invalid, it shouldn't navigate");
+  });
 });
