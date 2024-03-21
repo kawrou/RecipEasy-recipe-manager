@@ -14,7 +14,10 @@ export const login = async (email, password) => {
     },
     body: JSON.stringify(payload),
   };
-
+  //TODO: 
+  //Refactor to use try/catch block
+  //It's using /tokens route instead of /users/login
+  //Refactor to better handle error messages
   const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
 
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
@@ -44,6 +47,8 @@ export const signup = async (email, password, username) => {
     body: JSON.stringify(payload),
   };
 
+  //TODO:
+  //Refactor to use try/catch block
   let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
   
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
@@ -69,6 +74,8 @@ export const checkToken = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   };
+  //TODO:
+  //Refactor to use try/catch block 
   // console.log(token)
   const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
   if (!response.ok) {
