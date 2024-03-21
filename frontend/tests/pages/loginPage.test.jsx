@@ -111,41 +111,21 @@ describe("Login Page", () => {
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
-    test("error message is handled when email cannot be found", async () => {
+    test.each([
+      ["Email not found"],
+      ["Password is incorrect"],
+      ["Login failed. Please try again"],
+    ])("error messages is handled correctly: %s", async (errorMessage) => {
       render(<LoginPage />);
 
-      login.mockRejectedValue(new Error("Email not found"));
+      login.mockRejectedValue(new Error(errorMessage));
 
       await completeLoginForm();
 
-      const emailErrorMsg = screen.getByText("Email not found");
+      const errMsg = screen.getByText(errorMessage);
 
-      expect(emailErrorMsg).toBeVisible();
+      expect(errMsg).toBeVisible();
     });
-
-    test("error message is handled when password is incorrect", async () => {
-      render(<LoginPage />);
-
-      login.mockRejectedValue(new Error("Password is incorrect"));
-
-      await completeLoginForm();
-
-      const passwordErrorMsg = screen.getByText("Password is incorrect");
-
-      expect(passwordErrorMsg).toBeVisible();
-    });
-
-    test("error message is handled when login fails", async () => {
-      render(<LoginPage />);
-
-      login.mockRejectedValue(new Error("Login failed. Please try again"));
-
-      await completeLoginForm();
-
-      const passwordErrorMsg = screen.getByText("Login failed. Please try again");
-
-      expect(passwordErrorMsg).toBeVisible();
-    })
   });
 
   describe("Form validation", () => {
