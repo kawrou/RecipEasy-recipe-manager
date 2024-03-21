@@ -115,7 +115,7 @@ describe("Login Page", () => {
       ["Email not found"],
       ["Password is incorrect"],
       ["Login failed. Please try again"],
-    ])("error messages is handled correctly: %s", async (errorMessage) => {
+    ])("error messages is handled correctly: '%s'", async (errorMessage) => {
       render(<LoginPage />);
 
       login.mockRejectedValue(new Error(errorMessage));
@@ -128,38 +128,105 @@ describe("Login Page", () => {
     });
   });
 
-  describe("Form validation", () => {
+  describe("Form validation should appear", () => {
     test.todo(
-      "If a user's email doesn't have an '@', an error message should appear",
+      "If a user's email doesn't have an '@'",
       async () => {
+        const user = userEvent.setup();
         render(<LoginPage />);
 
-        await completeLoginForm();
+        const emailInputEl = screen.getByLabelText("Your email");
+        await user.type(emailInputEl, "test.com");
 
-        const emailValidationMsg = screen.getByText(
-          "Email is invalid. Please include an @."
-        );
+        await waitFor(() => {
+          const emailValidationMsg = screen.getByText(
+            "Email is invalid. Please include an @."
+          );
 
-        expect(emailValidationMsg).toBeVisible();
+          expect(emailValidationMsg).toBeVisible();
+        });
       }
     );
+
     test.todo(
-      "If a user's email doesn't have a domain extentension, an error message should appear",
+      "If a user's email doesn't have a domain extentension",
       async () => {
+        const user = userEvent.setup();
         render(<LoginPage />);
 
-        await completeLoginForm();
+        const emailInputEl = screen.getByLabelText("Your email");
+        await user.type(emailInputEl, "test@");
 
-        const emailValidationMsg = screen.getByText(
-          "Email is invalid. Please include a domain name in your email."
-        );
+        await waitFor(() => {
+          const emailValidationMsg = screen.getByText(
+            "Email is invalid. Please include a domain name in your email."
+          );
 
-        expect(emailValidationMsg).toBeVisible();
+          expect(emailValidationMsg).toBeVisible();
+        });
       }
     );
-    test.todo("If a user's email is invalid, it shouldn't navigate");
+
     test.todo(
-      "If a user's password is invalid, an error message should appear"
+      "If a user's email is invalid, it shouldn't navigate",
+      async () => {}
+    );
+
+    test.todo(
+      "If a user's password doesn't have a capital letter",
+      async () => {
+        const user = userEvent.setup();
+        render(<LoginPage />);
+
+        const passwordInputEl = screen.getByLabelText("Password");
+        await user.type(passwordInputEl, "password");
+
+        await waitFor(() => {
+          const passwordValidationMsg = screen.getByText(
+            "Password must have a capital letter"
+          );
+
+          expect(passwordValidationMsg).toBeVisible();
+        });
+      }
+    );
+
+    test.todo.each([["a"], ["aa"], ["aaa"], ["aaaa"], ["aaaaa"], ["aaaaaa"], ["aaaaaaa"]])(
+      "If a user's password is too short: '%s'",
+      async () => {
+        const user = userEvent.setup();
+        render(<LoginPage />);
+
+        const passwordInputEl = screen.getByLabelText("Password");
+        await user.type(passwordInputEl);
+
+        await waitFor(() => {
+          const passwordValidationMsg = screen.getByText(
+            "Password must have a capital letter"
+          );
+
+          expect(passwordValidationMsg).toBeVisible();
+        });
+      }
+    );
+
+    test.todo(
+      "If a user's password doens't contain special characters",
+      async () => {
+        const user = userEvent.setup();
+        render(<LoginPage />);
+
+        const passwordInputEl = screen.getByLabelText("Password");
+        await user.type(passwordInputEl, "password");
+
+        await waitFor(() => {
+          const passwordValidationMsg = screen.getByText(
+            "Password must have a capital letter"
+          );
+
+          expect(passwordValidationMsg).toBeVisible();
+        });
+      }
     );
     test.todo("If a user's password is invalid, it shouldn't navigate");
   });
