@@ -1,39 +1,75 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { FavouriteButton } from '../../src/components/RecipePage/FavouriteButton';
+import { render, screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { FavouriteButton } from "../../src/components/RecipePage/FavouriteButton";
+import * as recipeServices from "../../src/services/recipes";
+import { vi, beforeEach } from "vitest";
 
-describe('FavouriteButton', () => {
-  test('renders unfavourited button', () => {
-    const { getByAltText } = render(<FavouriteButton />);
-    const unfavouritedButton = getByAltText('Unfavourite');
-    expect(unfavouritedButton).toBeInTheDocument();
+
+
+describe("When a user clicks the button:", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.resetAllMocks();
   });
 
-  test.todo('clicking favourite button toggles favourite status and changes the image', async () => {
-    const { getByAltText } = render(<FavouriteButton />);
-    const button = getByAltText('Unfavourite');
+  test("unfavourited becomes favourited", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(recipeServices, "toggleFavourite").mockResolvedValue();
+    render(<FavouriteButton />);
 
-    fireEvent.click(button);
+    const favouriteBtn = screen.getByRole("button", {
+      name: "favourite-button",
+    });
+    expect(screen.getByLabelText("reg-heart-icon")).toBeVisible();
+    await user.click(favouriteBtn);
+    expect(screen.getByLabelText("heart-icon")).toBeVisible();
+  });
 
-    // Wait for the state change to reflect in the button's alt attribute
-    await waitFor(() => {
-        expect(button.alt).toBe('Favourite');
+  test("favourited becomes unfavourited", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(recipeServices, "toggleFavourite").mockResolvedValue();
+    render(<FavouriteButton />);
+
+    const favouriteBtn = screen.getByRole("button", {
+      name: "favourite-button",
     });
 
-    fireEvent.click(button);
+    await user.dblClick(favouriteBtn);
+    const regHeartIcon = screen.getByLabelText("reg-heart-icon");
+    expect(regHeartIcon).toBeVisible();
+  });
 
-    // Wait for the state change to reflect in the button's alt attribute
-    await waitFor(() => {
-        expect(button.alt).toBe('Unfavourite');
+  test("heart icon doesn't toggle if there is an error", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(recipeServices, "toggleFavourite").mockRejectedValue();
+    render(<FavouriteButton />);
+
+    const favouriteBtn = screen.getByRole("button", {
+      name: "favourite-button",
     });
-});
 
+    await user.click(favouriteBtn);
+    expect(screen.queryByLabelText("heart-icon")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("reg-heart-icon")).toBeVisible();
+  });
 
-  test('favourite button changes image when favourited', () => {
-    const { getByAltText } = render(<FavouriteButton />);
-    const button = getByAltText('Unfavourite');
+  test("errors are logged to the console", async () => {
+    const user = userEvent.setup();
+    const consoleErrorSpy = vi.spyOn(console, "error");
+    const error = new Error("Toggle favourite failed");
 
-    fireEvent.click(button);
-    expect(button.src).toContain('favourited.svg'); // Check if image changes to favourited
+    vi.spyOn(recipeServices, "toggleFavourite").mockRejectedValue(error);
+
+    render(<FavouriteButton />);
+
+    const favouriteBtn = screen.getByRole("button", {
+      name: "favourite-button",
+    });
+
+    await user.click(favouriteBtn);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Failed to toggle Favourite button",
+      error
+    );
   });
 });
