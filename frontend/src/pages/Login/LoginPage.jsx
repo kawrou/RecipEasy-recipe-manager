@@ -6,19 +6,22 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  //Error message isn't being used anywhere
   const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const data = await login(email, password);
-      window.localStorage.setItem("token", data.token);
-      onLogin(data.token);
-      setToken(data.token);
+      window.localStorage.setItem("token", data.token); //This is also redundant
+      onLogin(data.token); //This and the below code duplicates the setToken() func
+      setToken(data.token); //This is possibly redundant
       navigate("/");
     } catch (err) {
       console.error(err);
+       //error & setError isn't being used anywhere yet.
       setError("Invalid email or password");
+      //This should be handled more gracefully
       alert("Please try again");
     }
   };
