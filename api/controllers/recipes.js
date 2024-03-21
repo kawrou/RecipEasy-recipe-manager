@@ -7,15 +7,18 @@ const User = require("../models/user");
 const { response } = require("../app");
 const { extractRecipeInfo } = require("../utils/recipeUtils");
 
+//This functions runs the main feature of our web app which is scraping recipe data from websites.
 const fetchRecipeData = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
   const newToken = generateToken(req.user_id);
 
   try {
-    const response = await axios.get(url); // Use axios to get webpage and return a promise
-    const html = response.data; // assign all webpage data to html variable
+    // We first use axios to get webpage and return a promise
+    // and then assign all webpage data to html variable
+    const response = await axios.get(url);
+    const html = response.data;
 
-    //load the html tags into cheerio which is a library that has methods for finding and extracting html elements
+    //We then load the html tags into cheerio which is a library that has methods for finding and extracting html elements
     const $ = cheerio.load(html);
 
     //JSON-LD is being used to semantically markup the data, to make them become not only machine-readable,
@@ -24,8 +27,11 @@ const fetchRecipeData = async (req, res) => {
     let recipeData;
 
     //jsonLD is a collection of HTML elements
-    //each method from the cheerio library, takes a callback func with two parameters - index of the current element, and 'element' is reference to the current 'element'
-    //you can access and manipulate the element using the 'element' parameter
+    //each method from the cheerio library, takes a callback func with two parameters -
+
+    //index of the current element, and 'element' is reference to the current 'element'
+
+    //You can access and manipulate the element using the 'element' parameter
     //console.log(`Element ${index}: ${element.html()}`); -> prints the html element and index to the console
     jsonLD.each((index, element) => {
       const scriptContent = $(element).html(); // Gets the html elements and assign it to a variable
@@ -36,10 +42,8 @@ const fetchRecipeData = async (req, res) => {
             (obj) => obj["@type"] === "Recipe"
           );
           recipeData = recipeObjects[0];
-          // console.log("5: @graph - RecipeData", recipeData);
         } else if (jsonData["@type"] === "Recipe") {
           recipeData = jsonData;
-          // console.log("5: @type - RecipeData", recipeData);
         }
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -81,7 +85,8 @@ const fetchRecipeData = async (req, res) => {
 
       await browser.close();
     }
-    console.log("before", recipeData, "after");
+
+    //Once the recipe data has been scraped, we send it to the 'extractRecipeInfo' module to filter out only the data we need. 
     const filteredRecipeData = extractRecipeInfo(recipeData);
     console.log(filteredRecipeData);
     res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
@@ -113,12 +118,17 @@ const create = async (req, res) => {
       recipeInstructions: req.body.recipeInstructions,
       url: req.body.url,
       image: req.body.image,
+
+      //TODO: There are 2 dateAdded?
       dateAdded: req.body.dateAdded,
       dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
     // console.log("New recipe created:", newRecipe._id.toString());
     const newToken = generateToken(req.user_id);
+
+    //TODO:
+    //Question: Do we need to return the whole newRecipe data? Or is newRecipe._id enough?
     res.status(201).json({
       message: "Recipe created successfully",
       recipe: newRecipe,
@@ -130,7 +140,6 @@ const create = async (req, res) => {
   }
 };
 
-// update existing recipe entry
 const updateRecipe = async (req, res) => {
   try {
     const recipeId = req.params.recipe_id;
@@ -166,6 +175,10 @@ const updateRecipe = async (req, res) => {
     const newToken = generateToken(req.user_id);
     res.status(200).json({
       message: "Recipe updated successfully",
+
+      //TODO:
+      //Question: Do we need to return the updatedRecipe if the data isn't being used?
+      //The SingleRecipePage uses a useEffect to create another Fetch request to get recipe data
       updatedRecipe,
       token: newToken,
     });
@@ -196,10 +209,11 @@ const isFavourite = async (req, res) => {
     // Toggle the favouritedByOwner field
     recipe.favouritedByOwner = !recipe.favouritedByOwner;
 
-    // Save the updated recipe
     await recipe.save();
-    console.log("Recipe saved successfully");
 
+    //TODO:
+    //Question: Do we need to return recipe? Is response data going to be used?
+    //Fix: No token returned!
     res.status(200).json({ message: "Recipe favourited successfully", recipe });
   } catch (error) {
     console.error("Internal server error:", error);
@@ -207,10 +221,15 @@ const isFavourite = async (req, res) => {
   }
 };
 
+//TODO:
+//Fix: There's no error handling. Use appropriate try/catch block.
 const getRecipeById = async (req, res) => {
   const recipeId = req.params.recipe_id;
   const recipeData = await Recipe.findById(recipeId);
   const newToken = generateToken(req.user_id);
+
+  //TODO:
+  //Question: Do we need to return user id?
   res
     .status(200)
     .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });

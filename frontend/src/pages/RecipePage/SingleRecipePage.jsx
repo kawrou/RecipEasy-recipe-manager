@@ -49,7 +49,7 @@ export const SingleRecipePage = ({ token, setToken }) => {
           setRecipeTags(data.recipeData.tags);
 
           setToken(data.token);
-
+          //TODO: Do we need this line if setToken above has state set?
           window.localStorage.setItem("token", data.token);
         })
         .catch((err) => {
