@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { test, vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
-import { login } from "../../src/services/authentication";
-import { validateForm } from "../../src/Validators/validator";
-import { LoginPage } from "../../src/pages/Login/LoginPage";
+import { login } from "../../../src/services/authentication";
+import { validateForm } from "../../../src/Validators/validator";
+import { LoginPage } from "../../../src/pages/Login/LoginPage";
 
 //The login page should have a form.
 //The form contains a title, two input fields, and a button for handling the form
@@ -35,7 +35,7 @@ vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
   const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
   return {
-    useNavigate: useNavigateMock,
+    useNavigate: useNavigateMock, 
     NavLink: () => null, // Mock NavLink component -> Does this actually work?
   };
 });
@@ -44,12 +44,12 @@ const onLoginMock = vi.fn();
 const setTokenMock = vi.fn();
 
 // Mocking the login service
-vi.mock("../../src/services/authentication", () => {
+vi.mock("../../../src/services/authentication", () => {
   const loginMock = vi.fn();
   return { login: loginMock };
 });
 
-vi.mock("../../src/Validators/validator", () => {
+vi.mock("../../../src/Validators/validator", () => {
   const validateFormMock = vi.fn();
   return { validateForm: validateFormMock };
 });
@@ -98,6 +98,7 @@ describe("Login Page", () => {
       expect(navigateMock).toHaveBeenCalledWith("/");
     });
 
+    //This is an integration test 
     test("doens't navigate if email cannot be found", async () => {
       validateForm.mockReturnValue({});
 
@@ -109,7 +110,7 @@ describe("Login Page", () => {
 
       expect(navigateMock).not.toHaveBeenCalled();
     });
-
+    //This is an integration test
     test("doesn't navigate if email is incorrect", async () => {
       validateForm.mockReturnValue({});
 
@@ -121,7 +122,7 @@ describe("Login Page", () => {
 
       expect(navigateMock).not.toHaveBeenCalled();
     });
-
+    //This is an integration test
     test.each([
       ["Email not found"],
       ["Password is incorrect"],
@@ -153,7 +154,7 @@ describe("Login Page", () => {
       const pwInputEl = screen.getByLabelText("Password");
       await user.type(pwInputEl, value);
     };
-
+    //This is an integration test
     test("If a user's email doesn't have an '@'", async () => {
       validateForm.mockReturnValue({
         email: "Email is invalid. Please include an @",
@@ -175,7 +176,7 @@ describe("Login Page", () => {
       //   expect(emailValidationMsg).toBeVisible();
       // });
     });
-
+    //This is an integration test
     test("If a user's email doesn't have a domain extentension", async () => {
       validateForm.mockReturnValue({
         email: "Email is invalid. Please include a domain name in your email",
@@ -197,7 +198,7 @@ describe("Login Page", () => {
       //   expect(emailValidationMsg).toBeVisible();
       // });
     });
-
+    
     test("If a user's email is invalid, it shouldn't navigate", async () => {
       validateForm.mockReturnValue({email: "invalid"})
 
@@ -209,6 +210,7 @@ describe("Login Page", () => {
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
+    //This is an integration test
     test("If a user's password doesn't have a capital letter", async () => {
       validateForm.mockReturnValue({
         password: "Password must contain a capital letter",
@@ -225,6 +227,7 @@ describe("Login Page", () => {
       });
     });
 
+    //This is an integration test
     test.each([
       ["a"],
       ["aa"],
@@ -249,6 +252,7 @@ describe("Login Page", () => {
       });
     });
 
+    //this is an integration test
     test("If a user's password doens't contain special characters", async () => {
       validateForm.mockReturnValue({
         password: "Password must contain atleast one special character",
@@ -265,6 +269,7 @@ describe("Login Page", () => {
       });
     });
 
+    //this is an integration test
     test("If a user's password doens't contain a number", async () => {
       validateForm.mockReturnValue({
         password: "Password must contain atleast one number",
@@ -280,7 +285,7 @@ describe("Login Page", () => {
         expect(passwordValidationMsg).toBeVisible();
       });
     });
-
+    
     test("If a user's password is invalid, it shouldn't navigate", async () => {
       validateForm.mockReturnValue({email: "invalid"})
 
