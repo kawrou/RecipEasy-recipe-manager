@@ -4,9 +4,8 @@ import { test, vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
-import { validateForm } from "../../../src/validators/validation";
+import { validateLoginForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
-import { init } from "../../../../api/models/recipe";
 
 //Validation logic:
 //Can be delegated to separate module
@@ -31,8 +30,8 @@ vi.mock("../../../src/services/authentication", () => {
 });
 
 vi.mock("../../../src/validators/validation", () => {
-  const validateFormMock = vi.fn();
-  return { validateForm: validateFormMock };
+  const validateLoginFormMock = vi.fn();
+  return { validateLoginForm: validateLoginFormMock };
 });
 
 // Reusable function for filling out login form
@@ -69,7 +68,7 @@ describe("Login Page", () => {
     });
 
     test("a login request is made", async () => {
-      validateForm.mockReturnValue({});
+      validateLoginForm.mockReturnValue(null);
 
       await completeLoginForm();
 
@@ -77,7 +76,7 @@ describe("Login Page", () => {
     });
 
     it("navigates to home page on successful login", async () => {
-      validateForm.mockReturnValue({});
+      validateLoginForm.mockReturnValue(null);
       login.mockResolvedValue("secrettoken123");
 
       await completeLoginForm();
@@ -86,7 +85,7 @@ describe("Login Page", () => {
     });
 
     it("doens't navigate if error logging in", async () => {
-      validateForm.mockReturnValue({});
+      validateLoginForm.mockReturnValue(null);
 
       login.mockRejectedValue(new Error("Login failed. Please try again"));
 
@@ -96,7 +95,7 @@ describe("Login Page", () => {
     });
 
     test("error messages is handled correctly", async () => {
-      validateForm.mockReturnValue({});
+      validateLoginForm.mockReturnValue(null);
       login.mockRejectedValue(new Error("Login failed. Please try again"));
 
       await completeLoginForm();
@@ -113,41 +112,61 @@ describe("Login Page", () => {
     });
 
     it("should display email validation error message", async () => {
-      const submitButtonEl = screen.getByRole("button");
-      
-      await user.click(submitButtonEl); 
+      validateLoginForm.mockReturnValue({
+        email: "Email address field was empty. Please enter an email address",
+      });
 
-      const emailValidationMsg = screen.getByText("Email address field was empty. Please enter an email address.")
-      
-      expect(emailValidationMsg).toBeVisible(); 
-    });
-
-    it("should display password validation error message", async () => {
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const passwordValidationMsg = screen.getByText("Password field was empty. Please enter your password.")
-      
+      const emailValidationMsg = screen.getByText(
+        "Email address field was empty. Please enter an email address."
+      );
+
+      expect(emailValidationMsg).toBeVisible();
+    });
+
+    it("should display password validation error message", async () => {
+      validateLoginForm.mockReturnValue({
+        password: "Password field was empty. Please enter your password",
+      });
+
+      const submitButtonEl = screen.getByRole("button");
+
+      await user.click(submitButtonEl);
+
+      const passwordValidationMsg = screen.getByText(
+        "Password field was empty. Please enter your password."
+      );
+
       expect(passwordValidationMsg).toBeVisible();
     });
 
     it("shouldn't navigate upon invalid email", async () => {
+      validateLoginForm.mockReturnValue({
+        email: "Email address field was empty. Please enter an email address",
+      });
+
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
-      screen.debug();
+
       expect(login).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
     it("shouldn't navigate upon invalid password", async () => {
+      validateLoginForm.mockReturnValue({
+        password: "Password field was empty. Please enter your password",
+      });
+
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
 
       expect(login).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
-    
+
     //Maybe shouldn't have this feature.
     //Instead just check that it isn't an empty field
     // test("should display email validation error message", async () => {
@@ -163,13 +182,13 @@ describe("Login Page", () => {
 
     //   expect(emailValidationMsg).toBeVisible();
 
-      // await waitFor(() => {
-      //   const emailValidationMsg = screen.getByText(
-      //     "Email is invalid. Please include an @."
-      //   );
+    // await waitFor(() => {
+    //   const emailValidationMsg = screen.getByText(
+    //     "Email is invalid. Please include an @."
+    //   );
 
-      //   expect(emailValidationMsg).toBeVisible();
-      // });
+    //   expect(emailValidationMsg).toBeVisible();
+    // });
     // });
 
     //Maybe shouldn't have this feature.

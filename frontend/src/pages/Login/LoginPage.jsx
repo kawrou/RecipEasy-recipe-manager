@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
-import { validateForm } from "../../validators/validation";
+import { validateLoginForm } from "../../validators/validation";
 
 export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
@@ -14,23 +14,29 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationMsg = {};
-    if (!email.trim()) {
-      validationMsg.email =
-        "Email address field was empty. Please enter an email address";
+    // const validationMsg = {};
+    // if (!email.trim()) {
+    //   validationMsg.email =
+    //     "Email address field was empty. Please enter an email address";
+    // }
+
+    // if (!password.trim()) {
+    //   validationMsg.password =
+    //     "Password field was empty. Please enter your password";
+    // }
+
+    // setValidation(validationMsg);
+
+    // if (Object.keys(validationMsg).length > 0){
+    //   return
+    // }
+
+    const validationError = validateLoginForm(email, password);
+    if (validationError) {
+      setValidation(validationError);
+      return;
     }
 
-    if (!password.trim()) {
-      validationMsg.password =
-        "Password field was empty. Please enter your password";
-    }
-
-    setValidation(validationMsg);
-    
-    if (Object.keys(validationMsg).length > 0){
-      return
-    }
-    
     if (Object.keys(validation).length === 0) {
       try {
         const data = await login(email, password);
