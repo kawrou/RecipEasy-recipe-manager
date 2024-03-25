@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
 import { validateForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
+import { init } from "../../../../api/models/recipe";
 
 //Validation logic:
 //Can be delegated to separate module
@@ -106,23 +107,61 @@ describe("Login Page", () => {
     });
   });
 
-  describe("When email and password inputs are invalid:", () => {
+  describe("When email and/or password fields are empty:", () => {
     beforeEach(() => {
       render(<LoginPage />);
     });
 
-    test("should display email validation error message", async () => {
-      validateForm.mockReturnValue({
-        email: "Email is invalid. Please include an @",
-      });
+    it("should display email validation error message", async () => {
+      const submitButtonEl = screen.getByRole("button");
+      
+      await user.click(submitButtonEl); 
 
-      await typeEmailInput("test");
+      const emailValidationMsg = screen.getByText("Email address field was empty. Please enter an email address.")
+      
+      expect(emailValidationMsg).toBeVisible(); 
+    });
 
-      const emailValidationMsg = screen.getByText(
-        "Email is invalid. Please include an @."
-      );
+    it("should display password validation error message", async () => {
+      const submitButtonEl = screen.getByRole("button");
 
-      expect(emailValidationMsg).toBeVisible();
+      await user.click(submitButtonEl);
+
+      const passwordValidationMsg = screen.getByText("Password field was empty. Please enter your password.")
+      
+      expect(passwordValidationMsg).toBeVisible();
+    });
+
+    it("shouldn't navigate upon invalid email", async () => {
+      const submitButtonEl = screen.getByRole("button");
+      await user.click(submitButtonEl);
+      screen.debug();
+      expect(login).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it("shouldn't navigate upon invalid password", async () => {
+      const submitButtonEl = screen.getByRole("button");
+      await user.click(submitButtonEl);
+
+      expect(login).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+    
+    //Maybe shouldn't have this feature.
+    //Instead just check that it isn't an empty field
+    // test("should display email validation error message", async () => {
+    //   validateForm.mockReturnValue({
+    //     email: "Email is invalid. Please include an @",
+    //   });
+
+    //   await typeEmailInput("test");
+
+    //   const emailValidationMsg = screen.getByText(
+    //     "Email is invalid. Please include an @."
+    //   );
+
+    //   expect(emailValidationMsg).toBeVisible();
 
       // await waitFor(() => {
       //   const emailValidationMsg = screen.getByText(
@@ -131,45 +170,46 @@ describe("Login Page", () => {
 
       //   expect(emailValidationMsg).toBeVisible();
       // });
-    });
-    
-    //Maybe shouldn't have this feature. 
-    test("should display password validation error message", async () => {
-      validateForm.mockReturnValue({
-        password: "Password must contain a capital letter",
-      });
+    // });
 
-      await typePasswordInput("password");
+    //Maybe shouldn't have this feature.
+    //Instead just check that it isn't an empty field
+    // test("should display password validation error message", async () => {
+    //   validateForm.mockReturnValue({
+    //     password: "Password must contain a capital letter",
+    //   });
 
-      await waitFor(() => {
-        const passwordValidationMsg = screen.getByText(
-          "Password must contain a capital letter."
-        );
+    //   await typePasswordInput("password");
 
-        expect(passwordValidationMsg).toBeVisible();
-      });
-    });
+    //   await waitFor(() => {
+    //     const passwordValidationMsg = screen.getByText(
+    //       "Password must contain a capital letter."
+    //     );
 
-    test("shouldn't navigate upon invalid email", async () => {
-      validateForm.mockReturnValue({ email: "invalid" });
+    //     expect(passwordValidationMsg).toBeVisible();
+    //   });
+    // });
 
-      await typeEmailInput("test");
-      const submitButtonEl = screen.getByRole("button");
-      await user.click(submitButtonEl);
+    // test("shouldn't navigate upon invalid email", async () => {
+    //   validateForm.mockReturnValue({ email: "invalid" });
 
-      expect(login).not.toHaveBeenCalled();
-      expect(navigateMock).not.toHaveBeenCalled();
-    });
+    //   await typeEmailInput("test");
+    //   const submitButtonEl = screen.getByRole("button");
+    //   await user.click(submitButtonEl);
 
-    test("shouldn't navigate upon invalid password", async () => {
-      validateForm.mockReturnValue({ email: "invalid" });
+    //   expect(login).not.toHaveBeenCalled();
+    //   expect(navigateMock).not.toHaveBeenCalled();
+    // });
 
-      await typeEmailInput("test");
-      const submitButtonEl = screen.getByRole("button");
-      await user.click(submitButtonEl);
+    // test("shouldn't navigate upon invalid password", async () => {
+    //   validateForm.mockReturnValue({ email: "invalid" });
 
-      expect(login).not.toHaveBeenCalled();
-      expect(navigateMock).not.toHaveBeenCalled();
-    });
+    //   await typeEmailInput("test");
+    //   const submitButtonEl = screen.getByRole("button");
+    //   await user.click(submitButtonEl);
+
+    //   expect(login).not.toHaveBeenCalled();
+    //   expect(navigateMock).not.toHaveBeenCalled();
+    // });
   });
 });

@@ -10,8 +10,27 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [error, setError] = useState(null);
   const [validation, setValidation] = useState({});
 
+  //Should only validate if the fields are empty or not.
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const validationMsg = {};
+    if (!email.trim()) {
+      validationMsg.email =
+        "Email address field was empty. Please enter an email address";
+    }
+
+    if (!password.trim()) {
+      validationMsg.password =
+        "Password field was empty. Please enter your password";
+    }
+
+    setValidation(validationMsg);
+    
+    if (Object.keys(validationMsg).length > 0){
+      return
+    }
+    
     if (Object.keys(validation).length === 0) {
       try {
         const data = await login(email, password);
@@ -24,18 +43,20 @@ export const LoginPage = ({ onLogin, setToken }) => {
       }
     }
   };
+  //Maybe shouldn't validate email address on login page
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    const { name, value } = e.target;
-    const validationErrors = validateForm({ name: value });
-    setValidation(validationErrors);
+    // const { name, value } = e.target;
+    // const validationErrors = validateForm({ name: value });
+    // setValidation(validationErrors);
   };
+
   //Maybe there shouldn't be a password validation on login page
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
-    const { name, value } = e.target;
-    const validationErrors = validateForm({ name: value });
-    setValidation(validationErrors);
+    // const { name, value } = e.target;
+    // const validationErrors = validateForm({ name: value });
+    // setValidation(validationErrors);
   };
 
   return (
