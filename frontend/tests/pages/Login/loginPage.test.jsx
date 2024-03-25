@@ -4,7 +4,7 @@ import { test, vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
-import { validateForm } from "../../../src/Validators/validator";
+import { validateForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 
 //Validation logic:
@@ -29,7 +29,7 @@ vi.mock("../../../src/services/authentication", () => {
   return { login: loginMock };
 });
 
-vi.mock("../../../src/Validators/validator", () => {
+vi.mock("../../../src/validators/validation", () => {
   const validateFormMock = vi.fn();
   return { validateForm: validateFormMock };
 });
@@ -132,7 +132,8 @@ describe("Login Page", () => {
       //   expect(emailValidationMsg).toBeVisible();
       // });
     });
-
+    
+    //Maybe shouldn't have this feature. 
     test("should display password validation error message", async () => {
       validateForm.mockReturnValue({
         password: "Password must contain a capital letter",

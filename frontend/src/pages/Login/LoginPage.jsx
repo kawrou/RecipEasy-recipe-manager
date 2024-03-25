@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/authentication";
-import { validateForm } from "../../Validators/validator";
+import { validateForm } from "../../validators/validation";
 
 export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
     const validationErrors = validateForm({ name: value });
     setValidation(validationErrors);
   };
-
+  //Maybe there shouldn't be a password validation on login page
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     const { name, value } = e.target;
@@ -93,6 +93,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
+                  {/* Maybe shouldn't have this feature */}
                   {validation.password && <span>{validation.password}.</span>}
                 </div>
                 <button

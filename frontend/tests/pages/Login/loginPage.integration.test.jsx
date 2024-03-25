@@ -4,7 +4,7 @@ import { test, vi } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
-import { validateForm } from "../../../src/Validators/validator";
+import { validateForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 
 //The login page should have a form.
@@ -31,14 +31,14 @@ import { LoginPage } from "../../../src/pages/Login/LoginPage";
 //Result: Either succeed or fail
 
 // Mocking React Router's useNavigate function and NavLink component
-vi.mock("react-router-dom", () => {
-  const navigateMock = vi.fn();
-  const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
-  return {
-    useNavigate: useNavigateMock, 
-    NavLink: () => null, // Mock NavLink component -> Does this actually work?
-  };
-});
+// vi.mock("react-router-dom", () => {
+//   const navigateMock = vi.fn();
+//   const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
+//   return {
+//     useNavigate: useNavigateMock,
+//     NavLink: () => null, // Mock NavLink component -> Does this actually work?
+//   };
+// });
 
 const onLoginMock = vi.fn();
 const setTokenMock = vi.fn();
@@ -47,11 +47,6 @@ const setTokenMock = vi.fn();
 vi.mock("../../../src/services/authentication", () => {
   const loginMock = vi.fn();
   return { login: loginMock };
-});
-
-vi.mock("../../../src/Validators/validator", () => {
-  const validateFormMock = vi.fn();
-  return { validateForm: validateFormMock };
 });
 
 const user = userEvent.setup();
@@ -78,6 +73,7 @@ describe("Login Page", () => {
       render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
     });
 
+    //TODO: delete
     test("allows a user to login", async () => {
       // render(<LoginPage />)
 
@@ -98,7 +94,7 @@ describe("Login Page", () => {
       expect(navigateMock).toHaveBeenCalledWith("/");
     });
 
-    //This is an integration test 
+    //This is an integration test
     test("doens't navigate if email cannot be found", async () => {
       validateForm.mockReturnValue({});
 
@@ -122,6 +118,8 @@ describe("Login Page", () => {
 
       expect(navigateMock).not.toHaveBeenCalled();
     });
+
+    //TODO: Maybe delete
     //This is an integration test
     test.each([
       ["Email not found"],
@@ -198,13 +196,13 @@ describe("Login Page", () => {
       //   expect(emailValidationMsg).toBeVisible();
       // });
     });
-    
-    test("If a user's email is invalid, it shouldn't navigate", async () => {
-      validateForm.mockReturnValue({email: "invalid"})
 
-      await typeEmailInput("test")
+    test("If a user's email is invalid, it shouldn't navigate", async () => {
+      validateForm.mockReturnValue({ email: "invalid" });
+
+      await typeEmailInput("test");
       const submitButtonEl = screen.getByRole("button");
-      await user.click(submitButtonEl)
+      await user.click(submitButtonEl);
 
       expect(login).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
@@ -285,16 +283,25 @@ describe("Login Page", () => {
         expect(passwordValidationMsg).toBeVisible();
       });
     });
-    
-    test("If a user's password is invalid, it shouldn't navigate", async () => {
-      validateForm.mockReturnValue({email: "invalid"})
 
-      await typeEmailInput("test")
+    test("If a user's password is invalid, it shouldn't navigate", async () => {
+      validateForm.mockReturnValue({ email: "invalid" });
+
+      await typeEmailInput("test");
       const submitButtonEl = screen.getByRole("button");
-      await user.click(submitButtonEl)
+      await user.click(submitButtonEl);
 
       expect(login).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
+  });
+
+  describe("Navigation buttons", () => {
+    test.todo(
+      "When a user clicks on the logo, it should navigate to home page"
+    );
+    test.todo(
+      "When a user clicks on the 'Back to homepage' button, it should navigate to home page"
+    );
   });
 });
