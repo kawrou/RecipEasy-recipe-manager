@@ -17,6 +17,7 @@ const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
   const [token, setToken] = useState("");
+  //TODO: There might be an issue with this implementation of setState
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") !== null
   );
@@ -44,7 +45,7 @@ const App = () => {
       window.location.reload();
     }
   };
-
+  //TODO: There might be an issue with this handleLogin
   const handleLogin = (token) => {
     // set token state and isLoggedIn to true if token is returned
     setIsLoggedIn(token !== null);

@@ -1,6 +1,9 @@
 const { generateToken } = require("../lib/token");
 const User = require("../models/user");
 
+//TODO: 
+//Password isn't hashed
+//Should probably rename this to signup instead of create
 const create = (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -19,6 +22,8 @@ const create = (req, res) => {
     });
 };
 
+//TODO: Implement
+//This controller isn't actually being used and can't be used until the create function above hashes password
 const login = async (req, res) => {
   const { email, password } = req.body;
 
