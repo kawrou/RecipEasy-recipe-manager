@@ -13,35 +13,38 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationError = validateLoginForm(email, password);
-    if (validationError) {
-      setValidationMsg(validationError);
-      return;
-    }
-  
-    // if (Object.keys(validationError).length === 0) {
-      try {
-        await performLogin(email,password)
-        // const data = await login(email, password);
-        // window.localStorage.setItem("token", data.token); //This is also redundant
-        // onLogin(data.token); //This and the below code duplicates the setToken() func
-        // setToken(data.token); //This is possibly redundant
-        navigate("/");
-      } catch (err) {
-        //TODO: Improve upon error handling
-        setError(err.message);
+    try {
+      const validationError = validateLoginForm(email, password);
+      if (validationError) {
+        setValidationMsg(validationError);
+        return;
       }
+    } catch (error) {
+      setError("An unexpected error occured. Please try again");
+    }
+    // if (Object.keys(validationError).length === 0) {
+    try {
+      await performLogin(email, password);
+      // const data = await login(email, password);
+      // window.localStorage.setItem("token", data.token); //This is also redundant
+      // onLogin(data.token); //This and the below code duplicates the setToken() func
+      // setToken(data.token); //This is possibly redundant
+      navigate("/");
+    } catch (err) {
+      //TODO: Improve upon error handling
+      setError(err.message);
+    }
     // }
   };
 
   const performLogin = async (email, password) => {
     try {
-      const data = await login(email, password); 
-      onLogin(data.token)
+      const data = await login(email, password);
+      onLogin(data.token);
     } catch (error) {
-      throw(error)
+      throw error;
     }
-  }
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -107,7 +110,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     onChange={handlePasswordChange}
                   />
                   {/* Maybe shouldn't have this feature */}
-                  {validationMsg.password && <span>{validationMsg.password}.</span>}
+                  {validationMsg.password && (
+                    <span>{validationMsg.password}.</span>
+                  )}
                 </div>
                 <button
                   type="submit"
