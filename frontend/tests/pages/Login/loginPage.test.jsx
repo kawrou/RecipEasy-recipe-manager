@@ -7,16 +7,14 @@ import { login } from "../../../src/services/authentication";
 import { validateLoginForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 
-//Validation logic:
-//Can be delegated to separate module
-
 // Mocking React Router's useNavigate function and NavLink component
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
   const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
   return {
     useNavigate: useNavigateMock,
-    NavLink: () => null, // Mock NavLink component
+    NavLink: () => null, // Mock NavLink react-router-dom component
+    Link: () => null, // Mock Link react-router-dom component
   };
 });
 
@@ -167,7 +165,7 @@ describe("Login Page", () => {
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
-    //TODO: Delete after confirming that these features aren't necessary.
+    //TODO: Maybe can use these tests for the SignUp page where it makes more sense
     //Maybe shouldn't have this feature.
     //Instead just check that it isn't an empty field
     // test("should display email validation error message", async () => {

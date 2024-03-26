@@ -40,8 +40,6 @@ const typePasswordInput = async (value) => {
   await user.type(pwInputEl, value);
 };
 
-// const navigateMock = useNavigate();
-
 describe("Login Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -57,7 +55,6 @@ describe("Login Page", () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
-        {/* // <LoginPage onLogin={onLoginMock} setToken={setTokenMock} /> */}
       </MemoryRouter>
     );
   });
@@ -94,23 +91,6 @@ describe("Login Page", () => {
       const heading = screen.queryByRole("heading", { name: "Recipeasy" });
       expect(heading).not.toBeInTheDocument();
     });
-
-    //TODO: Maybe return this to the unit test
-    // test.each([
-    //   ["Email not found"],
-    //   ["Password is incorrect"],
-    //   ["Login failed. Please try again"],
-    // ])("error messages is handled correctly: '%s'", async (errorMessage) => {
-    //   // render(<LoginPage />);
-    //   validateForm.mockReturnValue({});
-    //   login.mockRejectedValue(new Error(errorMessage));
-
-    //   await completeLoginForm();
-
-    //   const errMsg = screen.getByText(errorMessage);
-
-    //   expect(errMsg).toBeVisible();
-    // });
   });
 
   describe("Form validation msg should appear and doesn't navigate to HomePage", () => {
@@ -203,158 +183,156 @@ describe("Login Page", () => {
       expect(heading).toBeVisible();
     });
     test("When a user clicks on the 'Sign up' button, it should navigate to SignUp page", async () => {
-      const signUpBtnEl = screen.getByRole("link", {name: "Sign up"});
+      const signUpBtnEl = screen.getByRole("link", { name: "Sign up" });
       await user.click(signUpBtnEl);
 
-      const logoLinkEl = screen.getByRole("link", {name: "logo ecipeasy"});
+      const logoLinkEl = screen.getByRole("link", { name: "logo ecipeasy" });
       expect(logoLinkEl).toBeVisible();
-    })
+    });
   });
 });
 
+//TODO: Maybe these could be used for SignupPage instead. 
+// All these tests aren't applicable anymore
+//This is an integration test
+//   test("If a user's email doesn't have an '@'", async () => {
+//     validateForm.mockReturnValue({
+//       email: "Email is invalid. Please include an @",
+//     });
 
+//     await typeEmailInput("test");
 
+//     const emailValidationMsg = screen.getByText(
+//       "Email is invalid. Please include an @."
+//     );
 
-   // All these tests aren't applicable anymore
-    //This is an integration test
-    //   test("If a user's email doesn't have an '@'", async () => {
-    //     validateForm.mockReturnValue({
-    //       email: "Email is invalid. Please include an @",
-    //     });
+//     expect(emailValidationMsg).toBeVisible();
 
-    //     await typeEmailInput("test");
+//     // await waitFor(() => {
+//     //   const emailValidationMsg = screen.getByText(
+//     //     "Email is invalid. Please include an @."
+//     //   );
 
-    //     const emailValidationMsg = screen.getByText(
-    //       "Email is invalid. Please include an @."
-    //     );
+//     //   expect(emailValidationMsg).toBeVisible();
+//     // });
+//   });
+//   //This is an integration test
+//   test("If a user's email doesn't have a domain extentension", async () => {
+//     validateForm.mockReturnValue({
+//       email: "Email is invalid. Please include a domain name in your email",
+//     });
 
-    //     expect(emailValidationMsg).toBeVisible();
+//     await typeEmailInput("test@");
 
-    //     // await waitFor(() => {
-    //     //   const emailValidationMsg = screen.getByText(
-    //     //     "Email is invalid. Please include an @."
-    //     //   );
+//     const emailValidationMsg = screen.getByText(
+//       "Email is invalid. Please include a domain name in your email."
+//     );
 
-    //     //   expect(emailValidationMsg).toBeVisible();
-    //     // });
-    //   });
-    //   //This is an integration test
-    //   test("If a user's email doesn't have a domain extentension", async () => {
-    //     validateForm.mockReturnValue({
-    //       email: "Email is invalid. Please include a domain name in your email",
-    //     });
+//     expect(emailValidationMsg).toBeVisible();
 
-    //     await typeEmailInput("test@");
+//     // await waitFor(() => {
+//     //   const emailValidationMsg = screen.getByText(
+//     //     "Email is invalid. Please include a domain name in your email."
+//     //   );
 
-    //     const emailValidationMsg = screen.getByText(
-    //       "Email is invalid. Please include a domain name in your email."
-    //     );
+//     //   expect(emailValidationMsg).toBeVisible();
+//     // });
+//   });
 
-    //     expect(emailValidationMsg).toBeVisible();
+//   test("If a user's email is invalid, it shouldn't navigate", async () => {
+//     validateForm.mockReturnValue({ email: "invalid" });
 
-    //     // await waitFor(() => {
-    //     //   const emailValidationMsg = screen.getByText(
-    //     //     "Email is invalid. Please include a domain name in your email."
-    //     //   );
+//     await typeEmailInput("test");
+//     const submitButtonEl = screen.getByRole("button");
+//     await user.click(submitButtonEl);
 
-    //     //   expect(emailValidationMsg).toBeVisible();
-    //     // });
-    //   });
+//     expect(login).not.toHaveBeenCalled();
+//     expect(navigateMock).not.toHaveBeenCalled();
+//   });
 
-    //   test("If a user's email is invalid, it shouldn't navigate", async () => {
-    //     validateForm.mockReturnValue({ email: "invalid" });
+//   //This is an integration test
+//   test("If a user's password doesn't have a capital letter", async () => {
+//     validateForm.mockReturnValue({
+//       password: "Password must contain a capital letter",
+//     });
 
-    //     await typeEmailInput("test");
-    //     const submitButtonEl = screen.getByRole("button");
-    //     await user.click(submitButtonEl);
+//     await typePasswordInput("password");
 
-    //     expect(login).not.toHaveBeenCalled();
-    //     expect(navigateMock).not.toHaveBeenCalled();
-    //   });
+//     await waitFor(() => {
+//       const passwordValidationMsg = screen.getByText(
+//         "Password must contain a capital letter."
+//       );
 
-    //   //This is an integration test
-    //   test("If a user's password doesn't have a capital letter", async () => {
-    //     validateForm.mockReturnValue({
-    //       password: "Password must contain a capital letter",
-    //     });
+//       expect(passwordValidationMsg).toBeVisible();
+//     });
+//   });
 
-    //     await typePasswordInput("password");
+//   //This is an integration test
+//   test.each([
+//     ["a"],
+//     ["aa"],
+//     ["aaa"],
+//     ["aaaa"],
+//     ["aaaaa"],
+//     ["aaaaaa"],
+//     ["aaaaaaa"],
+//   ])("If a user's password isn't 8 chars long: '%s'", async (input) => {
+//     validateForm.mockReturnValue({
+//       password: "Password must be atleast 8 characters long",
+//     });
 
-    //     await waitFor(() => {
-    //       const passwordValidationMsg = screen.getByText(
-    //         "Password must contain a capital letter."
-    //       );
+//     await typePasswordInput(input);
 
-    //       expect(passwordValidationMsg).toBeVisible();
-    //     });
-    //   });
+//     await waitFor(() => {
+//       const passwordValidationMsg = screen.getByText(
+//         "Password must be atleast 8 characters long."
+//       );
 
-    //   //This is an integration test
-    //   test.each([
-    //     ["a"],
-    //     ["aa"],
-    //     ["aaa"],
-    //     ["aaaa"],
-    //     ["aaaaa"],
-    //     ["aaaaaa"],
-    //     ["aaaaaaa"],
-    //   ])("If a user's password isn't 8 chars long: '%s'", async (input) => {
-    //     validateForm.mockReturnValue({
-    //       password: "Password must be atleast 8 characters long",
-    //     });
+//       expect(passwordValidationMsg).toBeVisible();
+//     });
+//   });
 
-    //     await typePasswordInput(input);
+//   //this is an integration test
+//   test("If a user's password doens't contain special characters", async () => {
+//     validateForm.mockReturnValue({
+//       password: "Password must contain atleast one special character",
+//     });
 
-    //     await waitFor(() => {
-    //       const passwordValidationMsg = screen.getByText(
-    //         "Password must be atleast 8 characters long."
-    //       );
+//     await typePasswordInput("password");
 
-    //       expect(passwordValidationMsg).toBeVisible();
-    //     });
-    //   });
+//     await waitFor(() => {
+//       const passwordValidationMsg = screen.getByText(
+//         "Password must contain atleast one special character."
+//       );
 
-    //   //this is an integration test
-    //   test("If a user's password doens't contain special characters", async () => {
-    //     validateForm.mockReturnValue({
-    //       password: "Password must contain atleast one special character",
-    //     });
+//       expect(passwordValidationMsg).toBeVisible();
+//     });
+//   });
 
-    //     await typePasswordInput("password");
+//   //this is an integration test
+//   test("If a user's password doens't contain a number", async () => {
+//     validateForm.mockReturnValue({
+//       password: "Password must contain atleast one number",
+//     });
 
-    //     await waitFor(() => {
-    //       const passwordValidationMsg = screen.getByText(
-    //         "Password must contain atleast one special character."
-    //       );
+//     await typePasswordInput("password");
 
-    //       expect(passwordValidationMsg).toBeVisible();
-    //     });
-    //   });
+//     await waitFor(() => {
+//       const passwordValidationMsg = screen.getByText(
+//         "Password must contain atleast one number."
+//       );
 
-    //   //this is an integration test
-    //   test("If a user's password doens't contain a number", async () => {
-    //     validateForm.mockReturnValue({
-    //       password: "Password must contain atleast one number",
-    //     });
+//       expect(passwordValidationMsg).toBeVisible();
+//     });
+//   });
 
-    //     await typePasswordInput("password");
+//   test("If a user's password is invalid, it shouldn't navigate", async () => {
+//     validateForm.mockReturnValue({ email: "invalid" });
 
-    //     await waitFor(() => {
-    //       const passwordValidationMsg = screen.getByText(
-    //         "Password must contain atleast one number."
-    //       );
+//     await typeEmailInput("test");
+//     const submitButtonEl = screen.getByRole("button");
+//     await user.click(submitButtonEl);
 
-    //       expect(passwordValidationMsg).toBeVisible();
-    //     });
-    //   });
-
-    //   test("If a user's password is invalid, it shouldn't navigate", async () => {
-    //     validateForm.mockReturnValue({ email: "invalid" });
-
-    //     await typeEmailInput("test");
-    //     const submitButtonEl = screen.getByRole("button");
-    //     await user.click(submitButtonEl);
-
-    //     expect(login).not.toHaveBeenCalled();
-    //     expect(navigateMock).not.toHaveBeenCalled();
-    //   });
+//     expect(login).not.toHaveBeenCalled();
+//     expect(navigateMock).not.toHaveBeenCalled();
+//   });

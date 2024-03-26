@@ -23,13 +23,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
     } catch (error) {
       setError("An unexpected error occured. Please try again");
     }
-    // if (Object.keys(validationError).length === 0) {
+
     try {
-      await performLogin(email, password);
-      // const data = await login(email, password);
-      // window.localStorage.setItem("token", data.token); //This is also redundant
-      // onLogin(data.token); //This and the below code duplicates the setToken() func
-      // setToken(data.token); //This is possibly redundant
+      await performLogin(email, password);    
       navigate("/");
     } catch (err) {
       //TODO: Improve upon error handling
@@ -41,6 +37,8 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const performLogin = async (email, password) => {
     try {
       const data = await login(email, password);
+      window.localStorage.setItem("token", data.token); //This is also redundant
+      setToken(data.token); //This is possibly redundant
       onLogin(data.token);
     } catch (error) {
       throw error;
