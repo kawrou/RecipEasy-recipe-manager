@@ -62,7 +62,7 @@ describe("authentication service", () => {
         await login(testEmail, testPassword);
       } catch (err) {
         expect(err.message).toEqual(
-          "Wrong Password when logging in."
+          "Wrong Password"
         );
       }
     });

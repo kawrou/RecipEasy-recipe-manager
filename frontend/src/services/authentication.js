@@ -28,7 +28,7 @@ export const login = async (email, password) => {
   } else {
     let data = await response.json();
     throw new Error(
-      `${data.message} when logging in.`
+      `${data.message}`
     );
   }
 };
