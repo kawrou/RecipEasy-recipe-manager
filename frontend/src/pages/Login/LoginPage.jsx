@@ -13,7 +13,6 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    
     try {
       const validationError = validateLoginForm(email, password);
       if (validationError) {
@@ -25,7 +24,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
     }
 
     try {
-      await performLogin(email, password);    
+      await performLogin(email, password);
       navigate("/");
     } catch (err) {
       //TODO: Improve upon error handling
@@ -92,7 +91,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={email}
                     onChange={handleEmailChange}
                   />
-                  {validationMsg.email && <span>{validationMsg.email}.</span>}
+                  {validationMsg.email && (
+                    <span className="text-red-500">{validationMsg.email}.</span>
+                  )}
                 </div>
                 <div>
                   <label
@@ -112,7 +113,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
                   />
                   {/* Maybe shouldn't have this feature */}
                   {validationMsg.password && (
-                    <span>{validationMsg.password}.</span>
+                    <span className="text-red-500">
+                      {validationMsg.password}.
+                    </span>
                   )}
                 </div>
                 <button
@@ -121,7 +124,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                 >
                   Log in
                 </button>
-                {error && <span>{error}</span>}
+                {error && <span className="text-red-500">{error}</span>}
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
                   <Link
