@@ -8,61 +8,47 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [validation, setValidation] = useState({});
+  const [validationMsg, setValidationMsg] = useState({});
 
-  //Should only validate if the fields are empty or not.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const validationMsg = {};
-    // if (!email.trim()) {
-    //   validationMsg.email =
-    //     "Email address field was empty. Please enter an email address";
-    // }
-
-    // if (!password.trim()) {
-    //   validationMsg.password =
-    //     "Password field was empty. Please enter your password";
-    // }
-
-    // setValidation(validationMsg);
-
-    // if (Object.keys(validationMsg).length > 0){
-    //   return
-    // }
-
     const validationError = validateLoginForm(email, password);
     if (validationError) {
-      setValidation(validationError);
+      setValidationMsg(validationError);
       return;
     }
-
-    if (Object.keys(validation).length === 0) {
+  
+    // if (Object.keys(validationError).length === 0) {
       try {
-        const data = await login(email, password);
-        window.localStorage.setItem("token", data.token); //This is also redundant
-        onLogin(data.token); //This and the below code duplicates the setToken() func
-        setToken(data.token); //This is possibly redundant
+        await performLogin(email,password)
+        // const data = await login(email, password);
+        // window.localStorage.setItem("token", data.token); //This is also redundant
+        // onLogin(data.token); //This and the below code duplicates the setToken() func
+        // setToken(data.token); //This is possibly redundant
         navigate("/");
       } catch (err) {
+        //TODO: Improve upon error handling
         setError(err.message);
       }
-    }
-  };
-  //Maybe shouldn't validate email address on login page
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    // const { name, value } = e.target;
-    // const validationErrors = validateForm({ name: value });
-    // setValidation(validationErrors);
+    // }
   };
 
-  //Maybe there shouldn't be a password validation on login page
+  const performLogin = async (email, password) => {
+    try {
+      const data = await login(email, password); 
+      onLogin(data.token)
+    } catch (error) {
+      throw(error)
+    }
+  }
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
-    // const { name, value } = e.target;
-    // const validationErrors = validateForm({ name: value });
-    // setValidation(validationErrors);
   };
 
   return (
@@ -102,7 +88,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={email}
                     onChange={handleEmailChange}
                   />
-                  {validation.email && <span>{validation.email}.</span>}
+                  {validationMsg.email && <span>{validationMsg.email}.</span>}
                 </div>
                 <div>
                   <label
@@ -121,7 +107,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     onChange={handlePasswordChange}
                   />
                   {/* Maybe shouldn't have this feature */}
-                  {validation.password && <span>{validation.password}.</span>}
+                  {validationMsg.password && <span>{validationMsg.password}.</span>}
                 </div>
                 <button
                   type="submit"

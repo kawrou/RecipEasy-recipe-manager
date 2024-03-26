@@ -167,6 +167,7 @@ describe("Login Page", () => {
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
+    //TODO: Delete after confirming that these features aren't necessary. 
     //Maybe shouldn't have this feature.
     //Instead just check that it isn't an empty field
     // test("should display email validation error message", async () => {
