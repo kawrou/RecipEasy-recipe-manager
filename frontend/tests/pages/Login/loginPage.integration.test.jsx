@@ -62,7 +62,7 @@ const completeLoginForm = async () => {
   await user.click(submitButtonEl, "button");
 };
 
-const navigateMock = useNavigate();
+// const navigateMock = useNavigate();
 
 describe("Login Page", () => {
   beforeEach(() => {
@@ -295,6 +295,46 @@ describe("Login Page", () => {
       expect(navigateMock).not.toHaveBeenCalled();
     });
   });
+
+  describe("When email/password fields are initially empty,then entered:", () => {
+    beforeEach(() => {
+      render(<LoginPage />);
+    });
+
+    test("email validation message should disappear", async () => {
+
+      const submitButtonEl = screen.getByRole("button");
+
+      await user.click(submitButtonEl);
+
+      const emailValidationMsg = screen.getByText(
+        "Email address is required."
+      );
+
+      expect(emailValidationMsg).toBeVisible();
+
+      await typeEmailInput("test@test.com")
+      await user.click(submitButtonEl)
+
+      await expect(emailValidationMsg).not.toBeVisible();
+    })
+    test("password validation message should disapear", async () => {
+      const submitButtonEl = screen.getByRole("button");
+
+      await user.click(submitButtonEl);
+
+      const passwordValidationMsg = screen.getByText(
+        "Password is required."
+      );
+
+      expect(passwordValidationMsg).toBeVisible();
+
+      await typeEmailInput("test@test.com")
+      await user.click(submitButtonEl)
+
+      await expect(passwordValidationMsg).not.toBeVisible();
+    })
+  })
 
   describe("Navigation buttons", () => {
     test.todo(

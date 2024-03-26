@@ -13,6 +13,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    
     try {
       const validationError = validateLoginForm(email, password);
       if (validationError) {
@@ -47,10 +48,12 @@ export const LoginPage = ({ onLogin, setToken }) => {
   };
 
   const handleEmailChange = (e) => {
+    e.preventDefault();
     setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
+    e.preventDefault();
     setPassword(e.target.value);
   };
 
@@ -87,7 +90,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     name="email"
                     id="email"
                     className="outline-none focus:ring-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
-                    placeholder="name@company.com"
+                    placeholder="name@domain.com"
                     value={email}
                     onChange={handleEmailChange}
                   />
