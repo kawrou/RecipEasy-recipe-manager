@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, Link } from "react-router-dom";
 import { login } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
 
@@ -126,22 +126,22 @@ export const LoginPage = ({ onLogin, setToken }) => {
                 {error && <span>{error}</span>}
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
-                  <a
-                    href="/signup"
+                  <Link
+                    to="/signup"
                     className="font-medium text-primary-500 hover:text-rose-400"
                   >
                     Sign up
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>
           </div>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="font-medium text-sm text-primary-500 hover:text-rose-400 pt-5"
           >
             ← Back to homepage
-          </a>
+          </Link>
         </div>
       </section>
     </>
