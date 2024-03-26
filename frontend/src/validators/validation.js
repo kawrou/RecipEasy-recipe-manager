@@ -1,25 +1,21 @@
-export const ieEmpty = (value) => {
-    return !value.trim(); 
-}
+export const isEmpty = (value) => {
+  return !value.trim();
+};
 
 export const validateLoginForm = (email, password) => {
+  if (typeof email !== "string" || typeof password !== "string") {
+    throw new Error("Email and password must be strings");
+  }
 
-    const validationMsg = {};
-    
-    if (!email.trim()) {
-      validationMsg.email =
-        "Email address field was empty. Please enter an email address";
-    }
+  let validationErrMsg = {};
 
-    if (!password.trim()) {
-      validationMsg.password =
-        "Password field was empty. Please enter your password";
-    }
-    
-    // if (Object.keys(validationMsg).length > 0){
-    //   return
-    // }
+  if (isEmpty(email)) {
+    validationErrMsg.email = "Email address is required";
+  }
 
+  if (isEmpty(password)) {
+    validationErrMsg.password = "Password is required";
+  }
 
-    return validationMsg
-}
+  return Object.keys(validationErrMsg).length === 0 ? null : validationErrMsg;
+};
