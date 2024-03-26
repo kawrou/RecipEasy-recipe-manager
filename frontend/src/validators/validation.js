@@ -1,4 +1,4 @@
-export const validateLoginForm = () => {
+export const validateLoginForm = (email, password) => {
 
     const validationMsg = {};
     if (!email.trim()) {

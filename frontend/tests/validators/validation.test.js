@@ -1,4 +1,19 @@
-import { validateForm } from "../../src/validators/validation";
+import { validateLoginForm } from "../../src/validators/validation";
+
+
+describe("Login form validation", () => {
+    test("IF email string is empty, return a validation object with appropriate validation message", () => {
+
+    })
+
+    test("If password string is empty, return a validation object with appropriate validation message", () => {
+        
+    })
+})
+//If email string is empty, return a validation object containing the string "Email address field was empty. Please enter an email address"
+
+//If password string is empty, return a validation object containing the string "Password field was empty. Please enter your password"
+
 
 //If email string doesn't contain an @, return "Email is invalid. Please include an @"
 // {email: ""}
