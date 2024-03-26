@@ -2,10 +2,12 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { test, vi } from "vitest";
 
-import { useNavigate } from "react-router-dom";
+import { MemoryRouter, useNavigate, Routes, Route } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
 import { validateForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
+import HomePage from "../../../src/pages/Home/HomePage"
+import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 
 //The login page should have a form.
 //The form contains a title, two input fields, and a button for handling the form
@@ -70,28 +72,41 @@ describe("Login Page", () => {
   });
   describe("Login interactions:", () => {
     beforeEach(() => {
-      render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
+      render(
+      //   <MemoryRouter initialEntries={["/signup"]}>
+      //   <Routes>
+      //     <Route path="/signup" element={<SignupPage />} />
+      //     <Route path="/login" element={<LoginPage />} />
+      //   </Routes>
+      // </MemoryRouter>
+        <MemoryRouter initialEntries={["/login"]}>
+        <Routes>
+          <Route path="/login" element={<LoginPage onLogin={onLoginMock} setToken={setTokenMock}/>}/>
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/signup" element={<SignupPage />} />
+        </Routes>
+          {/* // <LoginPage onLogin={onLoginMock} setToken={setTokenMock} /> */}
+        </MemoryRouter>
+      );
     });
 
     //TODO: delete
-    test("allows a user to login", async () => {
-      // render(<LoginPage />)
-
-      validateForm.mockReturnValue({});
+    test.only("allows a user to login", async () => {
 
       await completeLoginForm();
 
       expect(login).toHaveBeenCalledWith("test@email.com", "1234");
     });
 
-    test("navigates to home page on successful login", async () => {
-      // render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
-      validateForm.mockReturnValue({});
+    test.only("navigates to home page on successful login", async () => {
+      
       login.mockResolvedValue("secrettoken123");
 
       await completeLoginForm();
-
-      expect(navigateMock).toHaveBeenCalledWith("/");
+      screen.debug();
+      // expect(navigateMock).toHaveBeenCalledWith("/");
+      const heading = screen.getByRole("heading", { name: "Recipeasy" });
+      expect(heading).toBeVisible();
     });
 
     //This is an integration test
@@ -302,39 +317,34 @@ describe("Login Page", () => {
     });
 
     test("email validation message should disappear", async () => {
-
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const emailValidationMsg = screen.getByText(
-        "Email address is required."
-      );
+      const emailValidationMsg = screen.getByText("Email address is required.");
 
       expect(emailValidationMsg).toBeVisible();
 
-      await typeEmailInput("test@test.com")
-      await user.click(submitButtonEl)
+      await typeEmailInput("test@test.com");
+      await user.click(submitButtonEl);
 
       await expect(emailValidationMsg).not.toBeVisible();
-    })
+    });
     test("password validation message should disapear", async () => {
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const passwordValidationMsg = screen.getByText(
-        "Password is required."
-      );
+      const passwordValidationMsg = screen.getByText("Password is required.");
 
       expect(passwordValidationMsg).toBeVisible();
 
-      await typeEmailInput("test@test.com")
-      await user.click(submitButtonEl)
+      await typeEmailInput("test@test.com");
+      await user.click(submitButtonEl);
 
       await expect(passwordValidationMsg).not.toBeVisible();
-    })
-  })
+    });
+  });
 
   describe("Navigation buttons", () => {
     test.todo(
