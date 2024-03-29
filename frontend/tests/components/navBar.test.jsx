@@ -143,7 +143,27 @@ describe("Navbar", () => {
   });
 
   describe("When a user is on the Sign Up page:", () => {
-    test.todo("Navbar elements aren't rendered");
+		beforeEach(() => {
+      render(
+        <MemoryRouter initialEntries={["/signup"]}>
+          <Navbar isLoggedIn={true} />
+          <Routes>
+            {/* <Route path="/" element={<HomePage />} /> */}
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    });
+    test("Navbar elements aren't rendered", () => {
+			screen.debug();
+			const logoEl = screen.queryByAltText("Recipeasy Homepage Logo Link")
+			const logInLinkEl = screen.queryByRole("link", {name: "Log in"})
+			const signUpLinkEl = screen.queryByRole("link", {name: "Sign Up"})
+
+			expect(logoEl).not.toBeInTheDocument();
+			expect(logInLinkEl).not.toBeInTheDocument();
+			expect(signUpLinkEl).not.toBeInTheDocument();
+		});
   });
   describe("When a user is on the Log In page:", () => {
     test.todo("Navbar elements aren't rendered");
