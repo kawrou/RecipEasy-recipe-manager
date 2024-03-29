@@ -1,7 +1,7 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
+import { describe, test, vi } from "vitest";
 import Navbar from "../../src/components/Navbar";
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
 import { HomePage } from "../../src/pages/Home/HomePage";
@@ -96,21 +96,30 @@ describe("Navbar", () => {
       });
       expect(headingEl).toBeVisible();
     });
-
-    // Update test once recipe collection page is done so that the user is redirected from their recipes page to the home page
-    test.skip("logout button works and user is redirected to homepage", async () => {
-      render(
-        <BrowserRouter>
-          <Navbar isLoggedIn={true} onLogout={() => {}} />
-          <LoginPage />
-        </BrowserRouter>
-      );
-
-      userEvent.click(screen.getByText("Log Out"));
-
-      await waitFor(() => {
-        expect(screen.getByText("Home")).toBeInTheDocument();
-      });
-    });
   });
+	describe("When a user is logged in and on the Home Page:", () => {
+		test.todo("'logo' navigates to Home Page")
+		test.todo("'My Recipes' button navigates to My Recipes page")
+		test.todo("'Log Out' button is visible and navigates to Home Page", async () => {
+			const logOutBtnEl = screen.getByRole("link", {name: "Log Out"});
+			await user.click(logOutBtnEl); 
+
+			const headingEl = screen.getByRole("heading", {name: "Recipeasy"});
+			expect(headingEl).toBeVisible();
+		})
+		test.todo("'Sign Up' isn't rendered")
+	})
+
+	describe("When a user is on the Sign Up page:", () => {
+		test.todo("Navbar elements aren't rendered")
+	})
+	describe("When a user is on the Log In page:", () => {
+		test.todo("Navbar elements aren't rendered")
+	})
+	describe("When a user is on their My Recipes page:", () => {
+		test.todo("'logo' navigates to Home Page")
+		test.todo("'Home' button navigates to Home Page")
+		test.todo("'My Recipes' button navigates to My Recipes page")
+		test.todo("'Log Out' button is visible and navigates to Home Page")
+	})
 });
