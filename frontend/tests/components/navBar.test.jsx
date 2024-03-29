@@ -7,6 +7,7 @@ import { SignupPage } from "../../src/pages/Signup/SignupPage";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
 import { expect } from "vitest";
+import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
 
 const user = userEvent.setup();
 
@@ -22,7 +23,6 @@ const setTokenMock = vi.fn();
 describe("Navbar", () => {
   describe("When a user is not logged in and on the Home Page:", () => {
     beforeEach(() => {
-      vi.resetAllMocks();
       render(
         <MemoryRouter initialEntries={["/"]}>
           <Navbar />
@@ -73,6 +73,9 @@ describe("Navbar", () => {
 
       expect(window.location.pathname).toBe("/");
       expect(logoEl).toBeVisible();
+
+      const headingEl = screen.getByRole("heading", { name: "Recipeasy" });
+      expect(headingEl).toBeVisible();
     });
 
     test("'Log In' button navigates to login page", async () => {
@@ -97,29 +100,58 @@ describe("Navbar", () => {
       expect(headingEl).toBeVisible();
     });
   });
-	describe("When a user is logged in and on the Home Page:", () => {
-		test.todo("'logo' navigates to Home Page")
-		test.todo("'My Recipes' button navigates to My Recipes page")
-		test.todo("'Log Out' button is visible and navigates to Home Page", async () => {
-			const logOutBtnEl = screen.getByRole("link", {name: "Log Out"});
-			await user.click(logOutBtnEl); 
+  describe("When a user is logged in and on the Home Page:", () => {
+    beforeEach(() => {
+      render(
+        <MemoryRouter initialEntries={["/"]}>
+          <Navbar isLoggedIn={true} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/myrecipes" element={<MyRecipesPage />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    });
+    test("'logo' navigates to Home Page", async () => {
+      const logoEl = screen.getByAltText("Recipeasy Homepage Logo Link");
+      await user.click(logoEl);
 
-			const headingEl = screen.getByRole("heading", {name: "Recipeasy"});
-			expect(headingEl).toBeVisible();
-		})
-		test.todo("'Sign Up' isn't rendered")
-	})
+      const headingEl = screen.getByRole("heading", { name: "Recipeasy" });
+      expect(headingEl).toBeVisible();
+    });
+    test("'My Recipes' button navigates to My Recipes page", async () => {
+      const myRecipesBtn = screen.getByRole("link", { name: "My Recipes" });
+      await user.click(myRecipesBtn);
+			screen.debug();
+			const h2El = screen.getByRole("heading", {level: 2})
+			expect(h2El).toBeVisible();
+    });
+    test(
+      "'Log Out' button is visible and navigates to Home Page",
+      async () => {
+        const logOutBtnEl = screen.getByRole("link", { name: "Log Out" });
+        await user.click(logOutBtnEl);
 
-	describe("When a user is on the Sign Up page:", () => {
-		test.todo("Navbar elements aren't rendered")
-	})
-	describe("When a user is on the Log In page:", () => {
-		test.todo("Navbar elements aren't rendered")
-	})
-	describe("When a user is on their My Recipes page:", () => {
-		test.todo("'logo' navigates to Home Page")
-		test.todo("'Home' button navigates to Home Page")
-		test.todo("'My Recipes' button navigates to My Recipes page")
-		test.todo("'Log Out' button is visible and navigates to Home Page")
-	})
+        const headingEl = screen.getByRole("heading", { name: "Recipeasy" });
+        expect(headingEl).toBeVisible();
+      }
+    );
+    test("'Sign Up' isn't rendered", () => {
+			const signUpBtnEl = screen.queryByRole("link", {name: "Sign Up"}); 
+			expect(signUpBtnEl).not.toBeInTheDocument(); 
+		});
+  });
+
+  describe("When a user is on the Sign Up page:", () => {
+    test.todo("Navbar elements aren't rendered");
+  });
+  describe("When a user is on the Log In page:", () => {
+    test.todo("Navbar elements aren't rendered");
+  });
+  describe("When a user is on their My Recipes page:", () => {
+    test.todo("'logo' navigates to Home Page");
+    test.todo("'Home' button navigates to Home Page");
+    test.todo("'My Recipes' button navigates to My Recipes page");
+    test.todo("'Log Out' button is visible and navigates to Home Page");
+  });
 });
