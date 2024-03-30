@@ -3,6 +3,11 @@ import { useNavigate, NavLink, Link } from "react-router-dom";
 
 import { signup } from "../../services/authentication";
 
+//TODO: 
+// A logged in user can still access this page by typing the route in the URL
+// It'll be better for UX if it were handled
+
+
 // Match one or more alphanumeric characters, dots, underscores, or hyphens for the username part.
 // Match the "@" symbol.
 // Match one or more alphanumeric characters, dots, or hyphens for the domain name.

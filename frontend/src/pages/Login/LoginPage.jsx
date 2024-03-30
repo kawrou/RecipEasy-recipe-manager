@@ -3,6 +3,10 @@ import { useNavigate, NavLink, Link } from "react-router-dom";
 import { login } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
 
+//TODO: 
+// A logged in user can still access this page by typing the route in the URL
+// It'll be better for UX if it were handled
+
 export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
