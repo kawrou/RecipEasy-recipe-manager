@@ -3,9 +3,9 @@ import { vi } from "vitest";
 import { MyRecipesPage } from "../../../src/pages/MyRecipes/MyRecipesPage";
 import { CreateRecipePage } from "../../../src/pages/RecipePage/CreateRecipePage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
-import { MemoryRouter, Route, Routes, } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useFetchRecipes } from "../../../src/hooks/useFetchRecipe";
-import { getAllRecipes } from "../../../src/services/recipes";
+import { getAllRecipes, getRecipeById } from "../../../src/services/recipes";
 import { checkToken } from "../../../src/services/authentication";
 import userEvent from "@testing-library/user-event";
 import { SingleRecipePage } from "../../../src/pages/RecipePage/SingleRecipePage";
@@ -21,7 +21,7 @@ const testToken = "testToken";
 const user = userEvent.setup();
 
 describe("When My Recipes Page is first rendered", () => {
-  //This test failes because RecipeCard is making another FETCH request which overides the mock below
+  //TODO: This test failes because RecipeCard is making another FETCH request which overides the mock below
   test.todo("renders fetched recipes", async () => {
     getAllRecipes.mockReturnValue({
       recipes: [
@@ -301,34 +301,34 @@ describe("When a user clicks on:", () => {
   //TODO: Research how to check URL, otherwise I'll need to mock getRecipeById. Or there might be a way to check if the Link was called with the correct URL
   test.todo("a recipe card, it navigates to that recipe's page", async () => {
     getAllRecipes.mockReturnValue({
-        recipes: [{_id: 1, name: "test recipe", totalTime: 60}],
-        token: "returned token",
-      });
-  
-      await act(async () => {
-        render(
-          <MemoryRouter initialEntries={["/myrecipes"]}>
-            <Routes>
-              <Route
-                path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    token={testToken}
-                    setToken={setTokenMock}
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                    setRecipeData={setRecipeDataMock}
-                    setUrl={setUrlMock}
-                  />
-                }
-              />
-              <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
-            </Routes>
-          </MemoryRouter>
-        );
-      });
+      recipes: [{ _id: 1, name: "test recipe", totalTime: 60 }],
+      token: "returned token",
+    });
 
-     
-      const recipeCardLink = screen.getAllByRole("link");
-      await user.click(recipeCardLink[0]);
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={["/myrecipes"]}>
+          <Routes>
+            <Route
+              path="/myrecipes"
+              element={
+                <MyRecipesPage
+                  token={testToken}
+                  setToken={setTokenMock}
+                  handleScrapeRecipe={handleScrapeRecipeMock}
+                  setRecipeData={setRecipeDataMock}
+                  setUrl={setUrlMock}
+                />
+              }
+            />
+            <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    });
+
+    const recipeCardLink = screen.getAllByRole("link");
+    await user.click(recipeCardLink[0]);
+    // screen.debug();
   });
 });
