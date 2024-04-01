@@ -12,6 +12,8 @@ export const useFetchRecipes = (token, setToken) => {
       return;
     }
 
+    setLoading(true)
+
     try {
       const data = await getAllRecipes(token);
       setRecipes(data.recipes);

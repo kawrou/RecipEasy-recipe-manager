@@ -1,10 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { vi, expect, describe, test, beforeEach, afterEach } from "vitest";
-import { userEvent } from "@testing-library/user-event";
-import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
-import { useNavigate } from "react-router-dom";
-import { useFetchRecipes } from "../../src/hooks/useFetchRecipe";
-import RecipeCard from "../../src/components/Recipe/RecipeCard";
+import { vi, expect, describe, test, beforeEach } from "vitest";
+import { MyRecipesPage } from "../../../src/pages/MyRecipes/MyRecipesPage";
+import { useFetchRecipes } from "../../../src/hooks/useFetchRecipe";
 
 // MOCKS
 // Mocking React Router's useNavigate function
@@ -15,11 +12,11 @@ vi.mock("react-router-dom", () => {
 });
 
 // Mocking useFetchRecipe
-vi.mock("../../src/hooks/useFetchRecipe");
+vi.mock("../../../src/hooks/useFetchRecipe");
 
 // Mocking RecipeCard
 vi.mock(
-  "../../src/components/Recipe/RecipeCard",
+  "../../../src/components/Recipe/RecipeCard",
   () => (
     console.log("MyRecipesPage- Unit Tesst: RecipeCard mock called"),
     {
@@ -36,14 +33,12 @@ vi.mock(
 // Other Mocks
 const testToken = "testToken";
 const setTokenMock = vi.fn();
-const handleScrapeRecipeMock = vi.fn();
 
-describe("Recipe collection", () => {
-  describe("When a user is logged in:", () => {
+describe("My Recipes Page", () => {
     beforeEach(() => {
       vi.resetAllMocks();
     });
-    
+
     test("renders collection and recipes from db", async () => {
       useFetchRecipes.mockReturnValue({
         recipes: [
@@ -139,91 +134,4 @@ describe("Recipe collection", () => {
         "Loading ..."
       );
     });
-  });
-
-  describe.skip("Navigation", () => {
-    // TODO: Test might be false positive
-    // The following are more like integration tests as they involve other pages
-    // More of an integration test
-    test("generate recipe btn navigates to recipe page", async () => {
-      useFetchRecipes.mockReturnValue({
-        recipes: [],
-        loading: false,
-        error: null,
-      });
-
-      render(
-        <MyRecipesPage
-          token={testToken}
-          setToken={setTokenMock}
-          handleScrapeRecipe={handleScrapeRecipeMock}
-        />
-      );
-      const navigateMock = useNavigate();
-      await userEvent.type(screen.getByRole("textbox"), "test url");
-      await userEvent.click(screen.getByRole("button", { name: "Generate" }));
-      expect(handleScrapeRecipeMock).toHaveBeenCalled();
-      expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
-    });
-
-    //More of an integration test
-    test("enter Manually btn navigates to recipe page", async () => {
-      useFetchRecipes.mockReturnValue({
-        recipes: [],
-        loading: false,
-        error: null,
-      });
-
-      render(
-        <MyRecipesPage
-          token={testToken}
-          setToken={setTokenMock}
-          handleScrapeRecipe={handleScrapeRecipeMock}
-        />
-      );
-      const navigateMock = useNavigate();
-      await userEvent.click(screen.getByRole("button", { name: "Manually" }));
-      expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
-    });
-  });
-
-  //More of an integration test
-  describe.skip("When a user isn't logged in:", () => {
-    test("It navigates to login if no token is present", async () => {
-      useFetchRecipes.mockReturnValue({
-        recipes: [],
-        loading: false,
-        error: null,
-      });
-
-      render(
-        <MyRecipesPage
-          token={null}
-          setToken={setTokenMock}
-          handleScrapeRecipe={handleScrapeRecipeMock}
-        />
-      );
-      const navigateMock = useNavigate();
-      await userEvent.click(screen.getByText("Generate Recipe"));
-      expect(navigateMock).toHaveBeenCalledWith("/login");
-    });
-  });
-
-  //More of an integration test
-  describe.skip("When there is an error:", () => {
-    test("navigates to /login when error is true", async () => {
-      const navigateMock = useNavigate();
-      useFetchRecipes.mockReturnValue({
-        recipes: [],
-        loading: false,
-        error: { message: "some error message" },
-      });
-
-      render(<MyRecipesPage token={testToken} setToken={setTokenMock} />);
-
-      expect(useFetchRecipes).toHaveBeenCalledWith(testToken, setTokenMock);
-      // expect(screen.getByText("Error: some error message")).toBeVisible();
-      expect(navigateMock).toHaveBeenCalledWith("/login");
-    });
-  });
 });
