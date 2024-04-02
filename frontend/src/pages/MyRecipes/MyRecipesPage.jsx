@@ -30,13 +30,14 @@ export const MyRecipesPage = ({
     } else if (loading) {
       return <p aria-label="Loading message">Loading ...</p>;
     } else if (error) {
+      console.log("Error occured whilst retrieving recipe")
       navigate("/login");
       // return <p>Error: {error.message}</p>;
     } else if (
       (!loading && !error && recipes === undefined) ||
       recipes.length === 0
     ) {
-      return <p aria-label="Empty Recipes"> No recipes found</p>;
+      return <p aria-label="Empty Recipes"> No recipes found.</p>;
     } else {
       return recipes.map((recipe) => (
         <RecipeCard recipe={recipe} key={recipe._id} />

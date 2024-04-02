@@ -159,4 +159,7 @@ describe("authentication service", () => {
       );
     });
   });
+  describe("logout", () => {
+    test.todo("Logs a user out")
+  })
 });
